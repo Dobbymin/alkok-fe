@@ -15,8 +15,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "api:sync": "node scripts/api-sync.mjs",
-    "storybook": "echo 'Storybook will be configured in Issue #15'",
-    "build-storybook": "node scripts/run-storybook-build.mjs",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build",
     "check:principles": "node scripts/check-principles.mjs"
   },
   "dependencies": {
@@ -49,6 +49,9 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@storybook/addon-a11y": "^10.6.8",
+    "@storybook/addon-themes": "^10.6.8",
+    "@storybook/nextjs-vite": "^10.6.8",
     "@tailwindcss/postcss": "^4.3.5",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
@@ -61,6 +64,7 @@
     "eslint-config-next": "^16.4.6",
     "jsdom": "^28.1.0",
     "openapi-typescript": "^7.13.0",
+    "storybook": "^10.6.8",
     "tailwindcss": "^4.3.5",
     "typescript": "^5.9.3",
     "vitest": "^4.1.0"
