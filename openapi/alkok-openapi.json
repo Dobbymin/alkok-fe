@@ -1,0 +1,181 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Alkok API",
+    "version": "1.0.0",
+    "description": "알콕(Alkok) 백엔드 REST API 계약 스냅샷"
+  },
+  "servers": [{ "url": "/api/v1" }],
+  "paths": {
+    "/api/health": {
+      "get": {
+        "operationId": "getHealth",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": { "status": { "type": "string" } },
+                  "required": ["status"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/login": {
+      "post": {
+        "operationId": "login",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": { "type": "string" },
+                  "password": { "type": "string" }
+                },
+                "required": ["email", "password"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Logged in",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/AuthResponseEnvelope" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/refresh": {
+      "post": {
+        "operationId": "refresh",
+        "responses": {
+          "200": {
+            "description": "Refreshed",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/AuthResponseEnvelope" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/logout": {
+      "post": {
+        "operationId": "logout",
+        "responses": { "204": { "description": "Logged out" } }
+      }
+    },
+    "/api/v1/users/me": {
+      "get": {
+        "operationId": "getMe",
+        "responses": {
+          "200": {
+            "description": "Current user",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/UserProfileEnvelope" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/guides": {
+      "get": {
+        "operationId": "listGuides",
+        "responses": { "200": { "description": "Guide list" } }
+      }
+    },
+    "/api/v1/tools": {
+      "get": {
+        "operationId": "listTools",
+        "responses": { "200": { "description": "Tool list" } }
+      }
+    },
+    "/api/v1/news": {
+      "get": {
+        "operationId": "listNews",
+        "responses": { "200": { "description": "News list" } }
+      }
+    },
+    "/api/v1/vault/items": {
+      "get": {
+        "operationId": "listVaultItems",
+        "responses": { "200": { "description": "Vault items" } }
+      }
+    },
+    "/api/v1/admin/dashboard": {
+      "get": {
+        "operationId": "getAdminDashboard",
+        "responses": { "200": { "description": "Admin dashboard" } }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "UserRole": { "type": "string", "enum": ["USER", "ADMIN"] },
+      "UserStatus": {
+        "type": "string",
+        "enum": ["PENDING_VERIFICATION", "ACTIVE", "SUSPENDED"]
+      },
+      "ContentType": { "type": "string", "enum": ["GUIDE", "TOOL", "NEWS"] },
+      "PublishStatus": {
+        "type": "string",
+        "enum": ["DRAFT", "IN_REVIEW", "PUBLISHED", "REJECTED", "ARCHIVED"]
+      },
+      "VerificationStatus": {
+        "type": "string",
+        "enum": ["VALID", "NEEDS_REVIEW", "EXPIRED"]
+      },
+      "SourceType": {
+        "type": "string",
+        "enum": ["OFFICIAL", "MEDIA", "COMMUNITY"]
+      },
+      "UserProfile": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "email": { "type": "string" },
+          "nickname": { "type": "string" },
+          "role": { "$ref": "#/components/schemas/UserRole" },
+          "status": { "$ref": "#/components/schemas/UserStatus" },
+          "interestCategorySlugs": { "type": "array", "items": { "type": "string" } }
+        },
+        "required": ["id", "email", "nickname", "role", "status"]
+      },
+      "AuthResponseEnvelope": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "accessToken": { "type": "string" },
+              "user": { "$ref": "#/components/schemas/UserProfile" }
+            },
+            "required": ["accessToken", "user"]
+          }
+        },
+        "required": ["data"]
+      },
+      "UserProfileEnvelope": {
+        "type": "object",
+        "properties": {
+          "data": { "$ref": "#/components/schemas/UserProfile" }
+        },
+        "required": ["data"]
+      }
+    }
+  }
+}
