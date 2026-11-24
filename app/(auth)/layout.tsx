@@ -17,9 +17,18 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
         href="/"
         className="mb-6 flex items-center gap-2 font-semibold text-foreground text-lg tracking-tight"
       >
-        <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-primary font-bold text-primary-foreground text-sm">
-          A
-        </span>
+        <svg
+          width="32"
+          height="32"
+          viewBox="0 0 64 64"
+          fill="none"
+          aria-hidden="true"
+          className="h-8 w-8 shrink-0"
+        >
+          <rect width="64" height="64" rx="16" className="fill-primary" />
+          <circle cx="32" cy="32" r="14" className="fill-primary-foreground" />
+          <circle cx="32" cy="32" r="6" className="fill-status-valid-fg" />
+        </svg>
         <span>알콕 · Alkok</span>
       </Link>
       {children}
