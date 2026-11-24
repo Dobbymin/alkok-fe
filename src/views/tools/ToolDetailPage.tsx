@@ -2,6 +2,8 @@ import { ExternalLink } from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { ContentCard, VerificationBadge } from "@/entities/content";
+import { HelpfulButton } from "@/features/content-helpful";
+import { ReportModal } from "@/features/content-report";
 import { CompareToggleButton } from "@/features/tool-compare";
 import { BookmarkAction } from "@/features/vault-save";
 import type { KoreanSupportLevel, ToolDetailData } from "@/shared/types";
@@ -147,7 +149,15 @@ export default function ToolDetailPage({
             <ExternalLink className="h-4 w-4" strokeWidth={1.75} />
           </a>
         </Button>
-        {engagementSlot}
+        {engagementSlot ?? (
+          <div className="flex flex-wrap items-center gap-2">
+            <HelpfulButton
+              contentId={tool.id}
+              initialCount={tool.helpfulCount}
+            />
+            <ReportModal contentId={tool.id} contentTitle={tool.title} />
+          </div>
+        )}
       </div>
 
       {tool.relatedGuides && tool.relatedGuides.length > 0 ? (

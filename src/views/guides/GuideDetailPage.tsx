@@ -4,6 +4,8 @@ import type { ReactNode } from "react";
 import { ContentCard, VerificationBadge } from "@/entities/content";
 import { GuideToc, PromptCopyBlock, SafeMarkdown } from "@/entities/guide";
 import { DIFFICULTY_LABELS } from "@/entities/taxonomy";
+import { HelpfulButton } from "@/features/content-helpful";
+import { ReportModal } from "@/features/content-report";
 import { BookmarkAction } from "@/features/vault-save";
 import type { GuideDetailData } from "@/shared/types";
 import { Badge, Button, Card, CardContent, CardHeader, CardTitle, ErrorState } from "@/shared/ui";
@@ -122,7 +124,15 @@ export default function GuideDetailPage({
               <ExternalLink className="h-4 w-4" strokeWidth={1.75} />
             </a>
           </Button>
-          {engagementSlot}
+          {engagementSlot ?? (
+            <div className="flex flex-wrap items-center gap-2">
+              <HelpfulButton
+                contentId={guide.id}
+                initialCount={guide.helpfulCount}
+              />
+              <ReportModal contentId={guide.id} contentTitle={guide.title} />
+            </div>
+          )}
         </div>
 
         {guide.relatedGuides && guide.relatedGuides.length > 0 ? (
