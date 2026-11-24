@@ -1,7 +1,22 @@
 import type { Metadata } from "next";
+import localFont from "next/font/local";
 import type { ReactNode } from "react";
 import { AppProviders } from "@/app/providers";
 import "@/shared/styles/globals.css";
+
+const pretendard = localFont({
+  src: "../src/shared/assets/fonts/PretendardVariable.woff2",
+  variable: "--font-pretendard",
+  display: "swap",
+  weight: "100 900",
+});
+
+const jetbrainsMono = localFont({
+  src: "../src/shared/assets/fonts/JetBrainsMonoVariable.woff2",
+  variable: "--font-jetbrains-mono",
+  display: "swap",
+  weight: "100 800",
+});
 
 export const metadata: Metadata = {
   title: {
@@ -14,8 +29,12 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="ko" suppressHydrationWarning>
-      <body>
+    <html
+      lang="ko"
+      suppressHydrationWarning
+      className={`${pretendard.variable} ${jetbrainsMono.variable}`}
+    >
+      <body className="min-h-screen bg-background text-foreground font-sans antialiased">
         <AppProviders>{children}</AppProviders>
       </body>
     </html>
