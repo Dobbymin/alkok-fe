@@ -1,0 +1,40 @@
+schema_version: 1
+
+execution:
+  sub_agents: auto
+  max_parallel_agents: 3
+  retry:
+    worker_max_retries: 2
+    code_ci_max_retries: 2
+    transient_ci_max_retries: 3
+
+archive:
+  retention_days: 30
+  auto_cleanup_on_cli_start: true
+
+github:
+  auth_preference: gh
+  default_branch: main
+  create_draft_pr: false
+  auto_merge_on_ci_pass: true
+  merge_method: squash
+  require_issue_approval: true
+  require_release_approval: true
+
+quality:
+  reuse_existing_tools: true
+  require_secret_scan: true
+  secret_scanner_install_requires_approval: true
+  self_review_required_before_pr: true
+
+notifications:
+  session: true
+  external:
+    enabled: false
+    provider: null
+
+privacy:
+  telemetry: false
+
+session:
+  context_mode: auto

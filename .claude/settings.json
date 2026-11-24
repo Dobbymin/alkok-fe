@@ -1,0 +1,6 @@
+{
+  "enabledPlugins": {
+    "github-convention@github-convention": true,
+    "dev-principles@dev-principles": true
+  }
+}
