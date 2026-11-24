@@ -1,4 +1,5 @@
 export { cn } from "./cn";
+export { sanitizeNextPath } from "./sanitize-next-path";
 export {
   buildGuideJsonLd,
   buildNewsJsonLd,
