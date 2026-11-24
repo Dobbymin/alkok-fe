@@ -1,0 +1,8 @@
+export {
+  AI_USES,
+  DIFFICULTY_LABELS,
+  POPULAR_COMPARE_PRESETS,
+  POPULAR_SEARCH_CHIPS,
+  SOURCE_TYPE_LABELS,
+  WORK_DOMAINS,
+} from "./model/taxonomy.constants";
