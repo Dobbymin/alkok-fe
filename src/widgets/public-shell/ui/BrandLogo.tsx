@@ -13,13 +13,14 @@ export const BrandLogo = ({ className }: { className?: string }) => (
     <svg
       width="24"
       height="24"
-      viewBox="0 0 24 24"
+      viewBox="0 0 64 64"
       fill="none"
       aria-hidden="true"
       className="h-6 w-6 shrink-0"
     >
-      <rect width="24" height="24" rx="6" className="fill-primary" />
-      <circle cx="12" cy="12" r="4.5" className="fill-primary-foreground" />
+      <rect width="64" height="64" rx="16" className="fill-primary" />
+      <circle cx="32" cy="32" r="14" className="fill-primary-foreground" />
+      <circle cx="32" cy="32" r="6" className="fill-status-valid-fg" />
     </svg>
     <span className="text-base font-bold">알콕</span>
     <span className="text-xs font-medium text-muted-foreground">Alkok</span>
