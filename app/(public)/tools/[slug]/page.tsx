@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { serverApiGet } from "@/shared/api/server-api-client.server";
+import { buildPageMetadata, buildToolJsonLd } from "@/shared/lib";
 import type { ApiEnvelope, ToolDetailData } from "@/shared/types";
+import { JsonLdScript } from "@/shared/ui";
 import { ToolDetailPage } from "@/views/tools";
 
 export async function generateMetadata({
@@ -16,10 +18,11 @@ export async function generateMetadata({
   if (!res?.data) {
     return { title: "AI 도구·모델 상세" };
   }
-  return {
+  return buildPageMetadata({
     title: res.data.title,
     description: res.data.summary,
-  };
+    path: `/tools/${slug}`,
+  });
 }
 
 export default async function Page({
@@ -32,5 +35,10 @@ export default async function Page({
     `/api/v1/tools/${slug}`,
     { revalidate: 60 },
   );
-  return <ToolDetailPage tool={res?.data ?? null} />;
+  return (
+    <>
+      {res?.data ? <JsonLdScript data={buildToolJsonLd(res.data)} /> : null}
+      <ToolDetailPage tool={res?.data ?? null} />
+    </>
+  );
 }

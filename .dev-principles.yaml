@@ -21,3 +21,4 @@ ignore:
   - src/shared/api/generated
   - .next
   - storybook-static
+  - public/sw.js
