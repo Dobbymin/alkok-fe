@@ -4,7 +4,15 @@ import { execFileSync } from "node:child_process";
 
 const cwd = process.cwd();
 const source = process.env.OPENAPI_SPEC_URL || path.join(cwd, "openapi", "alkok-openapi.json");
-const outFile = path.join(cwd, "src", "shared", "api", "generated", "schema.d.ts");
+const outFile = path.join(
+  cwd,
+  "packages",
+  "core",
+  "src",
+  "api",
+  "generated",
+  "schema.d.ts",
+);
 
 fs.mkdirSync(path.dirname(outFile), { recursive: true });
 execFileSync("pnpm", ["exec", "openapi-typescript", source, "-o", outFile], {

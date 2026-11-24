@@ -1,10 +1,11 @@
-node_modules
-.next
+**/node_modules
+**/.next
+**/.turbo
 out
 dist
 coverage
-storybook-static
-.storybook
+**/storybook-static
+**/.storybook
 .git
 .github
 .github-convention

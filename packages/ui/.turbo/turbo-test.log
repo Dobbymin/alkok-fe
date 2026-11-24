@@ -1,0 +1,41 @@
+$ vitest run
+[?25l(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - ESM syntax in a file loaded as CommonJS (vitest.config.ts:1:1). Use a `.mjs` extension or set `"type": "module"` in the closest package.json
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+
+ RUN  v4.1.12 /Users/gimgangmin/Desktop/Dev/project/alkok/alkok-fe/packages/ui
+
+[?2026h
+ ❯ src/patterns/patterns.test.tsx [queued]
+
+ Test Files 0 passed (1)
+      Tests 0 passed (0)
+   Start at 01:21:13
+   Duration 303ms
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
+ ❯ src/patterns/patterns.test.tsx 0/4
+
+ Test Files 0 passed (1)
+      Tests 0 passed (4)
+   Start at 01:21:13
+   Duration 704ms
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
+ ❯ src/patterns/patterns.test.tsx 1/4
+
+ Test Files 0 passed (1)
+      Tests 1 passed (4)
+   Start at 01:21:13
+   Duration 906ms
+[?2026l[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K ✓ src/patterns/patterns.test.tsx (4 tests) 150ms
+   ✓ shared/ui patterns (4)
+     ✓ renders EmptyState and ErrorState with retry callback 117ms
+     ✓ copies code in CopyableCodeBlock and shows feedback 27ms
+     ✓ renders SplitPane left and right sections 2ms
+     ✓ contains zero hardcoded hex colors, bg-white, or text-black in ui src 3ms
+
+ Test Files  1 passed (1)
+      Tests  4 passed (4)
+   Start at  01:21:13
+   Duration  938ms (transform 91ms, setup 55ms, import 354ms, tests 150ms, environment 292ms)
+
+[?25h

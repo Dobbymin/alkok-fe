@@ -1,0 +1,25 @@
+$ vitest run
+[?25l(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - ESM syntax in a file loaded as CommonJS (vitest.config.ts:1:1). Use a `.mjs` extension or set `"type": "module"` in the closest package.json
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+
+ RUN  v4.1.12 /Users/gimgangmin/Desktop/Dev/project/alkok/alkok-fe/packages/core
+
+[?2026h
+ ❯ src/lib/seo.test.ts [queued]
+
+ Test Files 0 passed (4)
+      Tests 0 passed (0)
+   Start at 01:21:12
+   Duration 707ms
+[?2026l[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K ✓ src/lib/sanitize-next-path.test.ts (2 tests) 2ms
+ ✓ src/lib/cn.test.ts (2 tests) 7ms
+ ✓ src/lib/seo.test.ts (2 tests) 4ms
+ ✓ src/api/api-client.test.ts (4 tests) 12ms
+
+ Test Files  4 passed (4)
+      Tests  10 passed (10)
+   Start at  01:21:12
+   Duration  859ms (transform 145ms, setup 0ms, import 220ms, tests 25ms, environment 2.68s)
+
+[?25h

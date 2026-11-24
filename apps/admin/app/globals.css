@@ -1,0 +1,4 @@
+@import "@alkok/ui/globals.css";
+@source "../../../packages/ui/src";
+@source "../src";
+@source "../app";

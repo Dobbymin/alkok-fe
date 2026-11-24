@@ -1,0 +1,10 @@
+{
+  "extends": "@alkok/config/tsconfig/react-library.json",
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["../web/src/*"]
+    }
+  },
+  "include": [".storybook/**/*.ts", ".storybook/**/*.tsx"],
+  "exclude": ["node_modules", "storybook-static"]
+}

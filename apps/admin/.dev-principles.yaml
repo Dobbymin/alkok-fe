@@ -1,0 +1,21 @@
+version: 1
+
+architecture:
+  preset: fsd
+  sourceRoot: src
+
+context7:
+  mode: auto
+  preferredLibraries:
+    - react
+    - next.js
+    - "@tanstack/react-query"
+    - typescript
+    - tailwindcss
+
+rules: {}
+
+customPrinciples: []
+
+ignore:
+  - .next
