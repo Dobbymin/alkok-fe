@@ -1,2 +1,2 @@
-minimumReleaseAgeExclude:
-  - lucide-react@1.79.0
+onlyBuiltDependencies:
+  - esbuild
