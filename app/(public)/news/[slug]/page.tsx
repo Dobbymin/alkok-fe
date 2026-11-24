@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { serverApiGet } from "@/shared/api/server-api-client.server";
+import { buildNewsJsonLd, buildPageMetadata } from "@/shared/lib";
 import type { ApiEnvelope, NewsDetailData } from "@/shared/types";
+import { JsonLdScript } from "@/shared/ui";
 import { NewsDetailPage } from "@/views/news";
 
 export async function generateMetadata({
@@ -16,10 +18,11 @@ export async function generateMetadata({
   if (!res?.data) {
     return { title: "AI 소식" };
   }
-  return {
+  return buildPageMetadata({
     title: res.data.title,
     description: res.data.summary,
-  };
+    path: `/news/${slug}`,
+  });
 }
 
 export default async function Page({
@@ -32,5 +35,10 @@ export default async function Page({
     `/api/v1/news/${slug}`,
     { revalidate: 60 },
   );
-  return <NewsDetailPage news={res?.data ?? null} />;
+  return (
+    <>
+      {res?.data ? <JsonLdScript data={buildNewsJsonLd(res.data)} /> : null}
+      <NewsDetailPage news={res?.data ?? null} />
+    </>
+  );
 }

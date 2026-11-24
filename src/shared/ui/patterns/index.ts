@@ -8,5 +8,6 @@ export { ErrorState } from "./ErrorState";
 export type { ErrorStateProps } from "./ErrorState";
 export { FilterBar } from "./FilterBar";
 export type { FilterBarProps } from "./FilterBar";
+export { JsonLdScript } from "./JsonLdScript";
 export { SplitPane } from "./SplitPane";
 export type { SplitPaneProps } from "./SplitPane";
