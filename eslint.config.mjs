@@ -10,6 +10,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "storybook-static/**",
+    "playwright-report/**",
+    "test-results/**",
     "src/shared/api/generated/**",
     "public/sw.js",
     "next-env.d.ts",
