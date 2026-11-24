@@ -5,6 +5,7 @@ out/
 dist/
 coverage/
 storybook-static/
+*.tsbuildinfo
 
 # Env & OS
 .env

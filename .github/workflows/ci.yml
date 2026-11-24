@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality-gates:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Unit & Component Tests
+        run: pnpm test
+
+      - name: Build Next.js
+        run: pnpm build
+        env:
+          NEXT_PUBLIC_API_BASE_URL: https://alkok.dobbymin.cloud
+          NEXT_PUBLIC_SITE_URL: https://alkok.dobbymin.cloud
+          INTERNAL_API_BASE_URL: http://alkok-be:8080
+
+      - name: Build Storybook
+        run: pnpm build-storybook
+
+      - name: Check Dev Principles
+        run: pnpm check:principles
