@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { ContentCard, VerificationBadge } from "@/entities/content";
 import { GuideToc, PromptCopyBlock, SafeMarkdown } from "@/entities/guide";
 import { DIFFICULTY_LABELS } from "@/entities/taxonomy";
+import { BookmarkAction } from "@/features/vault-save";
 import type { GuideDetailData } from "@/shared/types";
 import { Badge, Button, Card, CardContent, CardHeader, CardTitle, ErrorState } from "@/shared/ui";
 
@@ -48,7 +49,9 @@ export default function GuideDetailPage({
                 sourceName={guide.sourceName}
                 showSourceBadge
               />
-              {bookmarkSlot}
+              {bookmarkSlot ?? (
+                <BookmarkAction contentId={guide.id} title={guide.title} />
+              )}
             </div>
             <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
               {guide.title}

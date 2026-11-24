@@ -2,6 +2,7 @@ import { ExternalLink } from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { ContentCard, VerificationBadge } from "@/entities/content";
+import { BookmarkAction } from "@/features/vault-save";
 import type { NewsDetailData } from "@/shared/types";
 import {
   Badge,
@@ -50,7 +51,9 @@ export default function NewsDetailPage({
               sourceName={news.sourceName}
               showSourceBadge
             />
-            {bookmarkSlot}
+            {bookmarkSlot ?? (
+              <BookmarkAction contentId={news.id} title={news.title} />
+            )}
           </div>
           <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
             {news.title}
