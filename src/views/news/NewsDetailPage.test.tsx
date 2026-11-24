@@ -25,7 +25,11 @@ describe("NewsDetailPage", () => {
   it("renders 3 key points, work impact, and external source link", () => {
     render(
       <TooltipProvider>
-        <NewsDetailPage news={sampleNews} bookmarkSlot={<span />} />
+        <NewsDetailPage
+          news={sampleNews}
+          bookmarkSlot={<span />}
+          engagementSlot={<span />}
+        />
       </TooltipProvider>,
     );
 

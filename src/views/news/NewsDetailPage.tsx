@@ -2,6 +2,8 @@ import { ExternalLink } from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { ContentCard, VerificationBadge } from "@/entities/content";
+import { HelpfulButton } from "@/features/content-helpful";
+import { ReportModal } from "@/features/content-report";
 import { BookmarkAction } from "@/features/vault-save";
 import type { NewsDetailData } from "@/shared/types";
 import {
@@ -106,7 +108,15 @@ export default function NewsDetailPage({
             <ExternalLink className="h-4 w-4" strokeWidth={1.75} />
           </a>
         </Button>
-        {engagementSlot}
+        {engagementSlot ?? (
+          <div className="flex flex-wrap items-center gap-2">
+            <HelpfulButton
+              contentId={news.id}
+              initialCount={news.helpfulCount}
+            />
+            <ReportModal contentId={news.id} contentTitle={news.title} />
+          </div>
+        )}
       </div>
 
       {news.relatedContents && news.relatedContents.length > 0 ? (
