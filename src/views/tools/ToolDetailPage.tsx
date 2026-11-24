@@ -3,6 +3,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { ContentCard, VerificationBadge } from "@/entities/content";
 import { CompareToggleButton } from "@/features/tool-compare";
+import { BookmarkAction } from "@/features/vault-save";
 import type { KoreanSupportLevel, ToolDetailData } from "@/shared/types";
 import {
   Badge,
@@ -67,7 +68,9 @@ export default function ToolDetailPage({
             </div>
             <div className="flex items-center gap-2">
               <CompareToggleButton slug={tool.slug} title={tool.title} />
-              {bookmarkSlot}
+              {bookmarkSlot ?? (
+                <BookmarkAction contentId={tool.id} title={tool.title} />
+              )}
             </div>
           </div>
 
