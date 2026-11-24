@@ -1,3 +1,4 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { MOBILE_BOTTOM_TABS, MobileBottomTabs } from "./MobileBottomTabs";
@@ -5,6 +6,7 @@ import { PublicShell } from "./PublicShell";
 
 vi.mock("next/navigation", () => ({
   usePathname: () => "/",
+  useRouter: () => ({ push: vi.fn() }),
 }));
 
 vi.mock("@/shared/auth", () => ({
@@ -34,10 +36,13 @@ describe("PublicShell & MobileBottomTabs", () => {
   });
 
   it("applies pb-20 md:pb-8 safe bottom padding on main and Korean aria-labels on icon buttons", () => {
+    const qc = new QueryClient();
     render(
-      <PublicShell>
-        <div>본문</div>
-      </PublicShell>,
+      <QueryClientProvider client={qc}>
+        <PublicShell>
+          <div>본문</div>
+        </PublicShell>
+      </QueryClientProvider>,
     );
 
     const main = screen.getByRole("main");

@@ -1,22 +1,16 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
+import { QuickSearchModal } from "@/features/quick-search";
 import { DesktopHeader } from "./DesktopHeader";
 import { MobileBottomTabs } from "./MobileBottomTabs";
 import { MobileHeader } from "./MobileHeader";
 
 export interface PublicShellProps {
   children: ReactNode;
-  renderSearchModal?: (props: {
-    open: boolean;
-    onOpenChange: (open: boolean) => void;
-  }) => ReactNode;
 }
 
-export const PublicShell = ({
-  children,
-  renderSearchModal,
-}: PublicShellProps) => {
+export const PublicShell = ({ children }: PublicShellProps) => {
   const [searchOpen, setSearchOpen] = useState(false);
 
   return (
@@ -30,9 +24,7 @@ export const PublicShell = ({
 
       <MobileBottomTabs />
 
-      {renderSearchModal
-        ? renderSearchModal({ open: searchOpen, onOpenChange: setSearchOpen })
-        : null}
+      <QuickSearchModal open={searchOpen} onOpenChange={setSearchOpen} />
     </div>
   );
 };
