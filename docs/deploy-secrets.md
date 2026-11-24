@@ -11,3 +11,7 @@
 | `DISCORD_WEBHOOK_URL` | 선택 | 헬스체크 실패 및 자동 롤백 알림용 Discord Webhook |
 | `NEXT_PUBLIC_API_BASE_URL` | 선택 | 클라이언트 API 기준 URL (기본 `https://alkok.dobbymin.cloud`) |
 | `NEXT_PUBLIC_SITE_URL` | 선택 | 사이트 정규 URL (기본 `https://alkok.dobbymin.cloud`) |
+
+## 멀티 컨테이너 이미지 태그 (`deploy.yml`)
+- `alkok-fe-web`: `ghcr.io/<owner>/alkok-fe-web:<sha|latest>` (`127.0.0.1:18101:3000`)
+- `alkok-fe-admin`: `ghcr.io/<owner>/alkok-fe-admin:<sha|latest>` (`127.0.0.1:18103:3000`, `basePath: "/admin"`)

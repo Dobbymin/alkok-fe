@@ -10,17 +10,22 @@ const candidates = [
 ];
 
 const cliPath = candidates.find((p) => fs.existsSync(p));
+const fsdTargets = ["apps/web", "apps/admin"];
+
 if (cliPath) {
-  execFileSync("node", [cliPath, "check", "--preset", "fsd", "--strict"], {
-    cwd,
-    stdio: "inherit",
-  });
+  for (const target of fsdTargets) {
+    const absTarget = path.join(cwd, target);
+    console.log(`\n=== dev-principles check (${target}) ===`);
+    execFileSync("node", [cliPath, "check", "--preset", "fsd", "--strict"], {
+      cwd: absTarget,
+      stdio: "inherit",
+    });
+  }
   process.exit(0);
 }
 
 // CI fallback: lightweight zero-dep static check for security invariants & FSD layers
 const LAYER_RANK = { app: 0, views: 1, pages: 1, widgets: 2, features: 3, entities: 4, shared: 5 };
-const srcRoot = path.join(cwd, "src");
 const findings = [];
 
 function walk(dir) {
@@ -36,26 +41,31 @@ function walk(dir) {
   return files;
 }
 
-for (const file of walk(srcRoot)) {
-  const rel = path.relative(cwd, file).replace(/\\/g, "/");
-  const isTest = /\.(test|spec|stories)\.[jt]sx?$/.test(rel);
-  const content = fs.readFileSync(file, "utf8");
-  if (!isTest && /\bdangerouslySetInnerHTML\b|\beval\s*\(|\bnew\s+Function\s*\(/.test(content)) {
-    findings.push(`[SEC-02] ${rel}: unsafe execution or HTML injection sink`);
-  }
-  if (!isTest && /(:\s*any\b|<any>|\bas\s+any\b)/.test(content)) {
-    findings.push(`[TS-02] ${rel}: prohibited any usage`);
-  }
-  const fromParts = path.relative(srcRoot, file).replace(/\\/g, "/").split("/");
-  const fromLayer = fromParts[0];
-  if (fromLayer && fromLayer in LAYER_RANK) {
-    const importRegex = /from\s+["']@\/([^"']+)["']/g;
-    let m;
-    while ((m = importRegex.exec(content)) !== null) {
-      const targetParts = m[1].split("/");
-      const toLayer = targetParts[0];
-      if (toLayer && toLayer in LAYER_RANK && LAYER_RANK[fromLayer] > LAYER_RANK[toLayer]) {
-        findings.push(`[FSD-01] ${rel}: reverse layer import @/${m[1]}`);
+for (const target of ["apps/web", "apps/admin", "packages/ui", "packages/core"]) {
+  const srcRoot = path.join(cwd, target, "src");
+  for (const file of walk(srcRoot)) {
+    const rel = path.relative(cwd, file).replace(/\\/g, "/");
+    const isTest = /\.(test|spec|stories)\.[jt]sx?$/.test(rel);
+    const content = fs.readFileSync(file, "utf8");
+    if (!isTest && /\bdangerouslySetInnerHTML\b|\beval\s*\(|\bnew\s+Function\s*\(/.test(content)) {
+      findings.push(`[SEC-02] ${rel}: unsafe execution or HTML injection sink`);
+    }
+    if (!isTest && /(:\s*any\b|<any>|\bas\s+any\b)/.test(content)) {
+      findings.push(`[TS-02] ${rel}: prohibited any usage`);
+    }
+    if (target.startsWith("apps/")) {
+      const fromParts = path.relative(srcRoot, file).replace(/\\/g, "/").split("/");
+      const fromLayer = fromParts[0];
+      if (fromLayer && fromLayer in LAYER_RANK) {
+        const importRegex = /from\s+["']@\/([^"']+)["']/g;
+        let m;
+        while ((m = importRegex.exec(content)) !== null) {
+          const targetParts = m[1].split("/");
+          const toLayer = targetParts[0];
+          if (toLayer && toLayer in LAYER_RANK && LAYER_RANK[fromLayer] > LAYER_RANK[toLayer]) {
+            findings.push(`[FSD-01] ${rel}: reverse layer import @/${m[1]}`);
+          }
+        }
       }
     }
   }

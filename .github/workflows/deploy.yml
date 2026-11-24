@@ -15,7 +15,7 @@ env:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-24.04-arm
-    timeout-minutes: 25
+    timeout-minutes: 30
     permissions:
       contents: read
       packages: write
@@ -29,7 +29,7 @@ jobs:
         run: |
           SHORT_SHA=$(echo "${{ github.sha }}" | cut -c1-7)
           echo "sha_tag=sha-${SHORT_SHA}" >> "$GITHUB_OUTPUT"
-          echo "image_lower=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')" >> "$GITHUB_OUTPUT"
+          echo "repo_lower=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')" >> "$GITHUB_OUTPUT"
 
       - name: Log in to GHCR
         uses: docker/login-action@v3
@@ -38,7 +38,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push ARM64 image
+      - name: Build and push ARM64 web image
         uses: docker/build-push-action@v6
         with:
           context: .
@@ -46,13 +46,29 @@ jobs:
           platforms: linux/arm64
           push: true
           build-args: |
+            APP_NAME=web
             NEXT_PUBLIC_API_BASE_URL=${{ secrets.NEXT_PUBLIC_API_BASE_URL || 'https://alkok.dobbymin.cloud' }}
             NEXT_PUBLIC_SITE_URL=${{ secrets.NEXT_PUBLIC_SITE_URL || 'https://alkok.dobbymin.cloud' }}
           tags: |
-            ${{ env.REGISTRY }}/${{ steps.meta.outputs.image_lower }}:${{ steps.meta.outputs.sha_tag }}
-            ${{ env.REGISTRY }}/${{ steps.meta.outputs.image_lower }}:latest
+            ${{ env.REGISTRY }}/${{ steps.meta.outputs.repo_lower }}-web:${{ steps.meta.outputs.sha_tag }}
+            ${{ env.REGISTRY }}/${{ steps.meta.outputs.repo_lower }}-web:latest
 
-      - name: Deploy to Raspberry Pi with 30s healthcheck & auto-rollback
+      - name: Build and push ARM64 admin image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          platforms: linux/arm64
+          push: true
+          build-args: |
+            APP_NAME=admin
+            NEXT_PUBLIC_API_BASE_URL=${{ secrets.NEXT_PUBLIC_API_BASE_URL || 'https://alkok.dobbymin.cloud' }}
+            NEXT_PUBLIC_SITE_URL=${{ secrets.NEXT_PUBLIC_SITE_URL || 'https://alkok.dobbymin.cloud' }}
+          tags: |
+            ${{ env.REGISTRY }}/${{ steps.meta.outputs.repo_lower }}-admin:${{ steps.meta.outputs.sha_tag }}
+            ${{ env.REGISTRY }}/${{ steps.meta.outputs.repo_lower }}-admin:latest
+
+      - name: Deploy web & admin to Raspberry Pi with 30s healthcheck & rollback
         if: ${{ secrets.RPI_HOST != '' && secrets.RPI_SSH_KEY != '' }}
         uses: appleboy/ssh-action@v1.2.0
         with:
@@ -63,45 +79,59 @@ jobs:
           script: |
             set -euo pipefail
             DEPLOY_DIR="/home/dobbymin/project/alkok"
-            LAST_GOOD_FILE="${DEPLOY_DIR}/.last_good_alkok-fe"
             NEW_TAG="${{ steps.meta.outputs.sha_tag }}"
             DISCORD_WEBHOOK="${{ secrets.DISCORD_WEBHOOK_URL }}"
 
             cd "$DEPLOY_DIR"
 
-            PREV_TAG=$(docker inspect -f '{{.Config.Image}}' alkok-fe 2>/dev/null | awk -F: '{print $NF}' || true)
-            if [ -n "$PREV_TAG" ]; then
-              echo "$PREV_TAG" > "$LAST_GOOD_FILE"
+            deploy_service() {
+              local SERVICE="$1"
+              local ENV_VAR="$2"
+              local HEALTH_URL="$3"
+              local LAST_GOOD_FILE="${DEPLOY_DIR}/.last_good_${SERVICE}"
+
+              local PREV_TAG
+              PREV_TAG=$(docker inspect -f '{{.Config.Image}}' "$SERVICE" 2>/dev/null | awk -F: '{print $NF}' || true)
+              if [ -n "$PREV_TAG" ]; then
+                echo "$PREV_TAG" > "$LAST_GOOD_FILE"
+              fi
+
+              export "${ENV_VAR}=${NEW_TAG}"
+              docker compose pull "$SERVICE"
+              docker compose up -d --no-deps "$SERVICE"
+
+              local HEALTHY=0
+              for i in $(seq 1 15); do
+                if curl -fsS "$HEALTH_URL" >/dev/null 2>&1; then
+                  HEALTHY=1
+                  break
+                fi
+                sleep 2
+              done
+
+              if [ "$HEALTHY" -ne 1 ]; then
+                echo "Healthcheck failed for ${SERVICE} (${NEW_TAG}); initiating rollback..."
+                local ROLLBACK_TAG="none"
+                if [ -f "$LAST_GOOD_FILE" ]; then
+                  ROLLBACK_TAG=$(cat "$LAST_GOOD_FILE")
+                  export "${ENV_VAR}=${ROLLBACK_TAG}"
+                  docker compose pull "$SERVICE" || true
+                  docker compose up -d --no-deps "$SERVICE" || true
+                fi
+                if [ -n "$DISCORD_WEBHOOK" ]; then
+                  curl -fsS -H "Content-Type: application/json" \
+                    -d "{\"content\": \"[${SERVICE}] 배포 실패(${NEW_TAG})로 인해 직전 버전(${ROLLBACK_TAG})으로 자동 롤백했습니다.\"}" \
+                    "$DISCORD_WEBHOOK" >/dev/null 2>&1 || true
+                fi
+                exit 1
+              fi
+            }
+
+            deploy_service "alkok-fe-web" "FE_WEB_IMAGE_TAG" "http://127.0.0.1:18101/"
+            deploy_service "alkok-fe-admin" "FE_ADMIN_IMAGE_TAG" "http://127.0.0.1:18103/admin"
+
+            if [ -n "$DISCORD_WEBHOOK" ]; then
+              curl -fsS -H "Content-Type: application/json" \
+                -d "{\"content\": \"[alkok-fe] web + admin 배포 완료 (${NEW_TAG})\"}" \
+                "$DISCORD_WEBHOOK" >/dev/null 2>&1 || true
             fi
-
-            export FE_IMAGE_TAG="$NEW_TAG"
-            docker compose pull alkok-fe
-            docker compose up -d --no-deps alkok-fe
-
-            HEALTHY=0
-            for i in $(seq 1 15); do
-              if curl -fsS "http://127.0.0.1:18101/" >/dev/null 2>&1; then
-                HEALTHY=1
-                break
-              fi
-              sleep 2
-            done
-
-            if [ "$HEALTHY" -ne 1 ]; then
-              echo "Healthcheck failed for $NEW_TAG; initiating rollback..."
-              if [ -f "$LAST_GOOD_FILE" ]; then
-                ROLLBACK_TAG=$(cat "$LAST_GOOD_FILE")
-                export FE_IMAGE_TAG="$ROLLBACK_TAG"
-                docker compose pull alkok-fe || true
-                docker compose up -d --no-deps alkok-fe || true
-              fi
-              if [ -n "$DISCORD_WEBHOOK" ]; then
-                curl -fsS -H "Content-Type: application/json" \
-                  -d "{\"content\": \"[alkok-fe] 배포 실패(${NEW_TAG})로 인해 직전 버전(${ROLLBACK_TAG:-none})으로 자동 롤백했습니다.\"}" \
-                  "$DISCORD_WEBHOOK" || true
-              fi
-              exit 1
-            fi
-
-            echo "$NEW_TAG" > "$LAST_GOOD_FILE"
-            echo "Deployed alkok-fe:$NEW_TAG successfully."

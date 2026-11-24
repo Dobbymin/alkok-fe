@@ -5,15 +5,15 @@
   "tsx": true,
   "tailwind": {
     "config": "",
-    "css": "src/shared/styles/globals.css",
+    "css": "packages/ui/src/styles/globals.css",
     "baseColor": "slate",
     "cssVariables": true
   },
   "iconLibrary": "lucide",
   "aliases": {
-    "components": "@/shared/ui",
-    "ui": "@/shared/ui/primitives",
-    "utils": "@/shared/lib/cn",
-    "hooks": "@/shared/hooks"
+    "components": "@alkok/ui",
+    "ui": "@alkok/ui",
+    "utils": "@alkok/core",
+    "hooks": "@alkok/core"
   }
 }
