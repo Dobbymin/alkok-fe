@@ -5,13 +5,14 @@ import { CopyableCodeBlock } from "@alkok/ui";
 
 export interface PromptCopyBlockProps {
   title?: string;
-  content: string;
+  content?: string;
   variables?: string[];
   className?: string;
 }
 
 function highlightVariables(text: string): ReactNode[] {
-  const parts = text.split(/(\[[^\]\n]+\])/g);
+  const safeText = text ?? "";
+  const parts = safeText.split(/(\[[^\]\n]+\])/g);
   return parts.map((part, idx) => {
     if (/^\[[^\]\n]+\]$/.test(part)) {
       return (
@@ -29,16 +30,17 @@ function highlightVariables(text: string): ReactNode[] {
 
 export const PromptCopyBlock = ({
   title = "실행 프롬프트",
-  content,
+  content = "",
   variables = [],
   className,
 }: PromptCopyBlockProps) => {
+  const safeContent = content ?? "";
   return (
     <div className={className}>
       <CopyableCodeBlock
         title={title}
-        code={content}
-        renderedCode={highlightVariables(content)}
+        code={safeContent}
+        renderedCode={highlightVariables(safeContent)}
         copyLabel="프롬프트 복사"
       />
       {variables.length > 0 ? (

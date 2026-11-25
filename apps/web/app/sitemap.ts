@@ -16,26 +16,31 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${siteUrl}/news`, lastModified: now, changeFrequency: "daily", priority: 0.8 },
   ];
 
-  const [guidesRes, toolsRes, newsRes] = await Promise.all([
-    serverApiGet<ApiEnvelope<ContentSummary[]>>("/api/v1/guides", {
-      params: { limit: 100 },
-      revalidate: 300,
-    }),
-    serverApiGet<ApiEnvelope<ContentSummary[]>>("/api/v1/tools", {
-      params: { limit: 100 },
-      revalidate: 300,
-    }),
-    serverApiGet<ApiEnvelope<ContentSummary[]>>("/api/v1/news", {
-      params: { limit: 100 },
-      revalidate: 300,
-    }),
+  const fetchAllPublished = async (endpoint: string): Promise<ContentSummary[]> => {
+    const collected: ContentSummary[] = [];
+    for (let page = 1; page <= 20; page += 1) {
+      const res = await serverApiGet<ApiEnvelope<ContentSummary[]>>(endpoint, {
+        params: { page, limit: 50 },
+        revalidate: 300,
+      });
+      if (!res?.data?.length) break;
+      collected.push(...res.data);
+      if (!res.meta?.hasNext) break;
+    }
+    return collected;
+  };
+
+  const [guides, tools, news] = await Promise.all([
+    fetchAllPublished("/api/v1/guides"),
+    fetchAllPublished("/api/v1/tools"),
+    fetchAllPublished("/api/v1/news"),
   ]);
 
   const toEntries = (
-    items: ContentSummary[] | undefined,
+    items: ContentSummary[],
     prefix: string,
   ): MetadataRoute.Sitemap =>
-    (items ?? [])
+    items
       .filter((item) => item.publishStatus === "PUBLISHED")
       .map((item) => ({
         url: `${siteUrl}${prefix}/${item.slug}`,
@@ -46,8 +51,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   return [
     ...staticRoutes,
-    ...toEntries(guidesRes?.data, "/guides"),
-    ...toEntries(toolsRes?.data, "/tools"),
-    ...toEntries(newsRes?.data, "/news"),
+    ...toEntries(guides, "/guides"),
+    ...toEntries(tools, "/tools"),
+    ...toEntries(news, "/news"),
   ];
 }

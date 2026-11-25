@@ -42,4 +42,9 @@ describe("PromptCopyBlock & SafeMarkdown", () => {
     expect(container.querySelector("script")).toBeNull();
     expect(container.innerHTML).not.toContain("onerror");
   });
+
+  it("renders safely when content is undefined", () => {
+    render(<PromptCopyBlock title="빈 프롬프트" content={undefined} />);
+    expect(screen.getByText("빈 프롬프트")).toBeInTheDocument();
+  });
 });

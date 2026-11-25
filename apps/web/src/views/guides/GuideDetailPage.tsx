@@ -95,8 +95,8 @@ export default function GuideDetailPage({
               <PromptCopyBlock
                 key={prompt.id}
                 title={prompt.title}
-                content={prompt.content}
-                variables={prompt.variables}
+                content={prompt.content ?? prompt.prompt ?? ""}
+                variables={prompt.variables ?? []}
               />
             ))}
           </section>

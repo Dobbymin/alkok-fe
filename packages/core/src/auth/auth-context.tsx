@@ -32,10 +32,17 @@ export interface AuthContextValue {
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
+function hasSessionCookieHint(): boolean {
+  if (typeof document === "undefined") {
+    return false;
+  }
+  return /(?:^|;\s*)alkok_logged_in=1(?:;|$)/.test(document.cookie);
+}
+
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const queryClient = useQueryClient();
   const [user, setUser] = useState<UserProfile | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const clearSession = useCallback(() => {
     clearAccessToken();
@@ -53,6 +60,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const setSession = useCallback((accessToken: string, nextUser: UserProfile) => {
     setAccessToken(accessToken);
     setUser(nextUser);
+    setIsLoading(false);
   }, []);
 
   const updateUser = useCallback((nextUser: UserProfile) => {
@@ -75,6 +83,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setIsLoading(false);
     }
   }, [clearSession]);
+
+  useEffect(() => {
+    if (hasSessionCookieHint()) {
+      void refreshSession();
+    } else {
+      setIsLoading(false);
+    }
+  }, [refreshSession]);
 
   const logout = useCallback(async () => {
     try {

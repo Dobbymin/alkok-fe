@@ -8,32 +8,49 @@ Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
 [?2026h
  Test Files 0 passed (13)
       Tests 0 passed (0)
-   Start at 01:21:15
-   Duration 927ms
+   Start at 20:50:46
+   Duration 917ms
 [?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K
  Test Files 0 passed (13)
       Tests 0 passed (0)
-   Start at 01:21:15
-   Duration 1.96s
+   Start at 20:50:46
+   Duration 1.95s
 [?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K
- ❯ src/features/vault-save/ui/BookmarkAction.test.tsx [queued]
-
  Test Files 0 passed (13)
       Tests 0 passed (0)
-   Start at 01:21:15
-   Duration 2.89s
-[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
- ❯ src/features/content-helpful/ui/HelpfulButton.test.tsx [queued]
- ❯ src/features/vault-save/ui/BookmarkAction.test.tsx [queued]
+   Start at 20:50:46
+   Duration 2.99s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K
+ ❯ src/features/vault-save/ui/ExternalUrlModal.test.tsx [queued]
  ❯ src/widgets/public-shell/ui/PublicShell.test.tsx [queued]
 
  Test Files 0 passed (13)
       Tests 0 passed (0)
-   Start at 01:21:15
-   Duration 2.99s
+   Start at 20:50:46
+   Duration 3.21s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
+ ❯ src/features/vault-save/ui/BookmarkAction.test.tsx [queued]
+ ❯ src/features/vault-save/ui/ExternalUrlModal.test.tsx [queued]
+ ❯ src/widgets/public-shell/ui/PublicShell.test.tsx [queued]
+
+ Test Files 0 passed (13)
+      Tests 0 passed (0)
+   Start at 20:50:46
+   Duration 3.86s
 [?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
  ❯ src/features/auth-forms/ui/SettingsForms.test.tsx [queued]
  ❯ src/features/content-helpful/ui/HelpfulButton.test.tsx [queued]
+ ❯ src/features/vault-save/ui/BookmarkAction.test.tsx [queued]
+ ❯ src/features/vault-save/ui/ExternalUrlModal.test.tsx [queued]
+ ❯ src/widgets/public-shell/ui/PublicShell.test.tsx [queued]
+
+ Test Files 0 passed (13)
+      Tests 0 passed (0)
+   Start at 20:50:46
+   Duration 3.96s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
+ ❯ src/features/auth-forms/ui/SettingsForms.test.tsx [queued]
+ ❯ src/features/content-helpful/ui/HelpfulButton.test.tsx [queued]
  ❯ src/features/quick-search/ui/QuickSearchModal.test.tsx [queued]
  ❯ src/features/vault-save/ui/BookmarkAction.test.tsx [queued]
  ❯ src/features/vault-save/ui/ExternalUrlModal.test.tsx [queued]
@@ -42,8 +59,8 @@ Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
 
  Test Files 0 passed (13)
       Tests 0 passed (0)
-   Start at 01:21:15
-   Duration 3.09s
+   Start at 20:50:46
+   Duration 4.96s
 [?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
  ❯ src/features/auth-forms/ui/SettingsForms.test.tsx [queued]
  ❯ src/features/content-helpful/ui/HelpfulButton.test.tsx [queued]
@@ -55,8 +72,8 @@ Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
 
  Test Files 0 passed (13)
       Tests 0 passed (0)
-   Start at 01:21:15
-   Duration 4.10s
+   Start at 20:50:46
+   Duration 6.00s
 [?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
  ❯ src/features/auth-forms/ui/SettingsForms.test.tsx [queued]
  ❯ src/features/content-helpful/ui/HelpfulButton.test.tsx [queued]
@@ -68,8 +85,8 @@ Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
 
  Test Files 0 passed (13)
       Tests 0 passed (0)
-   Start at 01:21:15
-   Duration 5.09s
+   Start at 20:50:46
+   Duration 7.23s
 [?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
  ❯ src/features/auth-forms/ui/SettingsForms.test.tsx [queued]
  ❯ src/features/content-helpful/ui/HelpfulButton.test.tsx [queued]
@@ -81,8 +98,8 @@ Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
 
  Test Files 0 passed (13)
       Tests 0 passed (0)
-   Start at 01:21:15
-   Duration 6.01s
+   Start at 20:50:46
+   Duration 8.14s
 [?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
  ❯ src/features/auth-forms/ui/SettingsForms.test.tsx [queued]
  ❯ src/features/content-helpful/ui/HelpfulButton.test.tsx [queued]
@@ -94,8 +111,8 @@ Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
 
  Test Files 0 passed (13)
       Tests 0 passed (0)
-   Start at 01:21:15
-   Duration 7.10s
+   Start at 20:50:46
+   Duration 9.18s
 [?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
  ❯ src/features/auth-forms/ui/SettingsForms.test.tsx [queued]
  ❯ src/features/content-helpful/ui/HelpfulButton.test.tsx [queued]
@@ -107,8 +124,34 @@ Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
 
  Test Files 0 passed (13)
       Tests 0 passed (0)
-   Start at 01:21:15
-   Duration 8.07s
+   Start at 20:50:46
+   Duration 10.20s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
+ ❯ src/features/auth-forms/ui/SettingsForms.test.tsx [queued]
+ ❯ src/features/content-helpful/ui/HelpfulButton.test.tsx [queued]
+ ❯ src/features/quick-search/ui/QuickSearchModal.test.tsx [queued]
+ ❯ src/features/vault-save/ui/BookmarkAction.test.tsx [queued]
+ ❯ src/features/vault-save/ui/ExternalUrlModal.test.tsx [queued]
+ ❯ src/views/search/SearchPage.test.tsx [queued]
+ ❯ src/widgets/public-shell/ui/PublicShell.test.tsx [queued]
+
+ Test Files 0 passed (13)
+      Tests 0 passed (0)
+   Start at 20:50:46
+   Duration 11.18s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
+ ❯ src/features/auth-forms/ui/SettingsForms.test.tsx [queued]
+ ❯ src/features/content-helpful/ui/HelpfulButton.test.tsx [queued]
+ ❯ src/features/quick-search/ui/QuickSearchModal.test.tsx [queued]
+ ❯ src/features/vault-save/ui/BookmarkAction.test.tsx [queued]
+ ❯ src/features/vault-save/ui/ExternalUrlModal.test.tsx [queued]
+ ❯ src/views/search/SearchPage.test.tsx [queued]
+ ❯ src/widgets/public-shell/ui/PublicShell.test.tsx [queued]
+
+ Test Files 0 passed (13)
+      Tests 0 passed (0)
+   Start at 20:50:46
+   Duration 12.21s
 [?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
 
  ❯ src/features/auth-forms/ui/SettingsForms.test.tsx [queued]
@@ -121,23 +164,51 @@ Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
 
  Test Files 0 passed (13)
       Tests 0 passed (1)
-   Start at 01:21:15
-   Duration 8.27s
+   Start at 20:50:46
+   Duration 12.92s
 [?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
 
-
- ❯ src/features/auth-forms/ui/SettingsForms.test.tsx 0/1
- ❯ src/features/content-helpful/ui/HelpfulButton.test.tsx 0/1
+ ❯ src/features/auth-forms/ui/SettingsForms.test.tsx [queued]
+ ❯ src/features/content-helpful/ui/HelpfulButton.test.tsx [queued]
  ❯ src/features/quick-search/ui/QuickSearchModal.test.tsx [queued]
  ❯ src/features/vault-save/ui/BookmarkAction.test.tsx 0/1
- ❯ src/features/vault-save/ui/ExternalUrlModal.test.tsx [queued]
+ ❯ src/features/vault-save/ui/ExternalUrlModal.test.tsx 0/1
  ❯ src/views/search/SearchPage.test.tsx [queued]
  ❯ src/widgets/public-shell/ui/PublicShell.test.tsx [queued]
 
  Test Files 0 passed (13)
-      Tests 0 passed (3)
-   Start at 01:21:15
-   Duration 8.49s
+      Tests 0 passed (2)
+   Start at 20:50:46
+   Duration 13.16s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
+
+ ❯ src/features/auth-forms/ui/SettingsForms.test.tsx [queued]
+ ❯ src/features/content-helpful/ui/HelpfulButton.test.tsx [queued]
+ ❯ src/features/quick-search/ui/QuickSearchModal.test.tsx [queued]
+ ❯ src/features/vault-save/ui/BookmarkAction.test.tsx 0/1
+ ❯ src/features/vault-save/ui/ExternalUrlModal.test.tsx 0/1
+ ❯ src/views/search/SearchPage.test.tsx [queued]
+ ❯ src/widgets/public-shell/ui/PublicShell.test.tsx [queued]
+
+ Test Files 0 passed (13)
+      Tests 0 passed (2)
+   Start at 20:50:46
+   Duration 13.28s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
+
+
+ ❯ src/features/auth-forms/ui/SettingsForms.test.tsx 0/1
+ ❯ src/features/content-helpful/ui/HelpfulButton.test.tsx [queued]
+ ❯ src/features/quick-search/ui/QuickSearchModal.test.tsx 0/2
+ ❯ src/features/vault-save/ui/BookmarkAction.test.tsx 0/1
+ ❯ src/features/vault-save/ui/ExternalUrlModal.test.tsx 0/1
+ ❯ src/views/search/SearchPage.test.tsx 0/1
+ ❯ src/widgets/public-shell/ui/PublicShell.test.tsx [queued]
+
+ Test Files 0 passed (13)
+      Tests 0 passed (6)
+   Start at 20:50:46
+   Duration 13.38s
 [?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
 
 
@@ -151,42 +222,25 @@ Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
 
  Test Files 0 passed (13)
       Tests 0 passed (7)
-   Start at 01:21:15
-   Duration 8.91s
+   Start at 20:50:46
+   Duration 14.21s
 [?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
 
 
-
  ❯ src/features/auth-forms/ui/SettingsForms.test.tsx 0/1
- ❯ src/features/content-helpful/ui/HelpfulButton.test.tsx 0/1
+ ❯ src/features/content-helpful/ui/HelpfulButton.test.tsx 1/1
  ❯ src/features/quick-search/ui/QuickSearchModal.test.tsx 0/2
  ❯ src/features/vault-save/ui/BookmarkAction.test.tsx 0/1
  ❯ src/features/vault-save/ui/ExternalUrlModal.test.tsx 0/1
  ❯ src/views/search/SearchPage.test.tsx 0/1
- ❯ src/widgets/public-shell/ui/PublicShell.test.tsx 0/2
+ ❯ src/widgets/public-shell/ui/PublicShell.test.tsx [queued]
 
  Test Files 0 passed (13)
-      Tests 0 passed (9)
-   Start at 01:21:15
-   Duration 9.01s
-[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
-
-
-
- ❯ src/features/auth-forms/ui/SettingsForms.test.tsx 0/1
- ❯ src/features/content-helpful/ui/HelpfulButton.test.tsx 1/1
- ❯ src/features/quick-search/ui/QuickSearchModal.test.tsx 0/2
- ❯ src/features/vault-save/ui/BookmarkAction.test.tsx 0/1
- ❯ src/features/vault-save/ui/ExternalUrlModal.test.tsx 0/1
- ❯ src/views/search/SearchPage.test.tsx 0/1
- ❯ src/widgets/public-shell/ui/PublicShell.test.tsx 0/2
-
- Test Files 0 passed (13)
-      Tests 1 passed (9)
-   Start at 01:21:15
-   Duration 9.96s
-[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K ✓ src/features/content-helpful/ui/HelpfulButton.test.tsx (1 test) 1472ms
-     ✓ toggles helpful state for authenticated users and avoids mutation for guests  1468ms
+      Tests 1 passed (7)
+   Start at 20:50:46
+   Duration 15.06s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K ✓ src/features/content-helpful/ui/HelpfulButton.test.tsx (1 test) 1404ms
+     ✓ toggles helpful state for authenticated users and avoids mutation for guests  1395ms
 
  ❯ src/features/auth-forms/ui/SettingsForms.test.tsx 0/1
  ❯ src/features/content-helpful/ui/HelpfulButton.test.tsx 1/1
@@ -194,27 +248,13 @@ Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
  ❯ src/features/vault-save/ui/BookmarkAction.test.tsx 0/1
  ❯ src/features/vault-save/ui/ExternalUrlModal.test.tsx 0/1
  ❯ src/views/search/SearchPage.test.tsx 0/1
- ❯ src/widgets/public-shell/ui/PublicShell.test.tsx 0/2
+ ❯ src/widgets/public-shell/ui/PublicShell.test.tsx [queued]
 
  Test Files 1 passed (13)
-      Tests 1 passed (9)
-   Start at 01:21:15
-   Duration 10.06s
-[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
- ❯ src/features/auth-forms/ui/SettingsForms.test.tsx 0/1
- ❯ src/features/content-helpful/ui/HelpfulButton.test.tsx 1/1
- ❯ src/features/quick-search/ui/QuickSearchModal.test.tsx 0/2
- ❯ src/features/vault-save/ui/BookmarkAction.test.tsx 0/1
- ❯ src/features/vault-save/ui/ExternalUrlModal.test.tsx 0/1
- ❯ src/views/search/SearchPage.test.tsx 1/1
- ❯ src/widgets/public-shell/ui/PublicShell.test.tsx 0/2
-
- Test Files 1 passed (13)
-      Tests 2 passed (9)
-   Start at 01:21:15
-   Duration 10.67s
-[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K ✓ src/views/search/SearchPage.test.tsx (1 test) 2125ms
-     ✓ hides 내 보관함 tab for unauthenticated users  2113ms
+      Tests 1 passed (7)
+   Start at 20:50:46
+   Duration 15.26s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
 
  ❯ src/features/auth-forms/ui/SettingsForms.test.tsx 0/1
  ❯ src/features/content-helpful/ui/HelpfulButton.test.tsx 1/1
@@ -222,99 +262,135 @@ Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
  ❯ src/features/vault-save/ui/BookmarkAction.test.tsx 0/1
  ❯ src/features/vault-save/ui/ExternalUrlModal.test.tsx 0/1
  ❯ src/views/search/SearchPage.test.tsx 1/1
- ❯ src/widgets/public-shell/ui/PublicShell.test.tsx 1/2
+ ❯ src/widgets/public-shell/ui/PublicShell.test.tsx 0/4
+
+ Test Files 1 passed (13)
+      Tests 2 passed (11)
+   Start at 20:50:46
+   Duration 15.72s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K ✓ src/views/search/SearchPage.test.tsx (1 test) 2387ms
+     ✓ hides 내 보관함 tab for unauthenticated users  2371ms
+
+ ❯ src/features/auth-forms/ui/SettingsForms.test.tsx 0/1
+ ❯ src/features/content-helpful/ui/HelpfulButton.test.tsx 1/1
+ ❯ src/features/quick-search/ui/QuickSearchModal.test.tsx 0/2
+ ❯ src/features/vault-save/ui/BookmarkAction.test.tsx 1/1
+ ❯ src/features/vault-save/ui/ExternalUrlModal.test.tsx 0/1
+ ❯ src/views/search/SearchPage.test.tsx 1/1
+ ❯ src/widgets/public-shell/ui/PublicShell.test.tsx 0/4
 
  Test Files 2 passed (13)
-      Tests 3 passed (9)
-   Start at 01:21:15
-   Duration 10.77s
-[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K ✓ src/widgets/public-shell/ui/PublicShell.test.tsx (2 tests) 1691ms
-     ✓ applies pb-20 md:pb-8 safe bottom padding on main and Korean aria-labels on icon buttons  1550ms
+      Tests 3 passed (11)
+   Start at 20:50:46
+   Duration 16.02s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K ✓ src/features/vault-save/ui/BookmarkAction.test.tsx (1 test) 2952ms
+     ✓ saves bookmark and opens quick edit popover  2925ms
 
  ❯ src/features/auth-forms/ui/SettingsForms.test.tsx 0/1
- ❯ src/features/content-helpful/ui/HelpfulButton.test.tsx 1/1
- ❯ src/features/quick-search/ui/QuickSearchModal.test.tsx 0/2
+ ❯ src/features/quick-search/ui/QuickSearchModal.test.tsx 1/2
  ❯ src/features/vault-save/ui/BookmarkAction.test.tsx 1/1
  ❯ src/features/vault-save/ui/ExternalUrlModal.test.tsx 0/1
  ❯ src/views/search/SearchPage.test.tsx 1/1
- ❯ src/widgets/public-shell/ui/PublicShell.test.tsx 2/2
+ ❯ src/widgets/public-shell/ui/PublicShell.test.tsx 0/4
 
  Test Files 3 passed (13)
-      Tests 5 passed (9)
-   Start at 01:21:15
-   Duration 10.87s
-[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K ✓ src/features/vault-save/ui/BookmarkAction.test.tsx (1 test) 2578ms
-     ✓ saves bookmark and opens quick edit popover  2573ms
-
- ❯ src/features/auth-forms/ui/SettingsForms.test.tsx 0/1
- ❯ src/features/quick-search/ui/QuickSearchModal.test.tsx 0/2
- ❯ src/features/vault-save/ui/BookmarkAction.test.tsx 1/1
- ❯ src/features/vault-save/ui/ExternalUrlModal.test.tsx 0/1
- ❯ src/views/search/SearchPage.test.tsx 1/1
- ❯ src/widgets/public-shell/ui/PublicShell.test.tsx 2/2
-
- Test Files 4 passed (13)
-      Tests 5 passed (9)
-   Start at 01:21:15
-   Duration 11.07s
-[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K ✓ src/features/quick-search/ui/QuickSearchModal.test.tsx (2 tests) 2183ms
-     ✓ debounces suggest calls by 250ms and navigates to /search?q= on submit  1408ms
-     ✓ shows popular search chips when query is empty  769ms
+      Tests 4 passed (11)
+   Start at 20:50:46
+   Duration 16.22s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K ✓ src/features/quick-search/ui/QuickSearchModal.test.tsx (2 tests) 2877ms
+     ✓ debounces suggest calls by 250ms and navigates to /search?q= on submit  2226ms
+     ✓ shows popular search chips when query is empty  646ms
 
  ❯ src/features/auth-forms/ui/SettingsForms.test.tsx 1/1
  ❯ src/features/quick-search/ui/QuickSearchModal.test.tsx 2/2
  ❯ src/features/vault-save/ui/BookmarkAction.test.tsx 1/1
  ❯ src/features/vault-save/ui/ExternalUrlModal.test.tsx 0/1
  ❯ src/views/search/SearchPage.test.tsx 1/1
- ❯ src/widgets/public-shell/ui/PublicShell.test.tsx 2/2
+ ❯ src/widgets/public-shell/ui/PublicShell.test.tsx 0/4
 
- Test Files 5 passed (13)
-      Tests 8 passed (9)
-   Start at 01:21:15
-   Duration 11.38s
-[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K ✓ src/features/auth-forms/ui/SettingsForms.test.tsx (1 test) 3015ms
-     ✓ requires 2-step confirmation dialog before deleting account  3007ms
- ✓ src/features/vault-save/ui/ExternalUrlModal.test.tsx (1 test) 2900ms
-     ✓ handles OG fallback: true manual input, 400 SSRF_BLOCKED_URL, and 409 VAULT_DUPLICATE_URL  2893ms
+ Test Files 4 passed (13)
+      Tests 6 passed (11)
+   Start at 20:50:46
+   Duration 16.52s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K ✓ src/features/auth-forms/ui/SettingsForms.test.tsx (1 test) 3227ms
+     ✓ requires 2-step confirmation dialog before deleting account  3224ms
+ ✓ src/features/vault-save/ui/ExternalUrlModal.test.tsx (1 test) 3390ms
+     ✓ handles OG fallback: true manual input, 400 SSRF_BLOCKED_URL, and 409 VAULT_DUPLICATE_URL  3372ms
 
- ❯ src/features/content-report/ui/ReportModal.test.tsx [queued]
+ ❯ src/features/auth-forms/ui/SettingsForms.test.tsx 1/1
+ ❯ src/features/quick-search/ui/QuickSearchModal.test.tsx 2/2
+ ❯ src/features/vault-save/ui/BookmarkAction.test.tsx 1/1
+ ❯ src/widgets/public-shell/ui/PublicShell.test.tsx 1/4
 
- Test Files 7 passed (13)
-      Tests 9 passed (9)
-   Start at 01:21:15
-   Duration 11.98s
-[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
- ❯ src/features/auth-forms/ui/LoginForm.test.tsx [queued]
- ❯ src/features/content-report/ui/ReportModal.test.tsx [queued]
- ❯ src/widgets/tool-compare/ui/ToolCompareTable.test.tsx [queued]
-
- Test Files 7 passed (13)
-      Tests 9 passed (9)
-   Start at 01:21:15
-   Duration 12.09s
+ Test Files 6 passed (13)
+      Tests 8 passed (11)
+   Start at 20:50:46
+   Duration 17.03s
 [?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
- ❯ src/entities/guide/ui/PromptCopyBlock.test.tsx [queued]
+
+ ❯ src/features/auth-forms/ui/SettingsForms.test.tsx 1/1
+ ❯ src/features/quick-search/ui/QuickSearchModal.test.tsx 2/2
+ ❯ src/widgets/public-shell/ui/PublicShell.test.tsx 1/4
+
+ Test Files 6 passed (13)
+      Tests 8 passed (11)
+   Start at 20:50:46
+   Duration 17.23s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
+
+
+
+ ❯ src/features/auth-forms/ui/SettingsForms.test.tsx 1/1
+ ❯ src/widgets/public-shell/ui/PublicShell.test.tsx 2/4
+
+ Test Files 6 passed (13)
+      Tests 9 passed (11)
+   Start at 20:50:46
+   Duration 17.33s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
+
+ ❯ src/features/auth-forms/ui/LoginForm.test.tsx [queued]
+ ❯ src/features/content-report/ui/ReportModal.test.tsx [queued]
+ ❯ src/widgets/public-shell/ui/PublicShell.test.tsx 2/4
+
+ Test Files 6 passed (13)
+      Tests 9 passed (11)
+   Start at 20:50:46
+   Duration 17.53s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K ✓ src/widgets/public-shell/ui/PublicShell.test.tsx (4 tests) 2304ms
+     ✓ isolates MobileBottomTabs with bottom-0 top-auto h-16 and renders 4 tabs  340ms
+     ✓ renders desktop left sidebar with skip link, search trigger, and collapsible rail  1585ms
+
+ ❯ src/features/auth-forms/ui/LoginForm.test.tsx [queued]
+ ❯ src/features/content-report/ui/ReportModal.test.tsx [queued]
+ ❯ src/widgets/tool-compare/ui/ToolCompareTable.test.tsx [queued]
+
+ Test Files 7 passed (13)
+      Tests 11 passed (11)
+   Start at 20:50:46
+   Duration 17.63s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
  ❯ src/features/auth-forms/ui/LoginForm.test.tsx [queued]
  ❯ src/features/content-report/ui/ReportModal.test.tsx [queued]
  ❯ src/views/news/NewsDetailPage.test.tsx [queued]
  ❯ src/widgets/tool-compare/ui/ToolCompareTable.test.tsx [queued]
 
  Test Files 7 passed (13)
-      Tests 9 passed (9)
-   Start at 01:21:15
-   Duration 12.19s
-[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
+      Tests 11 passed (11)
+   Start at 20:50:46
+   Duration 17.74s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
  ❯ src/entities/guide/ui/PromptCopyBlock.test.tsx [queued]
  ❯ src/features/auth-forms/ui/LoginForm.test.tsx [queued]
  ❯ src/features/content-report/ui/ReportModal.test.tsx [queued]
- ❯ src/shared/lib/brand-assets.test.ts [queued]
+ ❯ src/shared/lib/brand-assets.test.ts 0/2
  ❯ src/views/news/NewsDetailPage.test.tsx [queued]
  ❯ src/widgets/tool-compare/ui/ToolCompareTable.test.tsx [queued]
 
  Test Files 7 passed (13)
-      Tests 9 passed (9)
-   Start at 01:21:15
-   Duration 12.49s
+      Tests 11 passed (13)
+   Start at 20:50:46
+   Duration 18.04s
 [?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
  ❯ src/entities/guide/ui/PromptCopyBlock.test.tsx [queued]
  ❯ src/features/auth-forms/ui/LoginForm.test.tsx [queued]
@@ -324,76 +400,84 @@ Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
  ❯ src/widgets/tool-compare/ui/ToolCompareTable.test.tsx [queued]
 
  Test Files 7 passed (13)
-      Tests 10 passed (11)
-   Start at 01:21:15
-   Duration 12.59s
-[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K ✓ src/shared/lib/brand-assets.test.ts (2 tests) 31ms
-
+      Tests 12 passed (13)
+   Start at 20:50:46
+   Duration 18.14s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K ✓ src/shared/lib/brand-assets.test.ts (2 tests) 128ms
 
  ❯ src/entities/guide/ui/PromptCopyBlock.test.tsx [queued]
  ❯ src/features/auth-forms/ui/LoginForm.test.tsx [queued]
- ❯ src/features/content-report/ui/ReportModal.test.tsx 0/1
+ ❯ src/features/content-report/ui/ReportModal.test.tsx [queued]
  ❯ src/views/news/NewsDetailPage.test.tsx [queued]
  ❯ src/widgets/tool-compare/ui/ToolCompareTable.test.tsx [queued]
 
  Test Files 8 passed (13)
-      Tests 11 passed (12)
-   Start at 01:21:15
-   Duration 12.79s
+      Tests 13 passed (13)
+   Start at 20:50:46
+   Duration 18.24s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
+ ❯ src/entities/guide/ui/PromptCopyBlock.test.tsx [queued]
+ ❯ src/features/auth-forms/ui/LoginForm.test.tsx 0/1
+ ❯ src/features/content-report/ui/ReportModal.test.tsx [queued]
+ ❯ src/views/news/NewsDetailPage.test.tsx [queued]
+ ❯ src/widgets/tool-compare/ui/ToolCompareTable.test.tsx [queued]
+
+ Test Files 8 passed (13)
+      Tests 13 passed (14)
+   Start at 20:50:46
+   Duration 18.44s
 [?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
 
  ❯ src/entities/guide/ui/PromptCopyBlock.test.tsx [queued]
  ❯ src/features/auth-forms/ui/LoginForm.test.tsx 0/1
  ❯ src/features/content-report/ui/ReportModal.test.tsx 0/1
- ❯ src/views/news/NewsDetailPage.test.tsx [queued]
- ❯ src/widgets/tool-compare/ui/ToolCompareTable.test.tsx [queued]
-
- Test Files 8 passed (13)
-      Tests 11 passed (13)
-   Start at 01:21:15
-   Duration 12.99s
-[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
-
- ❯ src/entities/guide/ui/PromptCopyBlock.test.tsx [queued]
- ❯ src/features/auth-forms/ui/LoginForm.test.tsx 0/1
- ❯ src/features/content-report/ui/ReportModal.test.tsx 1/1
  ❯ src/views/news/NewsDetailPage.test.tsx [queued]
  ❯ src/widgets/tool-compare/ui/ToolCompareTable.test.tsx 0/2
 
  Test Files 8 passed (13)
-      Tests 12 passed (15)
-   Start at 01:21:15
-   Duration 13.29s
-[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K ✓ src/features/content-report/ui/ReportModal.test.tsx (1 test) 486ms
-     ✓ supports 4 reasons, hidden honeypot field, and submits report  483ms
+      Tests 13 passed (17)
+   Start at 20:50:46
+   Duration 18.84s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
 
- ❯ src/entities/guide/ui/PromptCopyBlock.test.tsx 0/2
- ❯ src/features/auth-forms/ui/LoginForm.test.tsx 0/1
+ ❯ src/entities/guide/ui/PromptCopyBlock.test.tsx [queued]
+ ❯ src/features/auth-forms/ui/LoginForm.test.tsx 1/1
+ ❯ src/features/content-report/ui/ReportModal.test.tsx 0/1
+ ❯ src/views/news/NewsDetailPage.test.tsx [queued]
+ ❯ src/widgets/tool-compare/ui/ToolCompareTable.test.tsx 0/2
+
+ Test Files 8 passed (13)
+      Tests 14 passed (17)
+   Start at 20:50:46
+   Duration 18.95s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K ✓ src/features/auth-forms/ui/LoginForm.test.tsx (1 test) 537ms
+     ✓ shows 60s resend cooldown on AUTH_EMAIL_NOT_VERIFIED and blocks unsafe next redirect  535ms
+ ✓ src/features/content-report/ui/ReportModal.test.tsx (1 test) 488ms
+     ✓ supports 4 reasons, hidden honeypot field, and submits report  486ms
+
+ ❯ src/entities/guide/ui/PromptCopyBlock.test.tsx 0/3
  ❯ src/views/news/NewsDetailPage.test.tsx 0/2
  ❯ src/widgets/tool-compare/ui/ToolCompareTable.test.tsx 0/2
 
- Test Files 9 passed (13)
-      Tests 12 passed (19)
-   Start at 01:21:15
-   Duration 13.49s
-[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K ✓ src/features/auth-forms/ui/LoginForm.test.tsx (1 test) 476ms
-     ✓ shows 60s resend cooldown on AUTH_EMAIL_NOT_VERIFIED and blocks unsafe next redirect  473ms
- ✓ src/widgets/tool-compare/ui/ToolCompareTable.test.tsx (2 tests) 438ms
-     ✓ renders 7 comparison axes and filters identical rows with 차이점만 보기  432ms
+ Test Files 10 passed (13)
+      Tests 15 passed (22)
+   Start at 20:50:46
+   Duration 19.15s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K ✓ src/views/news/NewsDetailPage.test.tsx (2 tests) 173ms
+ ✓ src/widgets/tool-compare/ui/ToolCompareTable.test.tsx (2 tests) 336ms
+     ✓ renders 7 comparison axes and filters identical rows with 차이점만 보기  330ms
 
- ❯ src/entities/guide/ui/PromptCopyBlock.test.tsx 0/2
- ❯ src/views/news/NewsDetailPage.test.tsx 1/2
+ ❯ src/entities/guide/ui/PromptCopyBlock.test.tsx 1/3
 
- Test Files 11 passed (13)
-      Tests 16 passed (19)
-   Start at 01:21:15
-   Duration 13.59s
-[?2026l[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K ✓ src/views/news/NewsDetailPage.test.tsx (2 tests) 215ms
- ✓ src/entities/guide/ui/PromptCopyBlock.test.tsx (2 tests) 179ms
+ Test Files 12 passed (13)
+      Tests 20 passed (22)
+   Start at 20:50:46
+   Duration 19.35s
+[?2026l[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K ✓ src/entities/guide/ui/PromptCopyBlock.test.tsx (3 tests) 127ms
 
  Test Files  13 passed (13)
-      Tests  19 passed (19)
-   Start at  01:21:15
-   Duration  13.68s (transform 6.88s, setup 2.27s, import 42.14s, tests 17.79s, environment 24.18s)
+      Tests  22 passed (22)
+   Start at  20:50:46
+   Duration  19.37s (transform 12.92s, setup 4.72s, import 70.08s, tests 20.33s, environment 29.45s)
 
 [?25h
