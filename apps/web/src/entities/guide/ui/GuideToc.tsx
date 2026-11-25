@@ -16,12 +16,12 @@ export const GuideToc = ({ headings }: { headings: TocHeading[] }) => {
   if (headings.length === 0) return null;
 
   const list = (
-    <ul className="flex flex-col gap-1.5 text-xs">
+    <ul className="flex flex-col gap-2 text-xs">
       {headings.map((h) => (
         <li key={h.id} className={cn(h.level >= 3 && "ps-3")}>
           <a
             href={`#${h.id}`}
-            className="block rounded-sm py-0.5 text-muted-foreground transition-colors hover:text-foreground"
+            className="block rounded-sm py-1 text-muted-foreground transition-colors hover:text-foreground"
           >
             {h.text}
           </a>
@@ -57,7 +57,7 @@ export const GuideToc = ({ headings }: { headings: TocHeading[] }) => {
       {/* Desktop sticky TOC */}
       <aside className="hidden lg:block">
         <div className="sticky top-8 rounded-xl border border-transparent bg-card p-4 shadow-border">
-          <p className="mb-2.5 text-xs font-semibold text-foreground">목차</p>
+          <p className="mb-3 text-xs font-semibold text-foreground">목차</p>
           {list}
         </div>
       </aside>

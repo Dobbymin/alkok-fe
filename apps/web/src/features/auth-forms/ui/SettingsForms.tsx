@@ -82,7 +82,7 @@ export const SettingsForms = () => {
   };
 
   return (
-    <div className="mx-auto flex max-w-2xl flex-col gap-6">
+    <div className="flex w-full flex-col gap-6">
       <Card>
         <CardHeader>
           <CardTitle>프로필 설정</CardTitle>

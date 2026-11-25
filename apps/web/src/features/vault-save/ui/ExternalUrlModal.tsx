@@ -155,21 +155,16 @@ export const ExternalUrlModal = ({
         <form onSubmit={handleSave} className="flex flex-col gap-4">
           <FieldGroup htmlFor="vault-ext-url" label="URL" required>
             <div className="flex gap-2">
-              <div className="relative flex-1">
-                <Link2
-                  className="pointer-events-none absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground"
-                  aria-hidden="true"
-                />
-                <Input
-                  id="vault-ext-url"
-                  type="url"
-                  value={url}
-                  onChange={(e) => setUrl(e.target.value)}
-                  placeholder="https://example.com/article"
-                  className="pl-8"
-                  required
-                />
-              </div>
+              <Input
+                id="vault-ext-url"
+                type="url"
+                value={url}
+                onChange={(e) => setUrl(e.target.value)}
+                placeholder="https://example.com/article"
+                wrapperClassName="flex-1"
+                startIcon={<Link2 className="h-4 w-4" />}
+                required
+              />
               <Button
                 type="button"
                 variant="outline"
@@ -188,7 +183,7 @@ export const ExternalUrlModal = ({
               role="alert"
               className="flex items-start gap-2 rounded-md border border-destructive/40 bg-destructive/10 p-3 text-xs text-destructive"
             >
-              <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
+              <AlertTriangle className="mt-1 h-4 w-4 shrink-0" aria-hidden="true" />
               <div className="flex flex-col gap-1">
                 <p className="font-medium">{errorBanner}</p>
                 {duplicateUrl ? (

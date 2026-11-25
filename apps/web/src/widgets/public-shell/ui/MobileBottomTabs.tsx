@@ -33,10 +33,10 @@ export const MobileBottomTabs = () => {
               href={tab.href}
               aria-current={isActive ? "page" : undefined}
               className={cn(
-                "relative flex min-h-[44px] flex-col items-center justify-center gap-1 text-[11px] [-webkit-tap-highlight-color:transparent] transition-colors duration-150 ease-out focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-ring",
+                "flex min-h-11 flex-col items-center justify-center gap-1 border-t-2 text-[11px] [-webkit-tap-highlight-color:transparent] transition-colors duration-150 ease-out focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring",
                 isActive
-                  ? "font-semibold text-primary before:absolute before:top-0 before:h-0.5 before:w-8 before:rounded-full before:bg-primary"
-                  : "font-medium text-muted-foreground",
+                  ? "border-primary font-semibold text-primary"
+                  : "border-transparent font-medium text-muted-foreground",
               )}
             >
               <Icon

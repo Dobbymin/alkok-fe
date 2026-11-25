@@ -16,7 +16,7 @@ export const DialogOverlay = ({
 }: ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>) => (
   <DialogPrimitive.Overlay
     className={cn(
-      "fixed inset-0 z-50 bg-overlay-scrim backdrop-blur-[2px]",
+      "fixed inset-0 z-50 bg-overlay-scrim backdrop-blur-xs",
       className,
     )}
     {...props}
@@ -33,21 +33,25 @@ export const DialogContent = ({
 }) => (
   <DialogPortal>
     <DialogOverlay />
-    <DialogPrimitive.Content
-      className={cn(
-        "fixed left-1/2 top-1/2 z-50 grid max-h-[90dvh] w-[calc(100%-2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 gap-4 overflow-y-auto overscroll-contain rounded-xl border border-transparent bg-surface-raised p-6 text-popover-foreground shadow-elevated focus-visible:outline-none",
-        className,
-      )}
-      {...props}
-    >
-      {children}
-      <DialogPrimitive.Close
-        aria-label={closeLabel}
-        className="absolute end-4 top-4 inline-flex h-8 w-8 items-center justify-center rounded-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring after:absolute after:-inset-1.5"
+    <div className="pointer-events-none fixed inset-0 z-50 flex items-center justify-center p-4">
+      <DialogPrimitive.Content
+        className={cn(
+          "pointer-events-auto flex max-h-[90dvh] w-full max-w-lg flex-col gap-4 overflow-y-auto overscroll-contain rounded-xl border border-transparent bg-surface-raised p-6 text-popover-foreground shadow-elevated focus-visible:outline-none",
+          className,
+        )}
+        {...props}
       >
-        <X className="h-4 w-4" strokeWidth={2} absoluteStrokeWidth aria-hidden="true" />
-      </DialogPrimitive.Close>
-    </DialogPrimitive.Content>
+        <div className="flex items-center justify-end">
+          <DialogPrimitive.Close
+            aria-label={closeLabel}
+            className="inline-flex h-8 w-8 items-center justify-center rounded-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+          >
+            <X className="h-4 w-4" strokeWidth={2} absoluteStrokeWidth aria-hidden="true" />
+          </DialogPrimitive.Close>
+        </div>
+        {children}
+      </DialogPrimitive.Content>
+    </div>
   </DialogPortal>
 );
 
@@ -55,7 +59,7 @@ export const DialogHeader = ({
   className,
   ...props
 }: HTMLAttributes<HTMLDivElement>) => (
-  <div className={cn("flex flex-col gap-1.5 text-start", className)} {...props} />
+  <div className={cn("flex flex-col gap-2 text-start", className)} {...props} />
 );
 
 export const DialogFooter = ({

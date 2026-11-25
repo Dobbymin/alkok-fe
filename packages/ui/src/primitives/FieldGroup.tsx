@@ -23,7 +23,7 @@ export const FieldGroup = ({
   className,
   children,
 }: FieldGroupProps) => (
-  <div className={cn("flex flex-col gap-1.5", className)}>
+  <div className={cn("flex flex-col gap-2", className)}>
     <Label htmlFor={htmlFor} className="flex items-center gap-1">
       <span>{label}</span>
       {required ? (

@@ -15,10 +15,10 @@ export const CompareTray = () => {
     <div
       role="region"
       aria-label="선택된 도구 비교 트레이"
-      className="fixed inset-x-4 bottom-20 z-30 mx-auto max-w-4xl rounded-xl border border-transparent bg-surface-raised p-3 shadow-elevated md:start-64 md:end-6 md:bottom-4"
+      className="fixed inset-x-6 bottom-20 z-30 mx-auto max-w-6xl rounded-xl border border-transparent bg-surface-raised p-4 shadow-elevated md:start-64 md:end-6 md:bottom-4"
     >
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <div className="flex flex-wrap items-center gap-1.5">
+        <div className="flex flex-wrap items-center gap-2">
           <span className="tabular-nums text-xs font-semibold text-foreground">
             비교 선택 ({items.length})
           </span>
@@ -29,7 +29,7 @@ export const CompareTray = () => {
                 type="button"
                 aria-label={`${item.title} 비교에서 제거`}
                 onClick={() => compareStore.remove(item.slug)}
-                className="rounded-sm p-0.5 hover:bg-muted focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-ring"
+                className="rounded-sm p-1 hover:bg-muted focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-ring"
               >
                 <X className="h-3 w-3" strokeWidth={2} absoluteStrokeWidth aria-hidden="true" />
               </button>

@@ -34,7 +34,7 @@ export const EmptyState = ({
       {title}
     </h3>
     {description ? (
-      <p className="mt-1.5 max-w-md text-pretty text-sm leading-[1.5] text-muted-foreground">
+      <p className="mt-2 max-w-md text-pretty text-sm leading-[1.5] text-muted-foreground">
         {description}
       </p>
     ) : null}

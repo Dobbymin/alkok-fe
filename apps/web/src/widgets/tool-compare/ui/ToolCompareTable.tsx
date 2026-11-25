@@ -266,7 +266,7 @@ export const ToolCompareTable = ({
                 {visibleAxes.map((axis) => (
                   <div
                     key={axis.key}
-                    className="border-t border-border pt-2.5 first:border-t-0 first:pt-0"
+                    className="border-t border-border pt-3 first:border-t-0 first:pt-0"
                   >
                     <p className="mb-1 text-xs font-semibold text-muted-foreground">
                       {axis.label}
@@ -287,7 +287,7 @@ export const ToolCompareTable = ({
             <TableRow>
               <TableHead
                 scope="col"
-                className="sticky left-0 z-10 min-w-[116px] whitespace-nowrap bg-muted/95 font-semibold"
+                className="sticky left-0 z-10 min-w-32 whitespace-nowrap bg-muted/95 font-semibold"
               >
                 비교 항목
               </TableHead>
@@ -305,7 +305,7 @@ export const ToolCompareTable = ({
               <TableRow key={axis.key}>
                 <th
                   scope="row"
-                  className="sticky left-0 z-10 min-w-[116px] whitespace-nowrap bg-card px-3 py-3 text-left align-top text-xs font-semibold text-muted-foreground"
+                  className="sticky left-0 z-10 min-w-32 whitespace-nowrap bg-card px-3 py-3 text-left align-top text-xs font-semibold text-muted-foreground"
                 >
                   {axis.label}
                 </th>

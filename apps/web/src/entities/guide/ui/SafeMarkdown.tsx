@@ -12,7 +12,7 @@ function slugifyHeading(text: string): string {
 
 export const SafeMarkdown = ({ content }: { content: string }) => {
   return (
-    <div className="prose-alkok max-w-[65ch] space-y-4 text-base leading-[1.7] text-foreground">
+    <div className="prose-alkok max-w-prose space-y-4 text-base leading-[1.7] text-foreground">
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeSanitize]}
@@ -45,13 +45,13 @@ export const SafeMarkdown = ({ content }: { content: string }) => {
             </p>
           ),
           ul: ({ children }) => (
-            <ul className="list-disc space-y-1.5 ps-5">{children}</ul>
+            <ul className="list-disc space-y-2 ps-5">{children}</ul>
           ),
           ol: ({ children }) => (
-            <ol className="list-decimal space-y-1.5 ps-5">{children}</ol>
+            <ol className="list-decimal space-y-2 ps-5">{children}</ol>
           ),
           code: ({ children }) => (
-            <code className="rounded-sm bg-muted px-1.5 py-0.5 font-mono text-[13px] text-foreground">
+            <code className="rounded-sm bg-muted px-2 py-1 font-mono text-[13px] text-foreground">
               {children}
             </code>
           ),

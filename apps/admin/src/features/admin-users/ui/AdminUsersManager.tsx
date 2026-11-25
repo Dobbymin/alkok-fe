@@ -118,20 +118,15 @@ export const AdminUsersManager = () => {
       </div>
 
       <FilterBar>
-        <div className="relative w-full sm:w-72">
-          <Search
-            className="pointer-events-none absolute left-2.5 top-2 h-4 w-4 text-muted-foreground"
-            strokeWidth={1.75}
-          />
-          <Input
-            inputSize="sm"
-            value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
-            placeholder="이메일 또는 닉네임 검색"
-            aria-label="회원 검색"
-            className="pl-8"
-          />
-        </div>
+        <Input
+          inputSize="sm"
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
+          placeholder="이메일 또는 닉네임 검색"
+          aria-label="회원 검색"
+          wrapperClassName="w-full sm:w-72"
+          startIcon={<Search className="h-4 w-4" strokeWidth={1.75} />}
+        />
       </FilterBar>
 
       {isLoading ? (

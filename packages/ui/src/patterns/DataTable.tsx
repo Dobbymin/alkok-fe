@@ -45,7 +45,7 @@ export function DataTable<T>({
             <TableHead
               key={col.key}
               scope="col"
-              className={cn(compact && "h-9 py-1.5", col.className)}
+              className={cn(compact && "h-9 py-2", col.className)}
             >
               {col.header}
             </TableHead>

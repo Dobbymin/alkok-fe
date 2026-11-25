@@ -17,7 +17,7 @@ export const PublicShell = ({ children }: PublicShellProps) => {
     <div className="flex min-h-dvh flex-col bg-background text-foreground md:flex-row">
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:fixed focus:start-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-primary focus:px-3.5 focus:py-2 focus:text-sm focus:font-medium focus:text-primary-foreground focus:shadow-elevated"
+        className="sr-only focus:not-sr-only focus:fixed focus:start-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-primary focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-primary-foreground focus:shadow-elevated"
       >
         본문으로 건너뛰기
       </a>
@@ -29,7 +29,7 @@ export const PublicShell = ({ children }: PublicShellProps) => {
         <main
           id="main-content"
           tabIndex={-1}
-          className="mx-auto w-full max-w-5xl flex-1 px-4 pt-6 pb-20 focus:outline-none md:px-8 md:py-8 md:pb-8"
+          className="mx-auto w-full max-w-6xl flex-1 px-6 pt-6 pb-20 focus:outline-none md:py-8 md:pb-8"
         >
           {children}
         </main>

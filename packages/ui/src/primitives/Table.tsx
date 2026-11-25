@@ -62,5 +62,5 @@ export const TableCell = ({
   className,
   ...props
 }: TdHTMLAttributes<HTMLTableCellElement>) => (
-  <td className={cn("px-3 py-2.5 align-middle", className)} {...props} />
+  <td className={cn("px-3 py-3 align-middle", className)} {...props} />
 );

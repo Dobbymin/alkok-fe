@@ -29,7 +29,7 @@ export const ContentCard = ({
     <Card className="flex h-full flex-col justify-between transition-[box-shadow,border-color] duration-150 ease-out hover:border-primary/40 hover:shadow-border-hover">
       <CardHeader className="gap-2 pb-3">
         <div className="flex items-center justify-between gap-2">
-          <div className="flex flex-wrap items-center gap-1.5">
+          <div className="flex flex-wrap items-center gap-2">
             <Badge variant="secondary">{typeMeta.label}</Badge>
             <VerificationBadge
               status={item.verificationStatus}
@@ -55,7 +55,7 @@ export const ContentCard = ({
 
       <CardContent className="flex flex-col gap-3 pt-0">
         {item.categories && item.categories.length > 0 ? (
-          <div className="flex flex-wrap gap-1.5">
+          <div className="flex flex-wrap gap-2">
             {item.categories.slice(0, 3).map((cat) => (
               <Badge key={cat.id} variant="outline" className="text-[11px]">
                 {cat.name}
@@ -64,7 +64,7 @@ export const ContentCard = ({
           </div>
         ) : null}
 
-        <div className="flex items-center justify-between border-t border-separator pt-2.5 text-xs text-muted-foreground">
+        <div className="flex items-center justify-between border-t border-separator pt-3 text-xs text-muted-foreground">
           <span className="inline-flex items-center gap-1 tabular-nums">
             <ThumbsUp
               className="h-3.5 w-3.5"

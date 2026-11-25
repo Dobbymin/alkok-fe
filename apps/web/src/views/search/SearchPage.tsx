@@ -69,19 +69,14 @@ export default function SearchPage() {
       </div>
 
       <form onSubmit={handleSubmit} className="flex items-center gap-2">
-        <div className="relative flex-1">
-          <Search
-            className="pointer-events-none absolute left-3 top-3 h-4 w-4 text-muted-foreground"
-            strokeWidth={1.75}
-          />
-          <Input
-            value={inputQ}
-            onChange={(e) => setInputQ(e.target.value)}
-            placeholder="검색어를 입력하세요"
-            aria-label="통합 검색어"
-            className="pl-9"
-          />
-        </div>
+        <Input
+          value={inputQ}
+          onChange={(e) => setInputQ(e.target.value)}
+          placeholder="검색어를 입력하세요"
+          aria-label="통합 검색어"
+          wrapperClassName="flex-1"
+          startIcon={<Search className="h-4 w-4" strokeWidth={1.75} />}
+        />
         <Button type="submit">검색</Button>
       </form>
 

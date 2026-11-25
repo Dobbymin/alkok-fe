@@ -111,7 +111,7 @@ export const AdminSourcesManager = () => {
       key: "actions",
       header: "작업",
       cell: (row) => (
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-2">
           <Button
             variant="outline"
             size="sm"

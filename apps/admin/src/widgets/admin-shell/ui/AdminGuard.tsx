@@ -39,7 +39,7 @@ export const AdminGuard = ({
 
   if (isLoading) {
     return (
-      <div className="mx-auto flex max-w-4xl flex-col gap-4 p-6">
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-4 px-6 py-6">
         <Skeleton className="h-8 w-48" />
         <Skeleton className="h-40 w-full" />
       </div>
@@ -48,7 +48,7 @@ export const AdminGuard = ({
 
   if (!isAuthenticated) {
     return (
-      <div className="flex min-h-[60vh] items-center justify-center p-4">
+      <div className="mx-auto flex min-h-dvh w-full max-w-6xl items-center justify-center px-6 py-12">
         <p className="text-sm text-muted-foreground">
           로그인 페이지로 이동 중입니다...
         </p>
@@ -58,7 +58,7 @@ export const AdminGuard = ({
 
   if (user?.role !== "ADMIN") {
     return (
-      <div className="flex min-h-[70vh] items-center justify-center p-4">
+      <div className="mx-auto flex min-h-dvh w-full max-w-6xl items-center justify-center px-6 py-12">
         <Card className="w-full max-w-md border-status-expired-border">
           <CardHeader>
             <div className="flex items-center gap-2 text-status-expired-fg">

@@ -47,7 +47,7 @@ export const CopyableCodeBlock = ({
         className,
       )}
     >
-      <div className="flex items-center justify-between border-b border-prompt-border px-3.5 py-2">
+      <div className="flex items-center justify-between border-b border-prompt-border px-4 py-2">
         <span className="text-xs font-semibold text-foreground">
           {title ?? "코드 / 프롬프트"}
         </span>
@@ -56,7 +56,7 @@ export const CopyableCodeBlock = ({
           size="sm"
           onClick={handleCopy}
           aria-label={copied ? "복사 완료" : `${title ?? "내용"} ${copyLabel}`}
-          className="h-7 gap-1.5 px-2.5 text-xs"
+          className="h-8 gap-2 px-3 text-xs"
         >
           {copied ? (
             <>
@@ -88,7 +88,7 @@ export const CopyableCodeBlock = ({
         <code>{renderedCode ?? code}</code>
       </pre>
       {copyFailed ? (
-        <p className="border-t border-prompt-border bg-status-review-bg px-3.5 py-1.5 text-xs text-status-review-fg">
+        <p className="border-t border-prompt-border bg-status-review-bg px-4 py-2 text-xs text-status-review-fg">
           브라우저 복사 권한이 제한되어 있습니다. 위 영역을 길게 눌러 직접 복사해 주세요.
         </p>
       ) : null}

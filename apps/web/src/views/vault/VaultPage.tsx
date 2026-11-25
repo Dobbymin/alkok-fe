@@ -52,7 +52,7 @@ export default function VaultPage() {
 
   if (isLoading || !isAuthenticated) {
     return (
-      <div className="mx-auto max-w-5xl py-6">
+      <div className="w-full py-6">
         <div className="h-72 rounded-lg bg-muted/40" />
       </div>
     );
@@ -63,7 +63,7 @@ export default function VaultPage() {
   const items = itemsQuery.data?.data ?? [];
 
   return (
-    <div className="mx-auto flex max-w-6xl flex-col gap-6">
+    <div className="flex w-full flex-col gap-6">
       <header className="flex flex-wrap items-center justify-between gap-3">
         <div className="space-y-1">
           <h1 className="text-2xl font-bold tracking-tight">내 보관함</h1>
@@ -74,8 +74,8 @@ export default function VaultPage() {
         <ExternalUrlModal folders={folders} defaultFolderId={selectedFolderId} />
       </header>
 
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-[240px_minmax(0,1fr)]">
-        <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-6 md:flex-row md:items-start">
+        <div className="flex w-full shrink-0 flex-col gap-4 md:w-60">
           <VaultFolderSidebar
             folders={folders}
             selectedFolderId={selectedFolderId}
@@ -87,7 +87,7 @@ export default function VaultPage() {
               <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 태그
               </h2>
-              <div className="flex flex-wrap gap-1.5">
+              <div className="flex flex-wrap gap-2">
                 {tags.map((tag) => (
                   <Badge
                     key={tag.id}
@@ -111,7 +111,7 @@ export default function VaultPage() {
                         void deleteTagMutation.mutateAsync(tag.id);
                         if (selectedTag === tag.name) setSelectedTag("");
                       }}
-                      className="ml-0.5 text-[10px] opacity-70 hover:opacity-100"
+                      className="ms-1 text-[10px] opacity-70 hover:opacity-100"
                     >
                       ×
                     </button>
@@ -122,23 +122,18 @@ export default function VaultPage() {
           ) : null}
         </div>
 
-        <section className="flex flex-col gap-4">
+        <section className="flex min-w-0 flex-1 flex-col gap-4">
           <FilterBar>
-            <div className="relative flex-1 min-w-48">
-              <Search
-                className="pointer-events-none absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground"
-                aria-hidden="true"
-              />
-              <Input
-                value={searchText}
-                onChange={(e) => setSearchText(e.target.value)}
-                placeholder="제목 또는 메모 검색"
-                aria-label="보관함 검색"
-                className="pl-8"
-              />
-            </div>
+            <Input
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+              placeholder="제목 또는 메모 검색"
+              aria-label="보관함 검색"
+              wrapperClassName="min-w-48 flex-1"
+              startIcon={<Search className="h-4 w-4" />}
+            />
 
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-2">
               {(
                 [
                   { value: "", label: "전체" },
