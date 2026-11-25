@@ -26,7 +26,7 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: {
-    default: "알콕(Alkok) — AI 정보, 알맹이만 콕.",
+    default: "알콕(Alkok) · AI 정보, 알맹이만 콕.",
     template: "%s | 알콕(Alkok)",
   },
   description:

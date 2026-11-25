@@ -8,7 +8,7 @@ import {
   Rss,
 } from "lucide-react";
 import Link from "next/link";
-import { Card, CardContent, CardHeader, CardTitle, ErrorState } from "@alkok/ui";
+import { Card, CardContent, CardHeader, CardTitle, ErrorState, Skeleton } from "@alkok/ui";
 import { useAdminDashboardQuery } from "../model/useAdminDashboard";
 
 export const AdminDashboardOverview = () => {
@@ -19,6 +19,7 @@ export const AdminDashboardOverview = () => {
       <ErrorState
         title="대시보드 지표를 불러오지 못했습니다."
         description="잠시 후 다시 시도해 주세요."
+        onRetry={() => query.refetch()}
       />
     );
   }
@@ -68,9 +69,9 @@ export const AdminDashboardOverview = () => {
           const Icon = card.icon;
           return (
             <Link key={card.label} href={card.href} className="group">
-              <Card className="h-full transition-colors group-hover:border-primary/50">
+              <Card variant="outline" className="h-full transition-colors group-hover:border-primary/50">
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
-                  <CardTitle className="text-sm font-medium text-muted-foreground">
+                  <CardTitle as="h2" className="text-sm font-medium text-muted-foreground">
                     {card.label}
                   </CardTitle>
                   <Icon
@@ -80,7 +81,11 @@ export const AdminDashboardOverview = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold tabular-nums">
-                    {query.isLoading ? "—" : card.value}
+                    {query.isLoading ? (
+                      <Skeleton className="h-8 w-12" aria-label="지표 불러오는 중" />
+                    ) : (
+                      card.value
+                    )}
                   </div>
                   <p className="mt-1 text-xs text-muted-foreground">
                     {card.description}
@@ -92,25 +97,25 @@ export const AdminDashboardOverview = () => {
         })}
       </div>
 
-      <Card>
+      <Card variant="outline">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-base">
+          <CardTitle as="h2" className="flex items-center gap-2 text-base">
             <Rss className="h-4 w-4" aria-hidden="true" />
             빠른 운영 작업
           </CardTitle>
         </CardHeader>
         <CardContent className="flex flex-wrap gap-3 text-sm">
           <Link href="/inbox" className="text-primary hover:underline">
-            수집함 검수하기 →
+            수집함 검수하기
           </Link>
           <Link href="/reports" className="text-primary hover:underline">
-            오류 제보 처리하기 →
+            오류 제보 처리하기
           </Link>
           <Link href="/contents" className="text-primary hover:underline">
-            유효성 일괄 점검 →
+            유효성 일괄 점검
           </Link>
           <Link href="/sources" className="text-primary hover:underline">
-            소스 즉시 수집 →
+            소스 즉시 수집
           </Link>
         </CardContent>
       </Card>

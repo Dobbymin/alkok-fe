@@ -85,7 +85,7 @@ export const SettingsForms = () => {
     <div className="flex w-full flex-col gap-6">
       <Card>
         <CardHeader>
-          <CardTitle>프로필 설정</CardTitle>
+          <CardTitle as="h2">프로필 설정</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSaveProfile} className="flex items-end gap-3">
@@ -106,7 +106,7 @@ export const SettingsForms = () => {
 
       <Card>
         <CardHeader>
-          <CardTitle>관심 업무 도메인</CardTitle>
+          <CardTitle as="h2">관심 업무 도메인</CardTitle>
           <CardDescription>
             선택한 도메인 가이드를 홈 화면 상단에 우선 배치합니다.
           </CardDescription>
@@ -133,7 +133,7 @@ export const SettingsForms = () => {
 
       <Card>
         <CardHeader>
-          <CardTitle>화면 테마</CardTitle>
+          <CardTitle as="h2">화면 테마</CardTitle>
         </CardHeader>
         <CardContent>
           <ToggleGroup
@@ -149,7 +149,7 @@ export const SettingsForms = () => {
 
       <Card>
         <CardHeader>
-          <CardTitle>비밀번호 변경</CardTitle>
+          <CardTitle as="h2">비밀번호 변경</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleChangePassword} className="flex flex-col gap-3">
@@ -181,9 +181,11 @@ export const SettingsForms = () => {
         </CardContent>
       </Card>
 
-      <Card className="border-status-expired-border">
+      <Card className="border border-status-expired-border">
         <CardHeader>
-          <CardTitle className="text-status-expired-fg">회원 탈퇴</CardTitle>
+          <CardTitle as="h2" className="text-status-expired-fg">
+            회원 탈퇴
+          </CardTitle>
           <CardDescription>
             탈퇴 시 개인 지식 보관함 및 모든 개인정보가 즉시 영구 삭제됩니다.
           </CardDescription>

@@ -37,7 +37,7 @@ export const SheetContent = ({
 }: ComponentPropsWithoutRef<typeof DialogPrimitive.Content> &
   VariantProps<typeof sheetVariants> & { closeLabel?: string }) => (
   <SheetPortal>
-    <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-overlay-scrim backdrop-blur-xs" />
+    <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-overlay-scrim" />
     <DialogPrimitive.Content
       className={cn(sheetVariants({ side }), className)}
       {...props}

@@ -16,7 +16,7 @@ export const DialogOverlay = ({
 }: ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>) => (
   <DialogPrimitive.Overlay
     className={cn(
-      "fixed inset-0 z-50 bg-overlay-scrim backdrop-blur-xs",
+      "fixed inset-0 z-50 bg-overlay-scrim",
       className,
     )}
     {...props}

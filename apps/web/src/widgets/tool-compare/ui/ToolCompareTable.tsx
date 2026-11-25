@@ -140,7 +140,7 @@ const COMPARE_AXES: CompareAxis[] = [
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
           >
-            공식 사이트 <ExternalLink className="h-3 w-3" strokeWidth={1.75} />
+            공식 사이트 <ExternalLink className="h-3 w-3" strokeWidth={1.75} aria-hidden="true" />
           </a>
           {t.isAffiliate ? (
             <Tooltip>
@@ -179,7 +179,12 @@ export const ToolCompareTable = ({
   const [mobileMode, setMobileMode] = useState<"cards" | "horizontal">("cards");
 
   if (isLoading) {
-    return <Skeleton className="h-80 w-full" />;
+    return (
+      <div role="status" aria-label="도구 비교표 불러오는 중">
+        <Skeleton className="h-80 w-full" />
+        <span className="sr-only">도구 비교표를 불러오고 있습니다.</span>
+      </div>
+    );
   }
 
   if (error) {
@@ -248,7 +253,7 @@ export const ToolCompareTable = ({
             </Button>
           </div>
           <Button variant="outline" size="sm" onClick={handleCopyUrl}>
-            <Share2 className="h-3.5 w-3.5" strokeWidth={1.75} />
+            <Share2 className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden="true" />
             URL 공유
           </Button>
         </div>
@@ -258,7 +263,7 @@ export const ToolCompareTable = ({
       {mobileMode === "cards" ? (
         <div className="flex flex-col gap-4 md:hidden">
           {tools.map((tool) => (
-            <Card key={tool.id}>
+            <Card key={tool.id} variant="outline">
               <CardHeader className="pb-2">
                 <CardTitle className="text-base">{tool.title}</CardTitle>
               </CardHeader>

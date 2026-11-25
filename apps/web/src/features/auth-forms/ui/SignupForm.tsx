@@ -43,9 +43,11 @@ export const SignupForm = () => {
   };
 
   return (
-    <Card className="w-full max-w-md">
+    <Card variant="surface" className="w-full max-w-md">
       <CardHeader>
-        <CardTitle>회원가입</CardTitle>
+        <CardTitle as="h1" className="text-xl">
+          회원가입
+        </CardTitle>
         <CardDescription>
           이메일 인증 후 개인 지식 보관함을 이용할 수 있습니다.
         </CardDescription>

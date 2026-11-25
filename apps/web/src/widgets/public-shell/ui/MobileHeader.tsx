@@ -73,10 +73,10 @@ export const MobileHeader = ({
         <div className="flex items-center gap-1">
         <Button
           variant="ghost"
-          size="icon-sm"
+          size="icon"
           aria-label="통합 검색 열기"
           onClick={onOpenSearch}
-          className="h-10 w-10"
+          className="h-11 w-11"
         >
           <Search
             className="h-5 w-5"
@@ -86,15 +86,15 @@ export const MobileHeader = ({
           />
         </Button>
 
-        <ThemeToggle />
+        <ThemeToggle className="h-11 w-11" />
 
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild>
             <Button
               variant="ghost"
-              size="icon-sm"
+              size="icon"
               aria-label="모바일 메뉴 열기"
-              className="h-10 w-10"
+              className="h-11 w-11"
             >
               <Menu
                 className="h-5 w-5"

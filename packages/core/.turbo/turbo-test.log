@@ -10,16 +10,16 @@ Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
 
  Test Files 0 passed (4)
       Tests 0 passed (0)
-   Start at 20:50:44
-   Duration 807ms
+   Start at 23:26:56
+   Duration 608ms
 [?2026l[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K ✓ src/lib/sanitize-next-path.test.ts (2 tests) 2ms
- ✓ src/lib/cn.test.ts (2 tests) 5ms
+ ✓ src/lib/cn.test.ts (2 tests) 6ms
  ✓ src/lib/seo.test.ts (2 tests) 2ms
- ✓ src/api/api-client.test.ts (4 tests) 7ms
+ ✓ src/api/api-client.test.ts (4 tests) 8ms
 
  Test Files  4 passed (4)
       Tests  10 passed (10)
-   Start at  20:50:44
-   Duration  899ms (transform 131ms, setup 0ms, import 177ms, tests 17ms, environment 2.86s)
+   Start at  23:26:56
+   Duration  745ms (transform 132ms, setup 0ms, import 173ms, tests 19ms, environment 2.32s)
 
 [?25h

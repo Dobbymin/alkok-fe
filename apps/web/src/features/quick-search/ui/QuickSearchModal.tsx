@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, Clock, Search } from "lucide-react";
+import { Clock, Search } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, type FormEvent } from "react";
@@ -142,7 +142,7 @@ export const QuickSearchModal = ({
               {recent.length > 0 ? (
                 <div className="flex flex-col gap-2">
                   <p className="flex items-center gap-2 text-xs font-semibold text-muted-foreground">
-                    <Clock className="h-3.5 w-3.5" strokeWidth={1.75} />
+                    <Clock className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden="true" />
                     최근 검색어
                   </p>
                   <div className="flex flex-wrap gap-2">
@@ -188,10 +188,9 @@ export const QuickSearchModal = ({
                       key={link.href}
                       href={link.href}
                       onClick={() => onOpenChange(false)}
-                      className="flex items-center justify-between rounded-md px-3 py-2 text-sm text-foreground hover:bg-secondary"
+                      className="flex items-center rounded-md px-3 py-2 text-sm text-foreground hover:bg-secondary"
                     >
                       <span>{link.label}</span>
-                      <ArrowRight className="h-3.5 w-3.5 text-muted-foreground" strokeWidth={1.75} />
                     </Link>
                   ))}
                 </div>

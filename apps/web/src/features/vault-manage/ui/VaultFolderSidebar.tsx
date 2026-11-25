@@ -69,9 +69,9 @@ export const VaultFolderSidebar = ({
   };
 
   return (
-    <aside className="flex flex-col gap-3 rounded-lg border border-border bg-card p-3">
+    <aside className="flex flex-col gap-3 rounded-xl border border-transparent bg-surface-sunken p-3 dark:border-border">
       <div className="flex items-center justify-between">
-        <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+        <h2 className="text-xs font-semibold text-muted-foreground">
           폴더 (1단계)
         </h2>
       </div>

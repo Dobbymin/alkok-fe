@@ -59,7 +59,7 @@ export default function GuidesListPage() {
               setSort(v as "recommended" | "latest" | "helpful")
             }
           >
-            <SelectTrigger className="h-8 w-32 text-xs">
+            <SelectTrigger aria-label="정렬 기준" className="h-11 w-32 text-xs sm:h-9">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -71,7 +71,7 @@ export default function GuidesListPage() {
         }
       >
         <Select value={workDomain} onValueChange={setWorkDomain}>
-          <SelectTrigger className="h-8 w-40 text-xs">
+          <SelectTrigger aria-label="업무 도메인 필터" className="h-11 w-40 text-xs sm:h-9">
             <SelectValue placeholder="업무 도메인" />
           </SelectTrigger>
           <SelectContent>
@@ -85,7 +85,7 @@ export default function GuidesListPage() {
         </Select>
 
         <Select value={aiUse} onValueChange={setAiUse}>
-          <SelectTrigger className="h-8 w-40 text-xs">
+          <SelectTrigger aria-label="AI 용도 필터" className="h-11 w-40 text-xs sm:h-9">
             <SelectValue placeholder="AI 용도" />
           </SelectTrigger>
           <SelectContent>
@@ -102,7 +102,7 @@ export default function GuidesListPage() {
           value={difficulty}
           onValueChange={(v) => setDifficulty(v as DifficultyLevel | "ALL")}
         >
-          <SelectTrigger className="h-8 w-28 text-xs">
+          <SelectTrigger aria-label="난이도 필터" className="h-11 w-28 text-xs sm:h-9">
             <SelectValue placeholder="난이도" />
           </SelectTrigger>
           <SelectContent>
@@ -117,7 +117,7 @@ export default function GuidesListPage() {
           value={pricingModel}
           onValueChange={(v) => setPricingModel(v as PricingModel | "ALL")}
         >
-          <SelectTrigger className="h-8 w-32 text-xs">
+          <SelectTrigger aria-label="가격 조건 필터" className="h-11 w-32 text-xs sm:h-9">
             <SelectValue placeholder="무료/유료" />
           </SelectTrigger>
           <SelectContent>

@@ -53,9 +53,11 @@ export const ResetPasswordForm = () => {
   };
 
   return (
-    <Card className="w-full max-w-md">
+    <Card variant="surface" className="w-full max-w-md">
       <CardHeader>
-        <CardTitle>비밀번호 재설정</CardTitle>
+        <CardTitle as="h1" className="text-xl">
+          비밀번호 재설정
+        </CardTitle>
         <CardDescription>
           {token
             ? "새 비밀번호를 입력해 주세요."

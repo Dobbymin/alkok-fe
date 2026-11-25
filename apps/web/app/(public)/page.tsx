@@ -7,7 +7,7 @@ import { JsonLdScript } from "@alkok/ui";
 import { HomePage } from "@/views/home";
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "알콕(Alkok) — AI 정보, 알맹이만 콕.",
+  title: "알콕(Alkok) · AI 정보, 알맹이만 콕.",
   description:
     "실무 직장인을 위한 AI 업무 활용 가이드, AI 도구·모델 비교, 최신 AI 소식과 개인 지식 보관함.",
   path: "/",

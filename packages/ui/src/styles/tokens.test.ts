@@ -95,8 +95,10 @@ describe("Design System OKLCH tokens", () => {
   it("passes WCAG 2.2 AA contrast for light and dark semantic pairs", () => {
     const textPairs: Array<[string, string, number]> = [
       ["--foreground", "--background", 4.5],
+      ["--foreground", "--surface-sunken", 4.5],
       ["--muted-foreground", "--background", 4.5],
       ["--muted-foreground", "--card", 4.5],
+      ["--muted-foreground", "--surface-sunken", 4.5],
       ["--muted-foreground", "--sidebar", 4.5],
       ["--primary-foreground", "--primary", 4.5],
       ["--destructive-foreground", "--destructive", 4.5],

@@ -7,8 +7,14 @@ import { DIFFICULTY_LABELS } from "@/entities/taxonomy";
 import { HelpfulButton } from "@/features/content-helpful";
 import { ReportModal } from "@/features/content-report";
 import { BookmarkAction } from "@/features/vault-save";
-import type { GuideDetailData } from "@alkok/core";
-import { Badge, Button, Card, CardContent, CardHeader, CardTitle, ErrorState } from "@alkok/ui";
+import type { GuideDetailData, PricingModel } from "@alkok/core";
+import { Badge, Button, Card, CardContent, CardHeader, ErrorState } from "@alkok/ui";
+
+const PRICING_LABELS: Record<PricingModel, string> = {
+  FREE: "무료",
+  FREEMIUM: "무료+유료",
+  PAID: "유료",
+};
 
 export interface GuideDetailPageProps {
   guide: GuideDetailData | null;
@@ -41,7 +47,7 @@ export default function GuideDetailPage({
     <div className="flex flex-col gap-8 lg:flex-row">
       <article className="flex min-w-0 flex-1 flex-col gap-6">
         {/* 1. Structured Summary Card */}
-        <Card>
+        <Card variant="surface">
           <CardHeader className="gap-3">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <VerificationBadge
@@ -58,7 +64,7 @@ export default function GuideDetailPage({
             <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
               {guide.title}
             </h1>
-            <p className="text-base text-muted-foreground">{guide.summary}</p>
+            <p className="text-base leading-[1.6] text-muted-foreground">{guide.summary}</p>
           </CardHeader>
           <CardContent className="flex flex-wrap items-center gap-2">
             <Badge variant="secondary">
@@ -66,11 +72,11 @@ export default function GuideDetailPage({
             </Badge>
             {guide.estimatedMinutes ? (
               <Badge variant="outline" className="tabular-nums">
-                <Clock className="h-3 w-3" strokeWidth={1.75} />
+                <Clock className="h-3 w-3" strokeWidth={1.75} aria-hidden="true" />
                 약 {guide.estimatedMinutes}분
               </Badge>
             ) : null}
-            <Badge variant="outline">{guide.pricingModel}</Badge>
+            <Badge variant="outline">{PRICING_LABELS[guide.pricingModel]}</Badge>
             {guide.recommendedTools?.map((tool) => (
               <Link key={tool.id} href={`/tools/${tool.slug}`}>
                 <Badge variant="official">추천 도구: {tool.title}</Badge>
@@ -104,16 +110,16 @@ export default function GuideDetailPage({
 
         {/* 4. Cautions & Official CTA */}
         {guide.cautions ? (
-          <div className="rounded-lg border border-status-review-border bg-status-review-bg p-4">
+          <div className="rounded-xl border border-status-review-border bg-status-review-bg p-4">
             <div className="flex items-center gap-2 text-sm font-semibold text-status-review-fg">
-              <AlertTriangle className="h-4 w-4" strokeWidth={1.75} />
+              <AlertTriangle className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
               <span>주의사항 및 한계</span>
             </div>
             <p className="mt-2 text-sm text-foreground">{guide.cautions}</p>
           </div>
         ) : null}
 
-        <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-border bg-card p-4">
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-transparent bg-surface-sunken p-4 dark:border-border">
           <Button asChild>
             <a
               href={guide.sourceUrl}
@@ -121,7 +127,7 @@ export default function GuideDetailPage({
               rel="noopener noreferrer"
             >
               공식 사이트에서 바로 쓰기
-              <ExternalLink className="h-4 w-4" strokeWidth={1.75} />
+              <ExternalLink className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
             </a>
           </Button>
           {engagementSlot ?? (
@@ -137,7 +143,7 @@ export default function GuideDetailPage({
 
         {guide.relatedGuides && guide.relatedGuides.length > 0 ? (
           <section className="flex flex-col gap-4 pt-4">
-            <CardTitle className="text-lg">연관 업무 가이드</CardTitle>
+            <h2 className="text-xl font-bold tracking-tight">연관 업무 가이드</h2>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               {guide.relatedGuides.map((rel) => (
                 <ContentCard key={rel.id} item={rel} />

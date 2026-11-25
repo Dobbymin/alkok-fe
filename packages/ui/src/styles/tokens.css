@@ -44,7 +44,7 @@
   --alkok-rose-950: oklch(0.255 0.085 16);
 
   /* ========================================================================
-     Layer 2: Semantic Tokens (Light Mode — :root)
+     Layer 2: Semantic Tokens (Light Mode : :root)
      ======================================================================== */
   --background: var(--alkok-slate-50);
   --foreground: var(--alkok-slate-900);
@@ -122,7 +122,7 @@
 }
 
 /* ==========================================================================
-   Layer 2 & 3: Semantic & Domain Tokens (Dark Mode — .dark)
+   Layer 2 & 3: Semantic & Domain Tokens (Dark Mode : .dark)
    ========================================================================== */
 .dark {
   --background: var(--alkok-slate-950);
