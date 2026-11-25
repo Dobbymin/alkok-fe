@@ -1,45 +1,47 @@
 /* ==========================================================================
    Layer 1: Primitive OKLCH Palette (Do not reference directly in components)
+   All steps verified inside sRGB gamut.
    ========================================================================== */
 :root {
-  /* Slate (Deep Navy ~ Off White) */
-  --alkok-slate-50: oklch(0.984 0.003 247.858);
-  --alkok-slate-100: oklch(0.968 0.007 247.896);
-  --alkok-slate-200: oklch(0.929 0.013 255.508);
-  --alkok-slate-300: oklch(0.869 0.022 252.894);
-  --alkok-slate-400: oklch(0.704 0.04 256.788);
-  --alkok-slate-500: oklch(0.554 0.046 257.417);
-  --alkok-slate-600: oklch(0.446 0.043 257.281);
-  --alkok-slate-700: oklch(0.372 0.044 257.287);
-  --alkok-slate-800: oklch(0.279 0.041 260.031);
-  --alkok-slate-900: oklch(0.208 0.042 265.755);
-  --alkok-slate-950: oklch(0.129 0.042 264.695);
+  /* Slate (Constant cool hue ~255-264, tightened light steps) */
+  --alkok-slate-50: oklch(0.985 0.003 255);
+  --alkok-slate-100: oklch(0.964 0.006 255);
+  --alkok-slate-200: oklch(0.916 0.012 255);
+  --alkok-slate-300: oklch(0.855 0.018 255);
+  --alkok-slate-400: oklch(0.695 0.028 256);
+  --alkok-slate-500: oklch(0.575 0.032 257);
+  --alkok-slate-600: oklch(0.448 0.035 258);
+  --alkok-slate-700: oklch(0.368 0.034 259);
+  --alkok-slate-800: oklch(0.275 0.030 260);
+  --alkok-slate-900: oklch(0.198 0.026 263);
+  --alkok-slate-950: oklch(0.145 0.022 264);
 
   /* Electric Blue (Primary Accent) */
-  --alkok-blue-50: oklch(0.97 0.014 254.604);
-  --alkok-blue-100: oklch(0.932 0.032 255.585);
-  --alkok-blue-400: oklch(0.707 0.165 254.624);
-  --alkok-blue-500: oklch(0.623 0.214 259.815);
-  --alkok-blue-600: oklch(0.546 0.245 262.881);
-  --alkok-blue-700: oklch(0.488 0.243 264.376);
-  --alkok-blue-950: oklch(0.282 0.091 267.935);
+  --alkok-blue-50: oklch(0.968 0.014 258);
+  --alkok-blue-100: oklch(0.928 0.032 258);
+  --alkok-blue-400: oklch(0.715 0.142 258);
+  --alkok-blue-500: oklch(0.555 0.195 260);
+  --alkok-blue-600: oklch(0.515 0.215 262);
+  --alkok-blue-700: oklch(0.455 0.205 263);
+  --alkok-blue-950: oklch(0.255 0.072 264);
 
   /* Semantic Status Primitives */
-  --alkok-emerald-50: oklch(0.979 0.021 166.113);
-  --alkok-emerald-700: oklch(0.508 0.118 165.612);
-  --alkok-emerald-300: oklch(0.845 0.143 164.978);
-  --alkok-emerald-950: oklch(0.262 0.051 172.552);
+  --alkok-emerald-50: oklch(0.974 0.018 165);
+  --alkok-emerald-300: oklch(0.825 0.125 165);
+  --alkok-emerald-700: oklch(0.485 0.095 165);
+  --alkok-emerald-950: oklch(0.245 0.045 168);
 
-  --alkok-amber-50: oklch(0.987 0.022 95.277);
-  --alkok-amber-800: oklch(0.473 0.137 46.201);
-  --alkok-amber-300: oklch(0.879 0.169 91.605);
-  --alkok-amber-950: oklch(0.279 0.077 45.635);
+  --alkok-amber-50: oklch(0.978 0.024 88);
+  --alkok-amber-300: oklch(0.855 0.138 84);
+  --alkok-amber-800: oklch(0.475 0.098 58);
+  --alkok-amber-950: oklch(0.265 0.062 55);
 
-  --alkok-rose-50: oklch(0.969 0.015 12.422);
-  --alkok-rose-600: oklch(0.586 0.253 17.585);
-  --alkok-rose-700: oklch(0.514 0.222 16.935);
-  --alkok-rose-300: oklch(0.81 0.117 11.638);
-  --alkok-rose-950: oklch(0.271 0.105 12.094);
+  --alkok-rose-50: oklch(0.969 0.015 16);
+  --alkok-rose-300: oklch(0.805 0.112 16);
+  --alkok-rose-500: oklch(0.545 0.195 17);
+  --alkok-rose-600: oklch(0.530 0.205 17);
+  --alkok-rose-700: oklch(0.485 0.192 17);
+  --alkok-rose-950: oklch(0.255 0.085 16);
 
   /* ========================================================================
      Layer 2: Semantic Tokens (Light Mode — :root)
@@ -50,6 +52,17 @@
   --card-foreground: var(--alkok-slate-900);
   --popover: oklch(1 0 0);
   --popover-foreground: var(--alkok-slate-900);
+
+  --surface-raised: oklch(1 0 0);
+  --surface-sunken: var(--alkok-slate-100);
+  --separator: var(--alkok-slate-200);
+  --overlay-scrim: oklch(0.145 0.022 264 / 45%);
+
+  --sidebar: oklch(0.976 0.005 255);
+  --sidebar-foreground: var(--alkok-slate-900);
+  --sidebar-accent: var(--alkok-blue-50);
+  --sidebar-accent-foreground: var(--alkok-blue-700);
+  --sidebar-border: var(--alkok-slate-200);
 
   --primary: var(--alkok-blue-600);
   --primary-foreground: oklch(0.985 0 0);
@@ -64,24 +77,39 @@
   --destructive-foreground: oklch(0.985 0 0);
 
   --border: var(--alkok-slate-200);
-  --input: var(--alkok-slate-200);
+  --input: oklch(0.605 0.022 257);
   --ring: var(--alkok-blue-600);
   --radius: 0.5rem;
+
+  /* Elevation & Outlines */
+  --shadow-border:
+    0px 0px 0px 1px oklch(0 0 0 / 0.06),
+    0px 1px 2px -1px oklch(0 0 0 / 0.06),
+    0px 2px 4px 0px oklch(0 0 0 / 0.04);
+  --shadow-border-hover:
+    0px 0px 0px 1px oklch(0 0 0 / 0.08),
+    0px 1px 2px -1px oklch(0 0 0 / 0.08),
+    0px 2px 4px 0px oklch(0 0 0 / 0.06);
+  --shadow-elevated:
+    0px 0px 0px 1px oklch(0 0 0 / 0.08),
+    0px 4px 12px -2px oklch(0 0 0 / 0.08),
+    0px 12px 24px -4px oklch(0 0 0 / 0.08);
+  --image-outline: oklch(0 0 0 / 0.1);
 
   /* ========================================================================
      Layer 3: Alkok Domain Status & Surface Tokens (Light)
      ======================================================================== */
   --status-valid-bg: var(--alkok-emerald-50);
   --status-valid-fg: var(--alkok-emerald-700);
-  --status-valid-border: oklch(0.87 0.07 165);
+  --status-valid-border: oklch(0.87 0.065 165);
 
   --status-review-bg: var(--alkok-amber-50);
   --status-review-fg: var(--alkok-amber-800);
-  --status-review-border: oklch(0.88 0.09 85);
+  --status-review-border: oklch(0.88 0.08 84);
 
   --status-expired-bg: var(--alkok-rose-50);
   --status-expired-fg: var(--alkok-rose-700);
-  --status-expired-border: oklch(0.88 0.06 15);
+  --status-expired-border: oklch(0.88 0.055 16);
 
   --badge-official-bg: var(--alkok-blue-50);
   --badge-official-fg: var(--alkok-blue-700);
@@ -101,8 +129,19 @@
   --foreground: var(--alkok-slate-50);
   --card: var(--alkok-slate-900);
   --card-foreground: var(--alkok-slate-50);
-  --popover: var(--alkok-slate-900);
+  --popover: oklch(0.232 0.028 262);
   --popover-foreground: var(--alkok-slate-50);
+
+  --surface-raised: oklch(0.232 0.028 262);
+  --surface-sunken: oklch(0.172 0.024 264);
+  --separator: oklch(1 0 0 / 10%);
+  --overlay-scrim: oklch(0 0 0 / 68%);
+
+  --sidebar: oklch(0.172 0.024 264);
+  --sidebar-foreground: var(--alkok-slate-50);
+  --sidebar-accent: var(--alkok-blue-950);
+  --sidebar-accent-foreground: var(--alkok-blue-400);
+  --sidebar-border: oklch(1 0 0 / 10%);
 
   --primary: var(--alkok-blue-500);
   --primary-foreground: oklch(0.985 0 0);
@@ -113,26 +152,33 @@
   --accent: var(--alkok-blue-950);
   --accent-foreground: var(--alkok-blue-400);
 
-  --destructive: oklch(0.645 0.246 16.439);
+  --destructive: var(--alkok-rose-500);
   --destructive-foreground: oklch(0.985 0 0);
 
   --border: oklch(1 0 0 / 12%);
-  --input: oklch(1 0 0 / 15%);
+  --input: oklch(0.515 0.025 259);
   --ring: var(--alkok-blue-400);
 
-  --status-valid-bg: oklch(0.262 0.051 172.552 / 60%);
+  --shadow-border: 0 0 0 1px oklch(1 0 0 / 0.08);
+  --shadow-border-hover: 0 0 0 1px oklch(1 0 0 / 0.13);
+  --shadow-elevated:
+    0 0 0 1px oklch(1 0 0 / 0.12),
+    0 12px 32px -4px oklch(0 0 0 / 0.55);
+  --image-outline: oklch(1 0 0 / 0.1);
+
+  --status-valid-bg: var(--alkok-emerald-950);
   --status-valid-fg: var(--alkok-emerald-300);
-  --status-valid-border: oklch(0.45 0.09 166 / 50%);
+  --status-valid-border: oklch(0.45 0.08 165 / 55%);
 
-  --status-review-bg: oklch(0.279 0.077 45.635 / 60%);
+  --status-review-bg: var(--alkok-amber-950);
   --status-review-fg: var(--alkok-amber-300);
-  --status-review-border: oklch(0.5 0.11 75 / 50%);
+  --status-review-border: oklch(0.5 0.09 70 / 55%);
 
-  --status-expired-bg: oklch(0.271 0.105 12.094 / 60%);
+  --status-expired-bg: var(--alkok-rose-950);
   --status-expired-fg: var(--alkok-rose-300);
-  --status-expired-border: oklch(0.5 0.14 15 / 50%);
+  --status-expired-border: oklch(0.5 0.12 16 / 55%);
 
-  --badge-official-bg: oklch(0.282 0.091 267.935 / 70%);
+  --badge-official-bg: var(--alkok-blue-950);
   --badge-official-fg: var(--alkok-blue-400);
 
   --badge-affiliate-bg: var(--alkok-slate-800);
@@ -140,4 +186,24 @@
 
   --prompt-surface: var(--alkok-slate-900);
   --prompt-border: oklch(1 0 0 / 14%);
+}
+
+/* ==========================================================================
+   Increased Contrast Preferences (Per Appearance)
+   ========================================================================== */
+@media (prefers-contrast: more) {
+  :root {
+    --muted-foreground: var(--alkok-slate-700);
+    --border: var(--alkok-slate-400);
+    --input: var(--alkok-slate-700);
+    --primary: var(--alkok-blue-700);
+  }
+
+  .dark {
+    --muted-foreground: var(--alkok-slate-300);
+    --border: oklch(1 0 0 / 28%);
+    --input: var(--alkok-slate-300);
+    --primary: var(--alkok-blue-400);
+    --primary-foreground: var(--alkok-slate-950);
+  }
 }

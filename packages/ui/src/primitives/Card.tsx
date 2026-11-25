@@ -4,7 +4,7 @@ import { cn } from "@alkok/core";
 export const Card = ({ className, ...props }: HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
-      "rounded-lg border border-border bg-card text-card-foreground",
+      "rounded-xl border border-transparent bg-card text-card-foreground shadow-border",
       className,
     )}
     {...props}
@@ -23,7 +23,10 @@ export const CardTitle = ({
   ...props
 }: HTMLAttributes<HTMLHeadingElement>) => (
   <h3
-    className={cn("text-base font-semibold leading-snug tracking-tight", className)}
+    className={cn(
+      "text-balance text-base font-semibold leading-[1.3] tracking-[-0.01em]",
+      className,
+    )}
     {...props}
   />
 );
@@ -32,7 +35,10 @@ export const CardDescription = ({
   className,
   ...props
 }: HTMLAttributes<HTMLParagraphElement>) => (
-  <p className={cn("text-sm text-muted-foreground", className)} {...props} />
+  <p
+    className={cn("text-pretty text-sm leading-[1.5] text-muted-foreground", className)}
+    {...props}
+  />
 );
 
 export const CardContent = ({

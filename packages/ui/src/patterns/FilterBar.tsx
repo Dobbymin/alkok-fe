@@ -10,7 +10,7 @@ export interface FilterBarProps {
 export const FilterBar = ({ children, actions, className }: FilterBarProps) => (
   <div
     className={cn(
-      "flex flex-col gap-3 rounded-lg border border-border bg-card p-3 sm:flex-row sm:items-center sm:justify-between",
+      "flex flex-col gap-3 rounded-xl border border-transparent bg-card p-3 shadow-border sm:flex-row sm:items-center sm:justify-between",
       className,
     )}
   >

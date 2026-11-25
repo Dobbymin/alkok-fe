@@ -7,8 +7,10 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
   return (
     <NextThemesProvider
       attribute="class"
-      defaultTheme="system"
-      enableSystem
+      defaultTheme="light"
+      enableSystem={false}
+      themes={["light", "dark"]}
+      storageKey="alkok-theme"
       disableTransitionOnChange
     >
       {children}

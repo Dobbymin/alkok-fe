@@ -17,7 +17,7 @@ export const DropdownMenuContent = ({
     <DropdownMenuPrimitive.Content
       sideOffset={sideOffset}
       className={cn(
-        "z-50 min-w-[10rem] overflow-hidden rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md",
+        "z-50 min-w-[10rem] origin-[var(--radix-dropdown-menu-content-transform-origin)] overflow-y-auto overscroll-contain rounded-lg border border-transparent bg-surface-raised p-1 text-popover-foreground shadow-elevated",
         className,
       )}
       {...props}
@@ -31,7 +31,7 @@ export const DropdownMenuItem = ({
 }: ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Item>) => (
   <DropdownMenuPrimitive.Item
     className={cn(
-      "relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2.5 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      "relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm outline-none [-webkit-tap-highlight-color:transparent] transition-[color,background-color] duration-150 ease-out focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
       className,
     )}
     {...props}
@@ -43,7 +43,7 @@ export const DropdownMenuSeparator = ({
   ...props
 }: ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Separator>) => (
   <DropdownMenuPrimitive.Separator
-    className={cn("-mx-1 my-1 h-px bg-border", className)}
+    className={cn("-mx-1 my-1 h-px bg-separator", className)}
     {...props}
   />
 );

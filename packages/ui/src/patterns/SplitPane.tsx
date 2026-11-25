@@ -14,10 +14,10 @@ export const SplitPane = ({ left, right, className }: SplitPaneProps) => (
       className,
     )}
   >
-    <section className="rounded-lg border border-border bg-card p-4">
+    <section className="rounded-xl border border-transparent bg-card p-4 shadow-border">
       {left}
     </section>
-    <section className="rounded-lg border border-border bg-card p-4">
+    <section className="rounded-xl border border-transparent bg-card p-4 shadow-border">
       {right}
     </section>
   </div>

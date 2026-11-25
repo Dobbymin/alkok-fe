@@ -10,7 +10,7 @@ export const Table = ({
   className,
   ...props
 }: TableHTMLAttributes<HTMLTableElement>) => (
-  <div className="relative w-full overflow-x-auto rounded-lg border border-border bg-card">
+  <div className="relative w-full overflow-x-auto rounded-xl border border-transparent bg-card shadow-border">
     <table
       className={cn("w-full caption-bottom text-sm", className)}
       {...props}
@@ -22,7 +22,7 @@ export const TableHeader = ({
   className,
   ...props
 }: HTMLAttributes<HTMLTableSectionElement>) => (
-  <thead className={cn("border-b border-border bg-muted/50", className)} {...props} />
+  <thead className={cn("border-b border-border bg-surface-sunken", className)} {...props} />
 );
 
 export const TableBody = ({
@@ -38,7 +38,7 @@ export const TableRow = ({
 }: HTMLAttributes<HTMLTableRowElement>) => (
   <tr
     className={cn(
-      "border-b border-border transition-colors hover:bg-muted/40",
+      "border-b border-separator transition-[background-color] duration-150 ease-out hover:bg-muted/40",
       className,
     )}
     {...props}
@@ -51,7 +51,7 @@ export const TableHead = ({
 }: ThHTMLAttributes<HTMLTableCellElement>) => (
   <th
     className={cn(
-      "h-10 px-3 text-left align-middle text-xs font-semibold text-muted-foreground",
+      "h-10 px-3 text-start align-middle text-xs font-semibold text-muted-foreground",
       className,
     )}
     {...props}
