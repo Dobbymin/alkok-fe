@@ -23,17 +23,23 @@ export const ErrorState = ({
   <div
     role="alert"
     className={cn(
-      "flex flex-col items-center justify-center rounded-lg border border-status-expired-border bg-status-expired-bg/50 px-6 py-10 text-center",
+      "flex flex-col items-center justify-center rounded-xl border border-status-expired-border bg-status-expired-bg/50 px-6 py-10 text-center",
       className,
     )}
   >
     <AlertCircle
       className="mb-3 h-8 w-8 text-status-expired-fg"
       strokeWidth={1.75}
+      absoluteStrokeWidth
+      aria-hidden="true"
     />
-    <h3 className="text-base font-semibold text-foreground">{title}</h3>
+    <h3 className="text-balance text-base font-semibold leading-[1.3] text-foreground">
+      {title}
+    </h3>
     {description ? (
-      <p className="mt-1 max-w-md text-sm text-muted-foreground">{description}</p>
+      <p className="mt-1 max-w-md text-pretty text-sm leading-[1.5] text-muted-foreground">
+        {description}
+      </p>
     ) : null}
     {onRetry || action ? (
       <div className="mt-4 flex flex-wrap justify-center gap-2">

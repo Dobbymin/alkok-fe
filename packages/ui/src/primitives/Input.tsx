@@ -14,8 +14,8 @@ export const Input = ({
   <input
     type={type}
     className={cn(
-      "flex w-full rounded-md border border-input bg-card px-3 text-sm text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
-      inputSize === "sm" ? "h-8 text-xs" : "h-10",
+      "flex w-full rounded-md border border-input bg-card px-3 text-foreground placeholder:text-muted-foreground transition-[border-color,box-shadow] duration-150 ease-out focus-visible:outline-2 focus-visible:outline-offset-0 focus-visible:outline-ring disabled:cursor-not-allowed disabled:opacity-50",
+      inputSize === "sm" ? "h-8 text-base sm:text-xs" : "h-10 text-base sm:text-sm",
       className,
     )}
     {...props}

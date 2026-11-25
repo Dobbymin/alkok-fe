@@ -74,7 +74,7 @@ export const QuickSearchModal = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="h-[90vh] max-w-xl content-start p-4 sm:h-auto sm:p-6">
+      <DialogContent className="max-h-[90dvh] max-w-xl content-start overflow-y-auto overscroll-contain p-4 sm:h-auto sm:p-6">
         <DialogHeader className="sr-only">
           <DialogTitle>통합 빠른 검색</DialogTitle>
           <DialogDescription>
@@ -82,11 +82,13 @@ export const QuickSearchModal = ({
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="flex items-center gap-2 pr-8">
+        <form onSubmit={handleSubmit} className="flex items-center gap-2 pe-8">
           <div className="relative flex-1">
             <Search
-              className="pointer-events-none absolute left-3 top-3 h-4 w-4 text-muted-foreground"
+              className="pointer-events-none absolute start-3 top-3 h-4 w-4 text-muted-foreground"
               strokeWidth={1.75}
+              absoluteStrokeWidth
+              aria-hidden="true"
             />
             <Input
               autoFocus
@@ -94,7 +96,7 @@ export const QuickSearchModal = ({
               onChange={(e) => setQuery(e.target.value)}
               placeholder="예: 회의록 정리, PDF 요약, 무료 이미지 생성 도구"
               aria-label="검색어 입력"
-              className="pl-9"
+              className="ps-9"
             />
           </div>
           <Button type="submit" size="sm">
@@ -109,7 +111,7 @@ export const QuickSearchModal = ({
                 자동완성 추천 (최대 8건)
               </p>
               {suggestQuery.isFetching ? (
-                <p className="text-xs text-muted-foreground">검색 중...</p>
+                <p className="text-xs text-muted-foreground">검색 중…</p>
               ) : suggestions.length > 0 ? (
                 <ul className="flex flex-col gap-1">
                   {suggestions.map((item) => {

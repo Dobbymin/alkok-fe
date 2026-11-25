@@ -47,7 +47,7 @@ const AdminNavLinks = ({
   pathname: string;
   onNavigate?: () => void;
 }) => (
-  <nav aria-label="관리자 메뉴" className="flex flex-col gap-1">
+  <nav aria-label="관리자 메뉴" className="flex flex-col gap-0.5">
     {ADMIN_NAV_ITEMS.map((item) => {
       const Icon = item.icon;
       const isActive =
@@ -60,13 +60,18 @@ const AdminNavLinks = ({
           onClick={onNavigate}
           aria-current={isActive ? "page" : undefined}
           className={cn(
-            "flex h-9 items-center gap-2.5 rounded-md px-3 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+            "relative flex h-9 items-center gap-2.5 rounded-lg px-3 text-sm [-webkit-tap-highlight-color:transparent] transition-[color,background-color] duration-150 ease-out focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
             isActive
-              ? "bg-accent text-accent-foreground"
-              : "text-muted-foreground hover:bg-secondary hover:text-foreground",
+              ? "bg-sidebar-accent font-semibold text-sidebar-accent-foreground before:absolute before:inset-y-1.5 before:start-0 before:w-0.5 before:rounded-full before:bg-primary"
+              : "font-medium text-muted-foreground hover:bg-secondary hover:text-foreground",
           )}
         >
-          <Icon className="h-4 w-4 shrink-0" strokeWidth={1.75} />
+          <Icon
+            className="h-4 w-4 shrink-0"
+            strokeWidth={isActive ? 2 : 1.75}
+            absoluteStrokeWidth
+            aria-hidden="true"
+          />
           <span>{item.label}</span>
         </Link>
       );
@@ -80,32 +85,42 @@ export const AdminShell = ({ children }: { children: ReactNode }) => {
   const currentLabel = getCurrentPageLabel(pathname);
 
   return (
-    <div className="flex min-h-screen bg-background text-foreground">
+    <div className="flex min-h-dvh bg-background text-foreground">
+      <a
+        href="#admin-main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:start-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-primary focus:px-3.5 focus:py-2 focus:text-sm focus:font-medium focus:text-primary-foreground focus:shadow-elevated"
+      >
+        본문으로 건너뛰기
+      </a>
+
       {/* Desktop Left Sidebar */}
-      <aside className="hidden w-60 shrink-0 flex-col border-r border-border bg-card lg:flex">
-        <div className="flex h-14 items-center justify-between border-b border-border px-4">
+      <aside
+        aria-label="관리자 사이드바"
+        className="sticky top-0 hidden h-dvh w-60 shrink-0 flex-col border-e border-sidebar-border bg-sidebar text-sidebar-foreground lg:flex"
+      >
+        <div className="flex h-14 shrink-0 items-center justify-between border-b border-separator px-4">
           <Link
             href="/"
-            className="text-sm font-bold tracking-tight text-foreground"
+            className="text-sm font-bold tracking-tight text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring rounded-sm"
           >
             Alkok Admin
           </Link>
           {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
           <a
             href="/"
-            className="text-xs text-muted-foreground hover:text-foreground"
+            className="text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
           >
             공개 웹 →
           </a>
         </div>
-        <div className="flex-1 p-3">
+        <div className="flex-1 overflow-y-auto overscroll-contain p-3">
           <AdminNavLinks pathname={pathname} />
         </div>
       </aside>
 
       {/* Main Column */}
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="flex h-14 items-center justify-between border-b border-border bg-card px-4 lg:px-6">
+        <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-border bg-card/95 px-4 backdrop-blur-sm lg:px-6">
           <div className="flex items-center gap-3">
             <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
               <SheetTrigger asChild>
@@ -115,7 +130,12 @@ export const AdminShell = ({ children }: { children: ReactNode }) => {
                   aria-label="관리자 메뉴 열기"
                   className="lg:hidden"
                 >
-                  <Menu className="h-4 w-4" strokeWidth={1.75} />
+                  <Menu
+                    className="h-4 w-4"
+                    strokeWidth={1.75}
+                    absoluteStrokeWidth
+                    aria-hidden="true"
+                  />
                 </Button>
               </SheetTrigger>
               <SheetContent side="left" className="w-64 p-4">
@@ -126,12 +146,12 @@ export const AdminShell = ({ children }: { children: ReactNode }) => {
                   pathname={pathname}
                   onNavigate={() => setMobileOpen(false)}
                 />
-                <div className="mt-6 border-t border-border pt-4">
+                <div className="mt-6 border-t border-separator pt-4">
                   {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
                   <a
                     href="/"
                     onClick={() => setMobileOpen(false)}
-                    className="text-xs text-muted-foreground hover:text-foreground"
+                    className="text-xs font-medium text-muted-foreground hover:text-foreground"
                   >
                     공개 웹으로 이동 →
                   </a>
@@ -148,7 +168,11 @@ export const AdminShell = ({ children }: { children: ReactNode }) => {
           </div>
         </header>
 
-        <main className="mx-auto w-full max-w-7xl flex-1 p-4 lg:p-6">
+        <main
+          id="admin-main-content"
+          tabIndex={-1}
+          className="mx-auto w-full max-w-7xl flex-1 p-4 focus:outline-none lg:p-6"
+        >
           {children}
         </main>
       </div>

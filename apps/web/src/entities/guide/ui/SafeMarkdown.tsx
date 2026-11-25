@@ -12,7 +12,7 @@ function slugifyHeading(text: string): string {
 
 export const SafeMarkdown = ({ content }: { content: string }) => {
   return (
-    <div className="prose-alkok space-y-4 text-base leading-[1.7] text-foreground">
+    <div className="prose-alkok max-w-[65ch] space-y-4 text-base leading-[1.7] text-foreground">
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeSanitize]}
@@ -22,7 +22,7 @@ export const SafeMarkdown = ({ content }: { content: string }) => {
             return (
               <h2
                 id={slugifyHeading(text)}
-                className="mt-8 scroll-mt-20 text-xl font-bold tracking-tight text-foreground"
+                className="mt-8 scroll-mt-20 text-balance text-xl font-bold leading-[1.25] tracking-[-0.015em] text-foreground md:scroll-mt-8"
               >
                 {children}
               </h2>
@@ -33,20 +33,22 @@ export const SafeMarkdown = ({ content }: { content: string }) => {
             return (
               <h3
                 id={slugifyHeading(text)}
-                className="mt-6 scroll-mt-20 text-lg font-semibold text-foreground"
+                className="mt-6 scroll-mt-20 text-balance text-lg font-semibold leading-[1.3] tracking-[-0.01em] text-foreground md:scroll-mt-8"
               >
                 {children}
               </h3>
             );
           },
           p: ({ children }) => (
-            <p className="text-base leading-[1.7] text-foreground">{children}</p>
+            <p className="text-pretty text-base leading-[1.7] text-foreground">
+              {children}
+            </p>
           ),
           ul: ({ children }) => (
-            <ul className="list-disc space-y-1.5 pl-5">{children}</ul>
+            <ul className="list-disc space-y-1.5 ps-5">{children}</ul>
           ),
           ol: ({ children }) => (
-            <ol className="list-decimal space-y-1.5 pl-5">{children}</ol>
+            <ol className="list-decimal space-y-1.5 ps-5">{children}</ol>
           ),
           code: ({ children }) => (
             <code className="rounded-sm bg-muted px-1.5 py-0.5 font-mono text-[13px] text-foreground">
@@ -58,7 +60,7 @@ export const SafeMarkdown = ({ content }: { content: string }) => {
               href={href}
               target="_blank"
               rel="noopener noreferrer"
-              className="font-medium text-primary underline underline-offset-4"
+              className="font-medium text-primary underline underline-offset-4 [text-underline-position:from-font] decoration-from-font"
             >
               {children}
             </a>

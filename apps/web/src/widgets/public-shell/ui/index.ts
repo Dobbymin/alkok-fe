@@ -1,5 +1,5 @@
 export * from "./BrandLogo";
-export * from "./DesktopHeader";
+export * from "./DesktopSidebar";
 export * from "./MobileBottomTabs";
 export * from "./MobileHeader";
 export * from "./PublicShell";

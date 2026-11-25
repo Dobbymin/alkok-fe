@@ -138,10 +138,9 @@ export const SettingsForms = () => {
         <CardContent>
           <ToggleGroup
             type="single"
-            value={theme ?? "system"}
+            value={theme === "dark" ? "dark" : "light"}
             onValueChange={(v) => v && setTheme(v)}
           >
-            <ToggleGroupItem value="system">시스템</ToggleGroupItem>
             <ToggleGroupItem value="light">라이트</ToggleGroupItem>
             <ToggleGroupItem value="dark">다크</ToggleGroupItem>
           </ToggleGroup>

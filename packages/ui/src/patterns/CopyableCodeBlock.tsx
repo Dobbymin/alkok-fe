@@ -43,7 +43,7 @@ export const CopyableCodeBlock = ({
   return (
     <div
       className={cn(
-        "overflow-hidden rounded-lg border border-prompt-border bg-prompt-surface",
+        "overflow-hidden rounded-xl border border-prompt-border bg-prompt-surface",
         className,
       )}
     >
@@ -60,17 +60,30 @@ export const CopyableCodeBlock = ({
         >
           {copied ? (
             <>
-              <Check className="h-3.5 w-3.5 text-status-valid-fg" strokeWidth={1.75} />
+              <Check
+                className="h-3.5 w-3.5 text-status-valid-fg"
+                strokeWidth={2}
+                absoluteStrokeWidth
+                aria-hidden="true"
+              />
               <span>복사됨</span>
             </>
           ) : (
             <>
-              <Copy className="h-3.5 w-3.5" strokeWidth={1.75} />
+              <Copy
+                className="h-3.5 w-3.5"
+                strokeWidth={1.75}
+                absoluteStrokeWidth
+                aria-hidden="true"
+              />
               <span>{copyLabel}</span>
             </>
           )}
         </Button>
       </div>
+      <span className="sr-only" role="status" aria-live="polite">
+        {copied ? "클립보드에 복사되었습니다." : ""}
+      </span>
       <pre className="overflow-x-auto p-4 font-mono text-[13px] leading-relaxed text-foreground select-all whitespace-pre-wrap break-words">
         <code>{renderedCode ?? code}</code>
       </pre>

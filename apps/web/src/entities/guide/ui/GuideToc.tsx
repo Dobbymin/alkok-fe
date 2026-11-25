@@ -18,10 +18,10 @@ export const GuideToc = ({ headings }: { headings: TocHeading[] }) => {
   const list = (
     <ul className="flex flex-col gap-1.5 text-xs">
       {headings.map((h) => (
-        <li key={h.id} className={cn(h.level >= 3 && "pl-3")}>
+        <li key={h.id} className={cn(h.level >= 3 && "ps-3")}>
           <a
             href={`#${h.id}`}
-            className="block rounded-sm py-0.5 text-muted-foreground hover:text-foreground"
+            className="block rounded-sm py-0.5 text-muted-foreground transition-colors hover:text-foreground"
           >
             {h.text}
           </a>
@@ -33,7 +33,7 @@ export const GuideToc = ({ headings }: { headings: TocHeading[] }) => {
   return (
     <>
       {/* Mobile collapsible TOC */}
-      <div className="rounded-lg border border-border bg-card p-3 lg:hidden">
+      <div className="rounded-xl border border-transparent bg-card p-3 shadow-border lg:hidden">
         <button
           type="button"
           onClick={() => setMobileOpen((prev) => !prev)}
@@ -43,18 +43,20 @@ export const GuideToc = ({ headings }: { headings: TocHeading[] }) => {
           <span>목차</span>
           <ChevronDown
             className={cn(
-              "h-4 w-4 transition-transform",
+              "h-4 w-4 transition-transform duration-150 ease-out",
               mobileOpen && "rotate-180",
             )}
             strokeWidth={1.75}
+            absoluteStrokeWidth
+            aria-hidden="true"
           />
         </button>
-        {mobileOpen ? <div className="mt-2 pt-2 border-t border-border">{list}</div> : null}
+        {mobileOpen ? <div className="mt-2 border-t border-separator pt-2">{list}</div> : null}
       </div>
 
       {/* Desktop sticky TOC */}
       <aside className="hidden lg:block">
-        <div className="sticky top-20 rounded-lg border border-border bg-card p-4">
+        <div className="sticky top-8 rounded-xl border border-transparent bg-card p-4 shadow-border">
           <p className="mb-2.5 text-xs font-semibold text-foreground">목차</p>
           {list}
         </div>
