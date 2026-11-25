@@ -1,9 +1,22 @@
 "use client";
 
-import { LogOut, Menu, Newspaper, Search, Settings, Shield } from "lucide-react";
+import {
+  Bookmark,
+  BookOpen,
+  Home,
+  LogOut,
+  Menu,
+  Newspaper,
+  Scale,
+  Search,
+  Settings,
+  Shield,
+  Wrench,
+} from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { useAuth } from "@alkok/core";
+import { cn, useAuth } from "@alkok/core";
 import {
   Button,
   Sheet,
@@ -15,16 +28,45 @@ import {
 import { BrandLogo } from "./BrandLogo";
 import { ThemeToggle } from "./ThemeToggle";
 
+const MOBILE_NAV = [
+  { href: "/", label: "홈", icon: Home, match: (p: string) => p === "/" },
+  {
+    href: "/guides",
+    label: "업무 가이드",
+    icon: BookOpen,
+    match: (p: string) => p.startsWith("/guides"),
+  },
+  {
+    href: "/tools",
+    label: "AI 도구·모델",
+    icon: Wrench,
+    match: (p: string) => p.startsWith("/tools") && !p.startsWith("/tools/compare"),
+  },
+  {
+    href: "/tools/compare",
+    label: "도구 비교",
+    icon: Scale,
+    match: (p: string) => p.startsWith("/tools/compare"),
+  },
+  {
+    href: "/news",
+    label: "AI 소식",
+    icon: Newspaper,
+    match: (p: string) => p.startsWith("/news"),
+  },
+] as const;
+
 export const MobileHeader = ({
   onOpenSearch,
 }: {
   onOpenSearch?: () => void;
 }) => {
   const [open, setOpen] = useState(false);
+  const pathname = usePathname() || "/";
   const { user, isAuthenticated, logout } = useAuth();
 
   return (
-    <header className="sticky top-0 z-40 flex h-14 items-center justify-between border-b border-border bg-card/95 px-4 backdrop-blur md:hidden">
+    <header className="sticky top-0 z-40 flex h-14 items-center justify-between border-b border-border bg-sidebar/95 px-4 backdrop-blur-sm md:hidden">
       <BrandLogo />
 
       <div className="flex items-center gap-1">
@@ -35,7 +77,12 @@ export const MobileHeader = ({
           onClick={onOpenSearch}
           className="h-10 w-10"
         >
-          <Search className="h-5 w-5" strokeWidth={1.75} />
+          <Search
+            className="h-5 w-5"
+            strokeWidth={1.75}
+            absoluteStrokeWidth
+            aria-hidden="true"
+          />
         </Button>
 
         <ThemeToggle />
@@ -48,41 +95,103 @@ export const MobileHeader = ({
               aria-label="모바일 메뉴 열기"
               className="h-10 w-10"
             >
-              <Menu className="h-5 w-5" strokeWidth={1.75} />
+              <Menu
+                className="h-5 w-5"
+                strokeWidth={1.75}
+                absoluteStrokeWidth
+                aria-hidden="true"
+              />
             </Button>
           </SheetTrigger>
-          <SheetContent side="right" className="w-72">
+          <SheetContent side="left" className="w-72">
             <SheetHeader>
               <SheetTitle>메뉴</SheetTitle>
             </SheetHeader>
             <nav aria-label="모바일 보조 메뉴" className="mt-4 flex flex-col gap-1">
-              <Link
-                href="/news"
-                onClick={() => setOpen(false)}
-                className="flex h-11 items-center gap-2.5 rounded-md px-3 text-sm font-medium hover:bg-secondary"
-              >
-                <Newspaper className="h-4 w-4" strokeWidth={1.75} />
-                AI 소식
-              </Link>
-              <Link
-                href="/settings"
-                onClick={() => setOpen(false)}
-                className="flex h-11 items-center gap-2.5 rounded-md px-3 text-sm font-medium hover:bg-secondary"
-              >
-                <Settings className="h-4 w-4" strokeWidth={1.75} />
-                설정
-              </Link>
-              {user?.role === "ADMIN" ? (
+              {MOBILE_NAV.map((item) => {
+                const Icon = item.icon;
+                const isActive = item.match(pathname);
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => setOpen(false)}
+                    aria-current={isActive ? "page" : undefined}
+                    className={cn(
+                      "flex h-11 items-center gap-2.5 rounded-lg px-3 text-sm transition-[color,background-color] duration-150 ease-out",
+                      isActive
+                        ? "bg-sidebar-accent font-semibold text-sidebar-accent-foreground"
+                        : "font-medium text-muted-foreground hover:bg-secondary hover:text-foreground",
+                    )}
+                  >
+                    <Icon
+                      className="h-4 w-4 shrink-0"
+                      strokeWidth={isActive ? 2 : 1.75}
+                      absoluteStrokeWidth
+                      aria-hidden="true"
+                    />
+                    {item.label}
+                  </Link>
+                );
+              })}
+
+              <div className="mt-4 flex flex-col gap-1">
                 <Link
-                  href="/admin"
+                  href="/vault"
                   onClick={() => setOpen(false)}
-                  className="flex h-11 items-center gap-2.5 rounded-md px-3 text-sm font-medium hover:bg-secondary"
+                  aria-current={pathname.startsWith("/vault") ? "page" : undefined}
+                  className={cn(
+                    "flex h-11 items-center gap-2.5 rounded-lg px-3 text-sm transition-[color,background-color] duration-150 ease-out",
+                    pathname.startsWith("/vault")
+                      ? "bg-sidebar-accent font-semibold text-sidebar-accent-foreground"
+                      : "font-medium text-muted-foreground hover:bg-secondary hover:text-foreground",
+                  )}
                 >
-                  <Shield className="h-4 w-4" strokeWidth={1.75} />
-                  관리자 CMS
+                  <Bookmark
+                    className="h-4 w-4 shrink-0"
+                    strokeWidth={1.75}
+                    absoluteStrokeWidth
+                    aria-hidden="true"
+                  />
+                  내 보관함
                 </Link>
-              ) : null}
-              <div className="my-2 border-t border-border" />
+                <Link
+                  href="/settings"
+                  onClick={() => setOpen(false)}
+                  aria-current={pathname.startsWith("/settings") ? "page" : undefined}
+                  className={cn(
+                    "flex h-11 items-center gap-2.5 rounded-lg px-3 text-sm transition-[color,background-color] duration-150 ease-out",
+                    pathname.startsWith("/settings")
+                      ? "bg-sidebar-accent font-semibold text-sidebar-accent-foreground"
+                      : "font-medium text-muted-foreground hover:bg-secondary hover:text-foreground",
+                  )}
+                >
+                  <Settings
+                    className="h-4 w-4 shrink-0"
+                    strokeWidth={1.75}
+                    absoluteStrokeWidth
+                    aria-hidden="true"
+                  />
+                  설정
+                </Link>
+                {user?.role === "ADMIN" ? (
+                  <Link
+                    href="/admin"
+                    onClick={() => setOpen(false)}
+                    className="flex h-11 items-center gap-2.5 rounded-lg px-3 text-sm font-medium text-muted-foreground hover:bg-secondary hover:text-foreground"
+                  >
+                    <Shield
+                      className="h-4 w-4 shrink-0"
+                      strokeWidth={1.75}
+                      absoluteStrokeWidth
+                      aria-hidden="true"
+                    />
+                    관리자 CMS
+                  </Link>
+                ) : null}
+              </div>
+
+              <div className="my-3 border-t border-separator" />
               {isAuthenticated ? (
                 <Button
                   variant="outline"
@@ -92,7 +201,12 @@ export const MobileHeader = ({
                   }}
                   className="justify-start gap-2"
                 >
-                  <LogOut className="h-4 w-4" strokeWidth={1.75} />
+                  <LogOut
+                    className="h-4 w-4"
+                    strokeWidth={1.75}
+                    absoluteStrokeWidth
+                    aria-hidden="true"
+                  />
                   로그아웃
                 </Button>
               ) : (

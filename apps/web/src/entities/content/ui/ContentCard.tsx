@@ -26,7 +26,7 @@ export const ContentCard = ({
   const href = `${typeMeta.hrefPrefix}/${item.slug}`;
 
   return (
-    <Card className="flex h-full flex-col justify-between transition-colors hover:border-primary/50">
+    <Card className="flex h-full flex-col justify-between transition-[box-shadow,border-color] duration-150 ease-out hover:border-primary/40 hover:shadow-border-hover">
       <CardHeader className="gap-2 pb-3">
         <div className="flex items-center justify-between gap-2">
           <div className="flex flex-wrap items-center gap-1.5">
@@ -43,12 +43,12 @@ export const ContentCard = ({
 
         <Link
           href={href}
-          className="line-clamp-2 text-base font-semibold leading-snug text-foreground hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
+          className="line-clamp-2 text-balance rounded-sm text-base font-semibold leading-[1.3] text-foreground transition-colors hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
         >
           {item.title}
         </Link>
 
-        <p className="line-clamp-2 text-sm text-muted-foreground">
+        <p className="line-clamp-2 text-pretty text-sm leading-[1.5] text-muted-foreground">
           {item.summary}
         </p>
       </CardHeader>
@@ -64,9 +64,14 @@ export const ContentCard = ({
           </div>
         ) : null}
 
-        <div className="flex items-center justify-between border-t border-border pt-2.5 text-xs text-muted-foreground">
+        <div className="flex items-center justify-between border-t border-separator pt-2.5 text-xs text-muted-foreground">
           <span className="inline-flex items-center gap-1 tabular-nums">
-            <ThumbsUp className="h-3.5 w-3.5" strokeWidth={1.75} />
+            <ThumbsUp
+              className="h-3.5 w-3.5"
+              strokeWidth={1.75}
+              absoluteStrokeWidth
+              aria-hidden="true"
+            />
             도움됨 {item.helpfulCount}
           </span>
           {footerSlot}

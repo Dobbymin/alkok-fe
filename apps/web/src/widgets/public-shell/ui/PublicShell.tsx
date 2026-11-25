@@ -2,7 +2,7 @@
 
 import { useState, type ReactNode } from "react";
 import { QuickSearchModal } from "@/features/quick-search";
-import { DesktopHeader } from "./DesktopHeader";
+import { DesktopSidebar } from "./DesktopSidebar";
 import { MobileBottomTabs } from "./MobileBottomTabs";
 import { MobileHeader } from "./MobileHeader";
 
@@ -14,13 +14,26 @@ export const PublicShell = ({ children }: PublicShellProps) => {
   const [searchOpen, setSearchOpen] = useState(false);
 
   return (
-    <div className="flex min-h-screen flex-col bg-background text-foreground">
-      <DesktopHeader onOpenSearch={() => setSearchOpen(true)} />
+    <div className="flex min-h-dvh flex-col bg-background text-foreground md:flex-row">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:start-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-primary focus:px-3.5 focus:py-2 focus:text-sm focus:font-medium focus:text-primary-foreground focus:shadow-elevated"
+      >
+        본문으로 건너뛰기
+      </a>
+
+      <DesktopSidebar onOpenSearch={() => setSearchOpen(true)} />
       <MobileHeader onOpenSearch={() => setSearchOpen(true)} />
 
-      <main className="mx-auto w-full max-w-6xl flex-1 px-4 pt-6 pb-20 md:pb-8">
-        {children}
-      </main>
+      <div className="flex min-w-0 flex-1 flex-col">
+        <main
+          id="main-content"
+          tabIndex={-1}
+          className="mx-auto w-full max-w-5xl flex-1 px-4 pt-6 pb-20 focus:outline-none md:px-8 md:py-8 md:pb-8"
+        >
+          {children}
+        </main>
+      </div>
 
       <MobileBottomTabs />
 
