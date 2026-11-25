@@ -38,8 +38,8 @@ export default function GuideDetailPage({
   const headings = guide.toc ?? [];
 
   return (
-    <div className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_240px]">
-      <article className="mx-auto flex w-full max-w-3xl flex-col gap-6">
+    <div className="flex flex-col gap-8 lg:flex-row">
+      <article className="flex min-w-0 flex-1 flex-col gap-6">
         {/* 1. Structured Summary Card */}
         <Card>
           <CardHeader className="gap-3">
@@ -109,7 +109,7 @@ export default function GuideDetailPage({
               <AlertTriangle className="h-4 w-4" strokeWidth={1.75} />
               <span>주의사항 및 한계</span>
             </div>
-            <p className="mt-1.5 text-sm text-foreground">{guide.cautions}</p>
+            <p className="mt-2 text-sm text-foreground">{guide.cautions}</p>
           </div>
         ) : null}
 
@@ -136,9 +136,9 @@ export default function GuideDetailPage({
         </div>
 
         {guide.relatedGuides && guide.relatedGuides.length > 0 ? (
-          <section className="flex flex-col gap-3 pt-4">
+          <section className="flex flex-col gap-4 pt-4">
             <CardTitle className="text-lg">연관 업무 가이드</CardTitle>
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               {guide.relatedGuides.map((rel) => (
                 <ContentCard key={rel.id} item={rel} />
               ))}
@@ -148,7 +148,7 @@ export default function GuideDetailPage({
       </article>
 
       {/* Desktop Sticky TOC */}
-      <div className="hidden lg:block">
+      <div className="hidden w-60 shrink-0 lg:block">
         <GuideToc headings={headings} />
       </div>
     </div>

@@ -99,7 +99,7 @@ export const VaultFolderSidebar = ({
           type="button"
           onClick={() => onSelectFolder("")}
           className={cn(
-            "flex items-center justify-between rounded-md px-2.5 py-1.5 text-left text-sm transition-colors",
+            "flex items-center justify-between rounded-md px-3 py-2 text-left text-sm transition-colors",
             selectedFolderId === ""
               ? "bg-accent font-medium text-accent-foreground"
               : "text-muted-foreground hover:bg-secondary hover:text-foreground",
@@ -132,7 +132,7 @@ export const VaultFolderSidebar = ({
             <div
               key={folder.id}
               className={cn(
-                "group flex items-center justify-between rounded-md px-2.5 py-1.5 text-sm transition-colors",
+                "group flex items-center justify-between rounded-md px-3 py-2 text-sm transition-colors",
                 selectedFolderId === folder.id
                   ? "bg-accent font-medium text-accent-foreground"
                   : "text-muted-foreground hover:bg-secondary hover:text-foreground",
@@ -146,7 +146,7 @@ export const VaultFolderSidebar = ({
                 <Folder className="h-4 w-4 shrink-0" aria-hidden="true" />
                 <span className="truncate">{folder.name}</span>
               </button>
-              <div className="flex items-center gap-0.5 opacity-0 transition-opacity group-hover:opacity-100 focus-within:opacity-100">
+              <div className="flex items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100 focus-within:opacity-100">
                 <button
                   type="button"
                   aria-label={`${folder.name} 이름 변경`}
@@ -172,7 +172,7 @@ export const VaultFolderSidebar = ({
         )}
       </nav>
 
-      <form onSubmit={handleCreate} className="flex gap-1.5 pt-1">
+      <form onSubmit={handleCreate} className="flex gap-2 pt-1">
         <Input
           value={newName}
           onChange={(e) => setNewName(e.target.value)}
@@ -186,7 +186,7 @@ export const VaultFolderSidebar = ({
           size="sm"
           disabled={createFolder.isPending || !newName.trim()}
           aria-label="폴더 추가"
-          className="h-8 px-2.5"
+          className="h-8 px-3"
         >
           <FolderPlus className="h-3.5 w-3.5" aria-hidden="true" />
         </Button>

@@ -108,7 +108,7 @@ export const VaultItemCard = ({ item, folders }: VaultItemCardProps) => {
               href={href}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 hover:underline"
+              className="inline-flex items-center gap-2 hover:underline"
             >
               <span>{item.title}</span>
               <ExternalLink className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
@@ -129,7 +129,7 @@ export const VaultItemCard = ({ item, folders }: VaultItemCardProps) => {
         ) : null}
 
         {item.memo ? (
-          <p className="rounded-md bg-muted/60 px-2.5 py-2 text-xs text-foreground">
+          <p className="rounded-md bg-muted/60 px-3 py-2 text-xs text-foreground">
             {item.memo}
           </p>
         ) : null}

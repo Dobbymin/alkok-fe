@@ -37,18 +37,20 @@ export const SheetContent = ({
 }: ComponentPropsWithoutRef<typeof DialogPrimitive.Content> &
   VariantProps<typeof sheetVariants> & { closeLabel?: string }) => (
   <SheetPortal>
-    <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-overlay-scrim backdrop-blur-[2px]" />
+    <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-overlay-scrim backdrop-blur-xs" />
     <DialogPrimitive.Content
       className={cn(sheetVariants({ side }), className)}
       {...props}
     >
+      <div className="flex items-center justify-end">
+        <DialogPrimitive.Close
+          aria-label={closeLabel}
+          className="inline-flex h-8 w-8 items-center justify-center rounded-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+        >
+          <X className="h-4 w-4" strokeWidth={2} absoluteStrokeWidth aria-hidden="true" />
+        </DialogPrimitive.Close>
+      </div>
       {children}
-      <DialogPrimitive.Close
-        aria-label={closeLabel}
-        className="absolute end-4 top-4 inline-flex h-8 w-8 items-center justify-center rounded-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring after:absolute after:-inset-1.5"
-      >
-        <X className="h-4 w-4" strokeWidth={2} absoluteStrokeWidth aria-hidden="true" />
-      </DialogPrimitive.Close>
     </DialogPrimitive.Content>
   </SheetPortal>
 );
@@ -57,7 +59,7 @@ export const SheetHeader = ({
   className,
   ...props
 }: HTMLAttributes<HTMLDivElement>) => (
-  <div className={cn("flex flex-col gap-1.5 text-start", className)} {...props} />
+  <div className={cn("flex flex-col gap-2 text-start", className)} {...props} />
 );
 
 export const SheetTitle = ({

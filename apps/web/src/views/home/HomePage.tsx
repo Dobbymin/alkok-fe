@@ -39,7 +39,7 @@ export default function HomePage({ initialData }: HomePageProps) {
       {/* 1. Search Hero */}
       <section className="rounded-xl border border-transparent bg-card p-6 shadow-border sm:p-8">
         <div className="mx-auto flex max-w-2xl flex-col items-center text-center">
-          <Badge variant="official" className="mb-3">
+          <Badge variant="official" className="mb-4">
             <Sparkles
               className="h-3 w-3"
               strokeWidth={1.75}
@@ -51,29 +51,28 @@ export default function HomePage({ initialData }: HomePageProps) {
           <h1 className="text-balance text-2xl font-bold leading-[1.2] tracking-[-0.02em] text-foreground sm:text-3xl">
             AI 정보, 알맹이만 콕.
           </h1>
-          <p className="mt-2 max-w-[52ch] text-pretty text-sm leading-[1.5] text-muted-foreground sm:text-base">
+          <p className="mt-2 max-w-xl text-pretty text-sm leading-[1.5] text-muted-foreground sm:text-base">
             출처와 최신성이 검증된 업무 가이드, 도구 7축 비교표, 핵심 AI 소식을 바로 찾아보세요.
           </p>
 
           <form
             onSubmit={handleHeroSearch}
-            className="mt-5 flex w-full items-center gap-2"
+            className="mt-6 flex w-full items-center gap-2"
           >
-            <div className="relative flex-1">
-              <Search
-                className="pointer-events-none absolute start-3 top-3 h-4 w-4 text-muted-foreground"
-                strokeWidth={1.75}
-                absoluteStrokeWidth
-                aria-hidden="true"
-              />
-              <Input
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="예: 회의록 정리, PDF 요약, 무료 이미지 생성 도구"
-                aria-label="홈 통합 검색"
-                className="ps-9"
-              />
-            </div>
+            <Input
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="예: 회의록 정리, PDF 요약, 무료 이미지 생성 도구"
+              aria-label="홈 통합 검색"
+              wrapperClassName="flex-1"
+              startIcon={
+                <Search
+                  className="h-4 w-4"
+                  strokeWidth={1.75}
+                  absoluteStrokeWidth
+                />
+              }
+            />
             <Button type="submit">검색</Button>
           </form>
 
@@ -171,7 +170,7 @@ export default function HomePage({ initialData }: HomePageProps) {
         </div>
 
         {news.length > 0 ? (
-          <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             {news.slice(0, 5).map((item) => (
               <Card key={item.id} className="p-4">
                 <div className="flex items-center justify-between gap-2">

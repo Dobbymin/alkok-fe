@@ -3,7 +3,7 @@ import type { HTMLAttributes } from "react";
 import { cn } from "@alkok/core";
 
 export const badgeVariants = cva(
-  "inline-flex items-center gap-1 whitespace-nowrap rounded-sm border px-2 py-0.5 text-xs font-medium [text-box:trim-both_cap_alphabetic] transition-colors",
+  "inline-flex items-center gap-1 whitespace-nowrap rounded-sm border px-2 py-1 text-xs font-medium [text-box:trim-both_cap_alphabetic] transition-colors",
   {
     variants: {
       variant: {

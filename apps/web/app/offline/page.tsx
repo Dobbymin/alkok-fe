@@ -5,7 +5,7 @@ import { Button, Card, CardContent, CardHeader, CardTitle } from "@alkok/ui";
 
 export default function OfflinePage() {
   return (
-    <main className="flex min-h-[70vh] items-center justify-center p-4">
+    <main className="mx-auto flex min-h-dvh w-full max-w-6xl items-center justify-center px-6 py-12">
       <Card className="w-full max-w-md text-center">
         <CardHeader className="items-center gap-2">
           <WifiOff className="h-8 w-8 text-muted-foreground" strokeWidth={1.75} />

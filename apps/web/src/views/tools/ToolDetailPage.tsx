@@ -49,7 +49,7 @@ export default function ToolDetailPage({
   }
 
   return (
-    <div className="mx-auto flex max-w-4xl flex-col gap-6">
+    <div className="flex w-full flex-col gap-6">
       <Card>
         <CardHeader className="gap-3">
           <div className="flex flex-wrap items-center justify-between gap-2">
@@ -116,7 +116,7 @@ export default function ToolDetailPage({
             <CardTitle className="text-base">강점 · 적합 업무</CardTitle>
           </CardHeader>
           <CardContent>
-            <ul className="list-disc space-y-1.5 pl-4 text-sm text-foreground">
+            <ul className="list-disc space-y-2 pl-4 text-sm text-foreground">
               {tool.strengths.map((s, idx) => (
                 <li key={idx}>{s}</li>
               ))}
@@ -129,7 +129,7 @@ export default function ToolDetailPage({
             <CardTitle className="text-base">한계 · 주의사항</CardTitle>
           </CardHeader>
           <CardContent>
-            <ul className="list-disc space-y-1.5 pl-4 text-sm text-muted-foreground">
+            <ul className="list-disc space-y-2 pl-4 text-sm text-muted-foreground">
               {tool.limitations.map((l, idx) => (
                 <li key={idx}>{l}</li>
               ))}
@@ -161,11 +161,11 @@ export default function ToolDetailPage({
       </div>
 
       {tool.relatedGuides && tool.relatedGuides.length > 0 ? (
-        <section className="flex flex-col gap-3">
+        <section className="flex flex-col gap-4">
           <h2 className="text-lg font-bold tracking-tight">
             이 도구를 활용하는 업무 가이드
           </h2>
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             {tool.relatedGuides.map((g) => (
               <ContentCard key={g.id} item={g} />
             ))}

@@ -78,11 +78,11 @@ const SourcePanel = ({ item }: { item: AdminReviewItem }) => (
 
     {item.unverifiedFields.length > 0 ? (
       <div className="rounded-md border border-status-review-border bg-status-review-bg p-3">
-        <div className="flex items-center gap-1.5 text-xs font-semibold text-status-review-fg">
+        <div className="flex items-center gap-2 text-xs font-semibold text-status-review-fg">
           <AlertTriangle className="h-4 w-4" strokeWidth={1.75} />
           <span>[확인 필요] 미검증 항목</span>
         </div>
-        <div className="mt-2 flex flex-wrap gap-1.5">
+        <div className="mt-2 flex flex-wrap gap-2">
           {item.unverifiedFields.map((field) => (
             <Badge key={field} variant="review">
               {field}
@@ -92,7 +92,7 @@ const SourcePanel = ({ item }: { item: AdminReviewItem }) => (
       </div>
     ) : null}
 
-    <div className="flex flex-col gap-1.5">
+    <div className="flex flex-col gap-2">
       <h3 className="text-xs font-semibold text-foreground">AI 추출 근거(Evidence)</h3>
       {item.evidenceNotes.length > 0 ? (
         <ul className="list-disc space-y-1 pl-4 text-xs text-muted-foreground">
@@ -105,7 +105,7 @@ const SourcePanel = ({ item }: { item: AdminReviewItem }) => (
       )}
     </div>
 
-    <div className="flex flex-col gap-1.5">
+    <div className="flex flex-col gap-2">
       <h3 className="text-xs font-semibold text-foreground">원문 발췌(RawDocument)</h3>
       <div className="max-h-80 overflow-y-auto rounded-md border border-border bg-muted/40 p-3 text-xs leading-relaxed text-foreground whitespace-pre-wrap">
         {item.rawTextExcerpt}

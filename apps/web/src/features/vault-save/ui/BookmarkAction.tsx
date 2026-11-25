@@ -158,16 +158,16 @@ export const BookmarkAction = ({
       </div>
 
       <FieldGroup htmlFor={`bm-folder-${contentId}`} label="폴더">
-        <div className="relative flex items-center">
+        <div className="flex h-9 items-center gap-2 rounded-md border border-input bg-background px-3 focus-within:outline-none focus-within:ring-2 focus-within:ring-ring">
           <Folder
-            className="pointer-events-none absolute left-2.5 h-3.5 w-3.5 text-muted-foreground"
+            className="h-3.5 w-3.5 shrink-0 text-muted-foreground"
             aria-hidden="true"
           />
           <select
             id={`bm-folder-${contentId}`}
             value={folderId}
             onChange={(e) => setFolderId(e.target.value)}
-            className="h-9 w-full rounded-md border border-input bg-background pl-8 pr-3 text-xs text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="h-full w-full bg-transparent text-xs text-foreground focus:outline-none"
           >
             <option value="">미분류</option>
             {folders.map((f) => (
@@ -226,7 +226,7 @@ export const BookmarkAction = ({
       disabled={createBookmark.isPending}
       aria-pressed={Boolean(savedItem)}
       aria-label={savedItem ? "보관함 저장됨 (편집)" : "보관함에 저장"}
-      className={cn("gap-1.5", className)}
+      className={cn("gap-2", className)}
     >
       {savedItem ? (
         <Check className="h-3.5 w-3.5 text-primary" aria-hidden="true" />

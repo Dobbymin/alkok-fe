@@ -42,7 +42,7 @@ export default function NewsDetailPage({
   }
 
   return (
-    <article className="mx-auto flex max-w-3xl flex-col gap-6">
+    <article className="flex w-full flex-col gap-6">
       <Card>
         <CardHeader className="gap-3">
           <div className="flex flex-wrap items-center justify-between gap-2">
@@ -63,7 +63,7 @@ export default function NewsDetailPage({
           <p className="text-base text-muted-foreground">{news.summary}</p>
         </CardHeader>
         {news.tags && news.tags.length > 0 ? (
-          <CardContent className="flex flex-wrap gap-1.5">
+          <CardContent className="flex flex-wrap gap-2">
             {news.tags.map((t) => (
               <Badge key={t.id} variant="outline">
                 #{t.name}
@@ -120,9 +120,9 @@ export default function NewsDetailPage({
       </div>
 
       {news.relatedContents && news.relatedContents.length > 0 ? (
-        <section className="flex flex-col gap-3">
+        <section className="flex flex-col gap-4">
           <h2 className="text-lg font-bold tracking-tight">연관 도구·가이드</h2>
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             {news.relatedContents.map((item) => (
               <ContentCard key={item.id} item={item} />
             ))}

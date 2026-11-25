@@ -77,7 +77,7 @@ export const AdminReportsManager = () => {
       key: "content",
       header: "콘텐츠 / 사유",
       cell: (row) => (
-        <div className="flex flex-col gap-0.5">
+        <div className="flex flex-col gap-1">
           <span className="font-medium text-foreground">
             {row.contentTitle ?? row.contentId}
           </span>
@@ -123,7 +123,7 @@ export const AdminReportsManager = () => {
   return (
     <div className="flex flex-col gap-4">
       <FilterBar>
-        <div className="flex flex-wrap items-center gap-1.5">
+        <div className="flex flex-wrap items-center gap-2">
           {(
             [
               { value: "", label: "전체" },

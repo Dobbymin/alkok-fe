@@ -47,7 +47,7 @@ const AdminNavLinks = ({
   pathname: string;
   onNavigate?: () => void;
 }) => (
-  <nav aria-label="관리자 메뉴" className="flex flex-col gap-0.5">
+  <nav aria-label="관리자 메뉴" className="flex flex-col gap-1">
     {ADMIN_NAV_ITEMS.map((item) => {
       const Icon = item.icon;
       const isActive =
@@ -60,12 +60,19 @@ const AdminNavLinks = ({
           onClick={onNavigate}
           aria-current={isActive ? "page" : undefined}
           className={cn(
-            "relative flex h-9 items-center gap-2.5 rounded-lg px-3 text-sm [-webkit-tap-highlight-color:transparent] transition-[color,background-color] duration-150 ease-out focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
+            "flex h-9 items-center gap-3 rounded-lg px-3 text-sm [-webkit-tap-highlight-color:transparent] transition-[color,background-color] duration-150 ease-out focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
             isActive
-              ? "bg-sidebar-accent font-semibold text-sidebar-accent-foreground before:absolute before:inset-y-1.5 before:start-0 before:w-0.5 before:rounded-full before:bg-primary"
+              ? "bg-sidebar-accent font-semibold text-sidebar-accent-foreground"
               : "font-medium text-muted-foreground hover:bg-secondary hover:text-foreground",
           )}
         >
+          <span
+            aria-hidden="true"
+            className={cn(
+              "h-5 w-1 shrink-0 rounded-full",
+              isActive ? "bg-primary" : "bg-transparent",
+            )}
+          />
           <Icon
             className="h-4 w-4 shrink-0"
             strokeWidth={isActive ? 2 : 1.75}
@@ -88,7 +95,7 @@ export const AdminShell = ({ children }: { children: ReactNode }) => {
     <div className="flex min-h-dvh bg-background text-foreground">
       <a
         href="#admin-main-content"
-        className="sr-only focus:not-sr-only focus:fixed focus:start-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-primary focus:px-3.5 focus:py-2 focus:text-sm focus:font-medium focus:text-primary-foreground focus:shadow-elevated"
+        className="sr-only focus:not-sr-only focus:fixed focus:start-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-primary focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-primary-foreground focus:shadow-elevated"
       >
         본문으로 건너뛰기
       </a>
@@ -120,58 +127,60 @@ export const AdminShell = ({ children }: { children: ReactNode }) => {
 
       {/* Main Column */}
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-border bg-card/95 px-4 backdrop-blur-sm lg:px-6">
-          <div className="flex items-center gap-3">
-            <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-              <SheetTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="icon-sm"
-                  aria-label="관리자 메뉴 열기"
-                  className="lg:hidden"
-                >
-                  <Menu
-                    className="h-4 w-4"
-                    strokeWidth={1.75}
-                    absoluteStrokeWidth
-                    aria-hidden="true"
-                  />
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="left" className="w-64 p-4">
-                <SheetHeader className="mb-4">
-                  <SheetTitle>Alkok Admin</SheetTitle>
-                </SheetHeader>
-                <AdminNavLinks
-                  pathname={pathname}
-                  onNavigate={() => setMobileOpen(false)}
-                />
-                <div className="mt-6 border-t border-separator pt-4">
-                  {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
-                  <a
-                    href="/"
-                    onClick={() => setMobileOpen(false)}
-                    className="text-xs font-medium text-muted-foreground hover:text-foreground"
+        <header className="sticky top-0 z-30 flex h-14 items-center border-b border-border bg-card/95 px-6 backdrop-blur-sm">
+          <div className="mx-auto flex w-full max-w-6xl items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+                <SheetTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="icon-sm"
+                    aria-label="관리자 메뉴 열기"
+                    className="lg:hidden"
                   >
-                    공개 웹으로 이동 →
-                  </a>
-                </div>
-              </SheetContent>
-            </Sheet>
-            <nav aria-label="현재 위치" className="flex items-center gap-2 text-sm">
-              <span className="text-muted-foreground">관리자</span>
-              <span className="text-muted-foreground" aria-hidden="true">
-                /
-              </span>
-              <span className="font-semibold text-foreground">{currentLabel}</span>
-            </nav>
+                    <Menu
+                      className="h-4 w-4"
+                      strokeWidth={1.75}
+                      absoluteStrokeWidth
+                      aria-hidden="true"
+                    />
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="left" className="w-64 p-4">
+                  <SheetHeader>
+                    <SheetTitle>Alkok Admin</SheetTitle>
+                  </SheetHeader>
+                  <AdminNavLinks
+                    pathname={pathname}
+                    onNavigate={() => setMobileOpen(false)}
+                  />
+                  <div className="mt-6 border-t border-separator pt-4">
+                    {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+                    <a
+                      href="/"
+                      onClick={() => setMobileOpen(false)}
+                      className="text-xs font-medium text-muted-foreground hover:text-foreground"
+                    >
+                      공개 웹으로 이동 →
+                    </a>
+                  </div>
+                </SheetContent>
+              </Sheet>
+              <nav aria-label="현재 위치" className="flex items-center gap-2 text-sm">
+                <span className="text-muted-foreground">관리자</span>
+                <span className="text-muted-foreground" aria-hidden="true">
+                  /
+                </span>
+                <span className="font-semibold text-foreground">{currentLabel}</span>
+              </nav>
+            </div>
           </div>
         </header>
 
         <main
           id="admin-main-content"
           tabIndex={-1}
-          className="mx-auto w-full max-w-7xl flex-1 p-4 focus:outline-none lg:p-6"
+          className="mx-auto w-full max-w-6xl flex-1 px-6 py-6 focus:outline-none"
         >
           {children}
         </main>

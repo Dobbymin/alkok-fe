@@ -66,4 +66,27 @@ describe("shared/ui patterns", () => {
       expect(content).not.toMatch(/\b(bg-white|text-black)\b/);
     }
   });
+
+  it("enforces UI layout rules (no absolute, negative margins, half-step spacing, or arbitrary px sizing)", () => {
+    const uiRoot = path.resolve(process.cwd(), "src");
+    const files: string[] = [];
+    const walk = (dir: string) => {
+      for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+        const full = path.join(dir, entry.name);
+        if (entry.isDirectory()) walk(full);
+        else if (/\.(ts|tsx)$/.test(entry.name) && !entry.name.includes(".test.") && !entry.name.includes(".stories.")) {
+          files.push(full);
+        }
+      }
+    };
+    walk(uiRoot);
+
+    for (const file of files) {
+      const content = fs.readFileSync(file, "utf8");
+      expect(content, `${file} absolute`).not.toMatch(/\b(?:[a-z0-9-]+:)?absolute\b|position:\s*absolute/);
+      expect(content, `${file} negative margin`).not.toMatch(/(?:^|[\s"'`:])-(?:m|mx|my|mt|mb|ml|mr|ms|me|inset|inset-x|inset-y|translate-x|translate-y)-[a-z0-9.[\]]+/);
+      expect(content, `${file} half-step spacing`).not.toMatch(/\b(?:[a-z0-9:[\]>-]+:)?(?:p|px|py|pt|pb|pl|pr|ps|pe|m|mx|my|mt|mb|ml|mr|ms|me|gap|gap-x|gap-y|space-x|space-y)-(?:0\.5|1\.5|2\.5|3\.5)\b/);
+      expect(content, `${file} arbitrary px sizing`).not.toMatch(/\b(?:[a-z0-9:[\]>-]+:)?(?:p|px|py|pt|pb|pl|pr|ps|pe|m|mx|my|mt|mb|ml|mr|ms|me|gap|gap-x|gap-y|space-x|space-y|w|h|min-w|max-w|min-h|max-h|top|bottom|left|right|start|end|inset)-\[[^\]]*px[^\]]*\]/);
+    }
+  });
 });

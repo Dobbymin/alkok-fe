@@ -17,14 +17,14 @@ export default function SettingsPage() {
 
   if (isLoading || !isAuthenticated) {
     return (
-      <div className="mx-auto max-w-2xl py-8">
+      <div className="w-full py-8">
         <div className="h-64 rounded-lg bg-muted/40" />
       </div>
     );
   }
 
   return (
-    <div className="mx-auto flex max-w-2xl flex-col gap-6 py-4">
+    <div className="flex w-full flex-col gap-6 py-4">
       <header className="space-y-1">
         <h1 className="text-2xl font-bold tracking-tight">계정 설정</h1>
         <p className="text-sm text-muted-foreground">

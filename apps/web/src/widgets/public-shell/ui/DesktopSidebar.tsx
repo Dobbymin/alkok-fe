@@ -113,13 +113,25 @@ function NavLink({
       href={item.href}
       aria-current={isActive ? "page" : undefined}
       className={cn(
-        "relative flex h-9 items-center gap-2.5 rounded-lg px-2.5 text-sm [-webkit-tap-highlight-color:transparent] transition-[color,background-color] duration-150 ease-out focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
-        collapsed && "justify-center px-0",
+        "flex h-9 items-center rounded-lg text-sm [-webkit-tap-highlight-color:transparent] transition-[color,background-color] duration-150 ease-out focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
+        collapsed ? "justify-center px-0" : "gap-3 px-3",
         isActive
-          ? "bg-sidebar-accent font-semibold text-sidebar-accent-foreground before:absolute before:inset-y-1.5 before:start-0 before:w-0.5 before:rounded-full before:bg-primary"
+          ? cn(
+              "bg-sidebar-accent font-semibold text-sidebar-accent-foreground",
+              collapsed && "ring-1 ring-inset ring-primary/25",
+            )
           : "font-medium text-muted-foreground hover:bg-secondary hover:text-foreground",
       )}
     >
+      {!collapsed ? (
+        <span
+          aria-hidden="true"
+          className={cn(
+            "h-5 w-1 shrink-0 rounded-full",
+            isActive ? "bg-primary" : "bg-transparent",
+          )}
+        />
+      ) : null}
       <Icon
         className="h-4 w-4 shrink-0"
         strokeWidth={isActive ? 2 : 1.75}
@@ -197,7 +209,7 @@ export const DesktopSidebar = ({
       onClick={onOpenSearch}
       aria-label="빠른 검색 열기"
       className={cn(
-        "flex h-9 w-full items-center gap-2 rounded-lg border border-border/80 bg-surface-sunken px-2.5 text-xs text-muted-foreground [-webkit-tap-highlight-color:transparent] transition-[color,background-color,border-color] duration-150 ease-out hover:bg-secondary hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
+        "flex h-9 w-full items-center gap-2 rounded-lg border border-border/80 bg-surface-sunken px-3 text-xs text-muted-foreground [-webkit-tap-highlight-color:transparent] transition-[color,background-color,border-color] duration-150 ease-out hover:bg-secondary hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
         collapsed && "justify-center px-0",
       )}
     >
@@ -210,7 +222,7 @@ export const DesktopSidebar = ({
       {!collapsed ? (
         <>
           <span className="truncate">빠른 검색</span>
-          <kbd className="ms-auto rounded-xs border border-border bg-card px-1.5 py-0.5 font-mono text-[10px] tabular-nums text-muted-foreground">
+          <kbd className="ms-auto rounded-xs border border-border bg-card px-2 py-1 font-mono text-[10px] tabular-nums text-muted-foreground">
             ⌘K
           </kbd>
         </>
@@ -262,7 +274,7 @@ export const DesktopSidebar = ({
       </div>
 
       {/* Quick Search Trigger */}
-      <div className="px-2.5 pt-1 pb-3">
+      <div className="px-3 pt-1 pb-3">
         {collapsed ? (
           <Tooltip>
             <TooltipTrigger asChild>{searchButton}</TooltipTrigger>
@@ -276,14 +288,14 @@ export const DesktopSidebar = ({
       {/* Primary & Workspace Navigation */}
       <nav
         aria-label="주 메뉴"
-        className="flex-1 overflow-y-auto overscroll-contain px-2.5 py-1"
+        className="flex-1 overflow-y-auto overscroll-contain px-3 py-1"
       >
         {!collapsed ? (
-          <p className="px-2.5 pb-1.5 text-[11px] font-medium tracking-[0.04em] text-muted-foreground">
+          <p className="px-3 pb-2 text-[11px] font-medium tracking-[0.04em] text-muted-foreground">
             탐색
           </p>
         ) : null}
-        <div className="flex flex-col gap-0.5">
+        <div className="flex flex-col gap-1">
           {EXPLORE_NAV.map((item) => (
             <NavLink
               key={item.href}
@@ -296,11 +308,11 @@ export const DesktopSidebar = ({
 
         <div className="mt-6">
           {!collapsed ? (
-            <p className="px-2.5 pb-1.5 text-[11px] font-medium tracking-[0.04em] text-muted-foreground">
+            <p className="px-3 pb-2 text-[11px] font-medium tracking-[0.04em] text-muted-foreground">
               워크스페이스
             </p>
           ) : null}
-          <div className="flex flex-col gap-0.5">
+          <div className="flex flex-col gap-1">
             {workspaceItems.map((item) => (
               <NavLink
                 key={item.href}
@@ -316,7 +328,7 @@ export const DesktopSidebar = ({
       {/* Bottom: Account & Theme */}
       <div
         className={cn(
-          "flex shrink-0 border-t border-separator p-2.5",
+          "flex shrink-0 border-t border-separator p-3",
           collapsed
             ? "flex-col items-center gap-2"
             : "items-center justify-between gap-2",

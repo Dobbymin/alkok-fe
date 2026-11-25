@@ -23,7 +23,7 @@ export const buttonVariants = cva(
       size: {
         default:
           "h-10 px-4 py-2 has-[>svg:first-child]:ps-3 has-[>svg:last-child]:pe-3",
-        sm: "h-8 rounded-sm px-3 text-xs has-[>svg:first-child]:ps-2.5 has-[>svg:last-child]:pe-2.5",
+        sm: "h-8 rounded-sm px-3 text-xs has-[>svg:first-child]:ps-2 has-[>svg:last-child]:pe-2",
         lg: "h-11 rounded-md px-6 has-[>svg:first-child]:ps-5 has-[>svg:last-child]:pe-5",
         icon: "h-10 w-10",
         "icon-sm": "h-8 w-8 rounded-sm",

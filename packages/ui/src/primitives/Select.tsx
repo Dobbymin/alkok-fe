@@ -42,7 +42,7 @@ export const SelectContent = ({
   <SelectPrimitive.Portal>
     <SelectPrimitive.Content
       className={cn(
-        "relative z-50 max-h-80 min-w-[8rem] origin-[var(--radix-select-content-transform-origin)] overflow-y-auto overscroll-contain rounded-lg border border-transparent bg-surface-raised text-popover-foreground shadow-elevated",
+        "relative z-50 max-h-80 min-w-32 origin-[var(--radix-select-content-transform-origin)] overflow-y-auto overscroll-contain rounded-lg border border-transparent bg-surface-raised text-popover-foreground shadow-elevated",
         position === "popper" && "translate-y-1",
         className,
       )}
@@ -61,12 +61,12 @@ export const SelectItem = ({
 }: ComponentPropsWithoutRef<typeof SelectPrimitive.Item>) => (
   <SelectPrimitive.Item
     className={cn(
-      "relative flex w-full cursor-pointer select-none items-center rounded-md py-1.5 ps-8 pe-2 text-sm outline-none [-webkit-tap-highlight-color:transparent] transition-[color,background-color] duration-150 ease-out focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      "flex w-full cursor-pointer select-none items-center gap-2 rounded-md px-2 py-2 text-sm outline-none [-webkit-tap-highlight-color:transparent] transition-[color,background-color] duration-150 ease-out focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
       className,
     )}
     {...props}
   >
-    <span className="absolute start-2 flex h-3.5 w-3.5 items-center justify-center">
+    <span className="flex h-4 w-4 shrink-0 items-center justify-center">
       <SelectPrimitive.ItemIndicator>
         <Check className="h-4 w-4" strokeWidth={2} absoluteStrokeWidth aria-hidden="true" />
       </SelectPrimitive.ItemIndicator>

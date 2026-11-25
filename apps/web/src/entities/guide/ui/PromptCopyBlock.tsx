@@ -18,7 +18,7 @@ function highlightVariables(text: string): ReactNode[] {
       return (
         <mark
           key={idx}
-          className="rounded-sm bg-accent px-1 py-0.5 font-semibold text-accent-foreground"
+          className="rounded-sm bg-accent px-1 py-1 font-semibold text-accent-foreground"
         >
           {part}
         </mark>
@@ -44,7 +44,7 @@ export const PromptCopyBlock = ({
         copyLabel="프롬프트 복사"
       />
       {variables.length > 0 ? (
-        <p className="mt-1.5 text-xs text-muted-foreground">
+        <p className="mt-2 text-xs text-muted-foreground">
           입력 변수: {variables.map((v) => `[${v}]`).join(", ")}
         </p>
       ) : null}

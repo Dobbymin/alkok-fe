@@ -9,7 +9,7 @@ export const ToggleGroup = ({
   ...props
 }: ComponentPropsWithoutRef<typeof ToggleGroupPrimitive.Root>) => (
   <ToggleGroupPrimitive.Root
-    className={cn("inline-flex flex-wrap items-center gap-1.5", className)}
+    className={cn("inline-flex flex-wrap items-center gap-2", className)}
     {...props}
   />
 );

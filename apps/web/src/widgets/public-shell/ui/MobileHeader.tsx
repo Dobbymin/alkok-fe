@@ -66,10 +66,11 @@ export const MobileHeader = ({
   const { user, isAuthenticated, logout } = useAuth();
 
   return (
-    <header className="sticky top-0 z-40 flex h-14 items-center justify-between border-b border-border bg-sidebar/95 px-4 backdrop-blur-sm md:hidden">
-      <BrandLogo />
+    <header className="sticky top-0 z-40 h-14 border-b border-border bg-sidebar/95 px-6 backdrop-blur-sm md:hidden">
+      <div className="mx-auto flex h-full w-full max-w-6xl items-center justify-between">
+        <BrandLogo />
 
-      <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1">
         <Button
           variant="ghost"
           size="icon-sm"
@@ -107,7 +108,7 @@ export const MobileHeader = ({
             <SheetHeader>
               <SheetTitle>메뉴</SheetTitle>
             </SheetHeader>
-            <nav aria-label="모바일 보조 메뉴" className="mt-4 flex flex-col gap-1">
+            <nav aria-label="모바일 보조 메뉴" className="flex flex-col gap-1">
               {MOBILE_NAV.map((item) => {
                 const Icon = item.icon;
                 const isActive = item.match(pathname);
@@ -118,7 +119,7 @@ export const MobileHeader = ({
                     onClick={() => setOpen(false)}
                     aria-current={isActive ? "page" : undefined}
                     className={cn(
-                      "flex h-11 items-center gap-2.5 rounded-lg px-3 text-sm transition-[color,background-color] duration-150 ease-out",
+                      "flex h-11 items-center gap-3 rounded-lg px-3 text-sm transition-[color,background-color] duration-150 ease-out",
                       isActive
                         ? "bg-sidebar-accent font-semibold text-sidebar-accent-foreground"
                         : "font-medium text-muted-foreground hover:bg-secondary hover:text-foreground",
@@ -141,7 +142,7 @@ export const MobileHeader = ({
                   onClick={() => setOpen(false)}
                   aria-current={pathname.startsWith("/vault") ? "page" : undefined}
                   className={cn(
-                    "flex h-11 items-center gap-2.5 rounded-lg px-3 text-sm transition-[color,background-color] duration-150 ease-out",
+                    "flex h-11 items-center gap-3 rounded-lg px-3 text-sm transition-[color,background-color] duration-150 ease-out",
                     pathname.startsWith("/vault")
                       ? "bg-sidebar-accent font-semibold text-sidebar-accent-foreground"
                       : "font-medium text-muted-foreground hover:bg-secondary hover:text-foreground",
@@ -160,7 +161,7 @@ export const MobileHeader = ({
                   onClick={() => setOpen(false)}
                   aria-current={pathname.startsWith("/settings") ? "page" : undefined}
                   className={cn(
-                    "flex h-11 items-center gap-2.5 rounded-lg px-3 text-sm transition-[color,background-color] duration-150 ease-out",
+                    "flex h-11 items-center gap-3 rounded-lg px-3 text-sm transition-[color,background-color] duration-150 ease-out",
                     pathname.startsWith("/settings")
                       ? "bg-sidebar-accent font-semibold text-sidebar-accent-foreground"
                       : "font-medium text-muted-foreground hover:bg-secondary hover:text-foreground",
@@ -178,7 +179,7 @@ export const MobileHeader = ({
                   <Link
                     href="/admin"
                     onClick={() => setOpen(false)}
-                    className="flex h-11 items-center gap-2.5 rounded-lg px-3 text-sm font-medium text-muted-foreground hover:bg-secondary hover:text-foreground"
+                    className="flex h-11 items-center gap-3 rounded-lg px-3 text-sm font-medium text-muted-foreground hover:bg-secondary hover:text-foreground"
                   >
                     <Shield
                       className="h-4 w-4 shrink-0"
@@ -217,6 +218,7 @@ export const MobileHeader = ({
             </nav>
           </SheetContent>
         </Sheet>
+        </div>
       </div>
     </header>
   );
