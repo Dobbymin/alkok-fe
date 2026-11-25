@@ -6,20 +6,20 @@ Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
  RUN  v4.1.12 /Users/gimgangmin/Desktop/Dev/project/alkok/alkok-fe/packages/core
 
 [?2026h
- ❯ src/lib/seo.test.ts [queued]
+ ❯ src/lib/sanitize-next-path.test.ts [queued]
 
  Test Files 0 passed (4)
       Tests 0 passed (0)
-   Start at 01:21:12
-   Duration 707ms
+   Start at 20:50:44
+   Duration 807ms
 [?2026l[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K ✓ src/lib/sanitize-next-path.test.ts (2 tests) 2ms
- ✓ src/lib/cn.test.ts (2 tests) 7ms
- ✓ src/lib/seo.test.ts (2 tests) 4ms
- ✓ src/api/api-client.test.ts (4 tests) 12ms
+ ✓ src/lib/cn.test.ts (2 tests) 5ms
+ ✓ src/lib/seo.test.ts (2 tests) 2ms
+ ✓ src/api/api-client.test.ts (4 tests) 7ms
 
  Test Files  4 passed (4)
       Tests  10 passed (10)
-   Start at  01:21:12
-   Duration  859ms (transform 145ms, setup 0ms, import 220ms, tests 25ms, environment 2.68s)
+   Start at  20:50:44
+   Duration  899ms (transform 131ms, setup 0ms, import 177ms, tests 17ms, environment 2.86s)
 
 [?25h

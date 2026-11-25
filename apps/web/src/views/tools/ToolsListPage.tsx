@@ -86,6 +86,7 @@ export default function ToolsListPage() {
         <div className="flex items-center gap-2">
           <Checkbox
             id="tool-free-plan"
+            aria-label="무료 플랜 있음"
             checked={hasFreePlan}
             onCheckedChange={(v) => setHasFreePlan(v === true)}
           />
@@ -97,6 +98,7 @@ export default function ToolsListPage() {
         <div className="flex items-center gap-2">
           <Checkbox
             id="tool-korean-full"
+            aria-label="한국어 지원"
             checked={koreanFull}
             onCheckedChange={(v) => setKoreanFull(v === true)}
           />
@@ -108,6 +110,7 @@ export default function ToolsListPage() {
         <div className="flex items-center gap-2">
           <Checkbox
             id="tool-valid-only"
+            aria-label="유효만 보기"
             checked={validOnly}
             onCheckedChange={(v) => setValidOnly(v === true)}
           />

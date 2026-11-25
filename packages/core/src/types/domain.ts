@@ -75,7 +75,8 @@ export interface TagItem {
 export interface PromptBlockItem {
   id: string;
   title: string;
-  content: string;
+  content?: string;
+  prompt?: string;
   variables: string[];
 }
 

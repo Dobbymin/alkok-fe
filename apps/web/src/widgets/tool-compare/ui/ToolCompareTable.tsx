@@ -221,6 +221,7 @@ export const ToolCompareTable = ({
         <div className="flex items-center gap-2">
           <Checkbox
             id="compare-diff-only"
+            aria-label="차이점만 보기"
             checked={diffOnly}
             onCheckedChange={(v) => setDiffOnly(v === true)}
           />
@@ -286,7 +287,7 @@ export const ToolCompareTable = ({
             <TableRow>
               <TableHead
                 scope="col"
-                className="sticky left-0 z-10 w-36 bg-muted/95 font-semibold"
+                className="sticky left-0 z-10 min-w-[116px] whitespace-nowrap bg-muted/95 font-semibold"
               >
                 비교 항목
               </TableHead>
@@ -304,7 +305,7 @@ export const ToolCompareTable = ({
               <TableRow key={axis.key}>
                 <th
                   scope="row"
-                  className="sticky left-0 z-10 bg-card px-3 py-3 text-left align-top text-xs font-semibold text-muted-foreground"
+                  className="sticky left-0 z-10 min-w-[116px] whitespace-nowrap bg-card px-3 py-3 text-left align-top text-xs font-semibold text-muted-foreground"
                 >
                   {axis.label}
                 </th>
