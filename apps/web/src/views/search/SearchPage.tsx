@@ -75,7 +75,7 @@ export default function SearchPage() {
           placeholder="검색어를 입력하세요"
           aria-label="통합 검색어"
           wrapperClassName="flex-1"
-          startIcon={<Search className="h-4 w-4" strokeWidth={1.75} />}
+          startIcon={<Search className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />}
         />
         <Button type="submit">검색</Button>
       </form>
@@ -94,7 +94,7 @@ export default function SearchPage() {
 
       <FilterBar>
         <Select value={workDomain} onValueChange={setWorkDomain}>
-          <SelectTrigger className="h-8 w-44 text-xs">
+          <SelectTrigger aria-label="업무 도메인 필터" className="h-11 w-44 text-xs sm:h-9">
             <SelectValue placeholder="업무 도메인" />
           </SelectTrigger>
           <SelectContent>
@@ -121,7 +121,7 @@ export default function SearchPage() {
 
       {!initialQ.trim() ? (
         <EmptyState
-          title="무엇을 도와드릴까요?"
+          title="찾고 싶은 업무나 AI 도구를 입력해 보세요."
           description="아래 인기 업무 키워드를 선택하거나 검색어를 입력해 주세요."
           action={
             <>
@@ -178,14 +178,16 @@ export default function SearchPage() {
               <h2 className="text-base font-semibold">내 보관함 결과</h2>
               <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                 {vaultItems.map((v) => (
-                  <li
-                    key={v.id}
-                    className="rounded-lg border border-border bg-card p-4"
-                  >
-                    <p className="font-medium text-foreground">{v.title}</p>
-                    {v.memo ? (
-                      <p className="mt-1 text-xs text-muted-foreground">{v.memo}</p>
-                    ) : null}
+                  <li key={v.id}>
+                    <Link
+                      href="/vault"
+                      className="block rounded-xl border border-transparent bg-surface-sunken p-4 transition-colors hover:bg-secondary dark:border-border"
+                    >
+                      <p className="font-medium text-foreground">{v.title}</p>
+                      {v.memo ? (
+                        <p className="mt-1 text-xs text-muted-foreground">{v.memo}</p>
+                      ) : null}
+                    </Link>
                   </li>
                 ))}
               </ul>

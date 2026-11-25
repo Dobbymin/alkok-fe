@@ -19,7 +19,7 @@ export const MobileBottomTabs = () => {
     <nav
       aria-label="모바일 하단 탭"
       data-testid="mobile-bottom-tabs"
-      className="fixed inset-x-0 bottom-0 top-auto z-40 h-16 border-t border-border bg-sidebar/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-sm md:hidden"
+      className="fixed inset-x-0 bottom-0 top-auto z-40 h-16 border-t border-border bg-sidebar pb-[env(safe-area-inset-bottom)] md:hidden"
     >
       <div className="grid h-full grid-cols-4">
         {MOBILE_BOTTOM_TABS.map((tab) => {

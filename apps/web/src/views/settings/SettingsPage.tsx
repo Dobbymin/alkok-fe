@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { SettingsForms } from "@/features/auth-forms";
 import { useAuth } from "@alkok/core";
+import { Skeleton } from "@alkok/ui";
 
 export default function SettingsPage() {
   const router = useRouter();
@@ -17,8 +18,9 @@ export default function SettingsPage() {
 
   if (isLoading || !isAuthenticated) {
     return (
-      <div className="w-full py-8">
-        <div className="h-64 rounded-lg bg-muted/40" />
+      <div role="status" aria-label="계정 설정 불러오는 중" className="w-full py-8">
+        <Skeleton className="h-64 w-full rounded-2xl" />
+        <span className="sr-only">계정 설정을 불러오고 있습니다.</span>
       </div>
     );
   }

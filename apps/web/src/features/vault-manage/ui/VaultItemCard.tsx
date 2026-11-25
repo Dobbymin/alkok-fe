@@ -89,7 +89,7 @@ export const VaultItemCard = ({ item, folders }: VaultItemCardProps) => {
   };
 
   return (
-    <Card className="flex flex-col justify-between">
+    <Card className="flex flex-col justify-between transition-colors duration-150 ease-out hover:bg-surface-sunken">
       <CardHeader className="gap-2">
         <div className="flex items-center justify-between gap-2">
           <Badge variant={isExternal ? "outline" : "secondary"}>
@@ -129,7 +129,7 @@ export const VaultItemCard = ({ item, folders }: VaultItemCardProps) => {
         ) : null}
 
         {item.memo ? (
-          <p className="rounded-md bg-muted/60 px-3 py-2 text-xs text-foreground">
+          <p className="rounded-md bg-surface-sunken px-3 py-2 text-xs text-foreground">
             {item.memo}
           </p>
         ) : null}

@@ -72,14 +72,14 @@ const SourcePanel = ({ item }: { item: AdminReviewItem }) => (
         className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
       >
         원문 열기
-        <ExternalLink className="h-3.5 w-3.5" strokeWidth={1.75} />
+        <ExternalLink className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden="true" />
       </a>
     </div>
 
     {item.unverifiedFields.length > 0 ? (
       <div className="rounded-md border border-status-review-border bg-status-review-bg p-3">
         <div className="flex items-center gap-2 text-xs font-semibold text-status-review-fg">
-          <AlertTriangle className="h-4 w-4" strokeWidth={1.75} />
+          <AlertTriangle className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
           <span>[확인 필요] 미검증 항목</span>
         </div>
         <div className="mt-2 flex flex-wrap gap-2">
@@ -222,7 +222,7 @@ const DraftEditorPanel = ({
           disabled={isSubmitting}
           onClick={() => onReject()}
         >
-          <XCircle className="h-3.5 w-3.5 text-destructive" strokeWidth={1.75} />
+          <XCircle className="h-3.5 w-3.5 text-destructive" strokeWidth={1.75} aria-hidden="true" />
           반려
         </Button>
         <Button
@@ -231,7 +231,7 @@ const DraftEditorPanel = ({
           disabled={isSubmitting}
           onClick={() => onSaveDraft(buildPayload())}
         >
-          <Save className="h-3.5 w-3.5" strokeWidth={1.75} />
+          <Save className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden="true" />
           임시 저장
         </Button>
         <Button
@@ -239,7 +239,7 @@ const DraftEditorPanel = ({
           disabled={isSubmitting}
           onClick={() => onApprove(buildPayload())}
         >
-          <Check className="h-3.5 w-3.5" strokeWidth={1.75} />
+          <Check className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden="true" />
           승인·즉시 공개
         </Button>
       </div>

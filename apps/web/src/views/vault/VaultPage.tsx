@@ -1,6 +1,7 @@
 "use client";
 
 import { BookmarkCheck, Search } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
@@ -20,6 +21,7 @@ import {
   ErrorState,
   FilterBar,
   Input,
+  Skeleton,
 } from "@alkok/ui";
 
 export default function VaultPage() {
@@ -52,8 +54,9 @@ export default function VaultPage() {
 
   if (isLoading || !isAuthenticated) {
     return (
-      <div className="w-full py-6">
-        <div className="h-72 rounded-lg bg-muted/40" />
+      <div role="status" aria-label="보관함 불러오는 중" className="w-full py-6">
+        <Skeleton className="h-72 w-full rounded-2xl" />
+        <span className="sr-only">보관함을 불러오고 있습니다.</span>
       </div>
     );
   }
@@ -83,8 +86,8 @@ export default function VaultPage() {
           />
 
           {tags.length > 0 ? (
-            <div className="flex flex-col gap-2 rounded-lg border border-border bg-card p-3">
-              <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            <div className="flex flex-col gap-2 rounded-xl border border-transparent bg-surface-sunken p-3 dark:border-border">
+              <h2 className="text-xs font-semibold text-muted-foreground">
                 태그
               </h2>
               <div className="flex flex-wrap gap-2">
@@ -158,18 +161,25 @@ export default function VaultPage() {
             <ErrorState
               title="보관함을 불러오지 못했습니다."
               description="잠시 후 다시 시도해 주세요."
+              onRetry={() => itemsQuery.refetch()}
             />
           ) : itemsQuery.isLoading ? (
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div role="status" aria-label="저장된 항목 불러오는 중" className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               {[0, 1, 2, 3].map((i) => (
-                <div key={i} className="h-36 rounded-lg bg-muted/40" />
+                <Skeleton key={i} className="h-36 rounded-xl" />
               ))}
+              <span className="sr-only">저장된 항목을 불러오고 있습니다.</span>
             </div>
           ) : items.length === 0 ? (
             <EmptyState
               icon={<BookmarkCheck className="h-6 w-6" aria-hidden="true" />}
               title="저장된 항목이 없습니다."
               description="가이드·도구·소식에서 보관함 저장을 누르거나 외부 URL을 추가해 보세요."
+              action={
+                <Button variant="outline" size="sm" asChild>
+                  <Link href="/guides">가이드 둘러보기</Link>
+                </Button>
+              }
             />
           ) : (
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">

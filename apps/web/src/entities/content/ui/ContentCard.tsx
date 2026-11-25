@@ -26,7 +26,7 @@ export const ContentCard = ({
   const href = `${typeMeta.hrefPrefix}/${item.slug}`;
 
   return (
-    <Card className="flex h-full flex-col justify-between transition-[box-shadow,border-color] duration-150 ease-out hover:border-primary/40 hover:shadow-border-hover">
+    <Card className="flex h-full flex-col justify-between transition-colors duration-150 ease-out hover:bg-surface-sunken">
       <CardHeader className="gap-2 pb-3">
         <div className="flex items-center justify-between gap-2">
           <div className="flex flex-wrap items-center gap-2">

@@ -33,7 +33,7 @@ export const GuideToc = ({ headings }: { headings: TocHeading[] }) => {
   return (
     <>
       {/* Mobile collapsible TOC */}
-      <div className="rounded-xl border border-transparent bg-card p-3 shadow-border lg:hidden">
+      <div className="rounded-xl border border-transparent bg-surface-sunken p-3 dark:border-border lg:hidden">
         <button
           type="button"
           onClick={() => setMobileOpen((prev) => !prev)}
@@ -56,7 +56,7 @@ export const GuideToc = ({ headings }: { headings: TocHeading[] }) => {
 
       {/* Desktop sticky TOC */}
       <aside className="hidden lg:block">
-        <div className="sticky top-8 rounded-xl border border-transparent bg-card p-4 shadow-border">
+        <div className="sticky top-8 rounded-xl border border-transparent bg-surface-sunken p-4 dark:border-border">
           <p className="mb-3 text-xs font-semibold text-foreground">목차</p>
           {list}
         </div>

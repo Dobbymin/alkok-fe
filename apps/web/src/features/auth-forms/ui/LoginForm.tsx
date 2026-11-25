@@ -66,9 +66,11 @@ export const LoginForm = () => {
   };
 
   return (
-    <Card className="w-full max-w-md">
+    <Card variant="surface" className="w-full max-w-md">
       <CardHeader>
-        <CardTitle>로그인</CardTitle>
+        <CardTitle as="h1" className="text-xl">
+          로그인
+        </CardTitle>
         <CardDescription>알콕(Alkok) 계정으로 로그인하세요.</CardDescription>
       </CardHeader>
       <CardContent>

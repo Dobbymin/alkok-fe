@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, X } from "lucide-react";
+import { X } from "lucide-react";
 import Link from "next/link";
 import { Badge, Button } from "@alkok/ui";
 import { compareStore, useCompareSelection } from "../model/compare-store";
@@ -46,15 +46,7 @@ export const CompareTray = () => {
             초기화
           </Button>
           <Button size="sm" asChild>
-            <Link href={compareHref}>
-              비교하기{" "}
-              <ArrowRight
-                className="h-3.5 w-3.5"
-                strokeWidth={1.75}
-                absoluteStrokeWidth
-                aria-hidden="true"
-              />
-            </Link>
+            <Link href={compareHref}>비교하기</Link>
           </Button>
         </div>
       </div>

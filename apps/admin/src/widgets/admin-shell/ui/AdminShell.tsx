@@ -117,7 +117,7 @@ export const AdminShell = ({ children }: { children: ReactNode }) => {
             href="/"
             className="text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
           >
-            공개 웹 →
+            공개 웹
           </a>
         </div>
         <div className="flex-1 overflow-y-auto overscroll-contain p-3">
@@ -134,9 +134,9 @@ export const AdminShell = ({ children }: { children: ReactNode }) => {
                 <SheetTrigger asChild>
                   <Button
                     variant="outline"
-                    size="icon-sm"
+                    size="icon"
                     aria-label="관리자 메뉴 열기"
-                    className="lg:hidden"
+                    className="h-11 w-11 lg:hidden"
                   >
                     <Menu
                       className="h-4 w-4"
@@ -161,7 +161,7 @@ export const AdminShell = ({ children }: { children: ReactNode }) => {
                       onClick={() => setMobileOpen(false)}
                       className="text-xs font-medium text-muted-foreground hover:text-foreground"
                     >
-                      공개 웹으로 이동 →
+                      공개 웹으로 이동
                     </a>
                   </div>
                 </SheetContent>

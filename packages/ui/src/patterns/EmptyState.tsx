@@ -18,21 +18,21 @@ export const EmptyState = ({
 }: EmptyStateProps) => (
   <div
     className={cn(
-      "flex flex-col items-center justify-center rounded-xl border border-dashed border-border bg-card px-6 py-12 text-center",
+      "flex flex-col items-center justify-center rounded-2xl border border-transparent bg-surface-sunken px-6 py-12 text-center dark:border-border",
       className,
     )}
   >
     {icon ? (
       <div
         aria-hidden="true"
-        className="mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-surface-sunken text-muted-foreground"
+        className="mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-card text-muted-foreground"
       >
         {icon}
       </div>
     ) : null}
-    <h3 className="text-balance text-base font-semibold leading-[1.3] text-foreground">
+    <p className="text-balance text-base font-semibold leading-[1.3] text-foreground">
       {title}
-    </h3>
+    </p>
     {description ? (
       <p className="mt-2 max-w-md text-pretty text-sm leading-[1.5] text-muted-foreground">
         {description}

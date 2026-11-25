@@ -1,6 +1,6 @@
 "use client";
 
-import { AlertTriangle, Link2, Plus, Sparkles } from "lucide-react";
+import { AlertTriangle, Globe, Link2, Plus } from "lucide-react";
 import { useState, type FormEvent } from "react";
 import { toast } from "sonner";
 import {
@@ -172,7 +172,7 @@ export const ExternalUrlModal = ({
                 onClick={handlePreview}
                 disabled={previewMutation.isPending || !url.trim()}
               >
-                <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
+                <Globe className="h-3.5 w-3.5" aria-hidden="true" />
                 {previewMutation.isPending ? "조회 중..." : "미리보기"}
               </Button>
             </div>

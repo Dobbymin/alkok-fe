@@ -1,14 +1,28 @@
+import { cva, type VariantProps } from "class-variance-authority";
 import type { HTMLAttributes } from "react";
 import { cn } from "@alkok/core";
 
-export const Card = ({ className, ...props }: HTMLAttributes<HTMLDivElement>) => (
-  <div
-    className={cn(
-      "rounded-xl border border-transparent bg-card text-card-foreground shadow-border",
-      className,
-    )}
-    {...props}
-  />
+export const cardVariants = cva("text-card-foreground", {
+  variants: {
+    variant: {
+      default:
+        "rounded-xl border border-transparent bg-card dark:border-border",
+      surface:
+        "rounded-2xl border border-transparent bg-surface-sunken dark:border-border",
+      outline: "rounded-xl border border-border bg-card",
+    },
+  },
+  defaultVariants: {
+    variant: "default",
+  },
+});
+
+export interface CardProps
+  extends HTMLAttributes<HTMLDivElement>,
+    VariantProps<typeof cardVariants> {}
+
+export const Card = ({ className, variant, ...props }: CardProps) => (
+  <div className={cn(cardVariants({ variant }), className)} {...props} />
 );
 
 export const CardHeader = ({
@@ -18,11 +32,16 @@ export const CardHeader = ({
   <div className={cn("flex flex-col gap-2 p-5", className)} {...props} />
 );
 
+export interface CardTitleProps extends HTMLAttributes<HTMLHeadingElement> {
+  as?: "h1" | "h2" | "h3" | "h4";
+}
+
 export const CardTitle = ({
+  as: Comp = "h3",
   className,
   ...props
-}: HTMLAttributes<HTMLHeadingElement>) => (
-  <h3
+}: CardTitleProps) => (
+  <Comp
     className={cn(
       "text-balance text-base font-semibold leading-[1.3] tracking-[-0.01em]",
       className,

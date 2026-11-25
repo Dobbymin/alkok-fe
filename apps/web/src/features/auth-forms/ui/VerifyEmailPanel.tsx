@@ -58,9 +58,11 @@ export const VerifyEmailPanel = () => {
   };
 
   return (
-    <Card className="w-full max-w-md">
+    <Card variant="surface" className="w-full max-w-md">
       <CardHeader>
-        <CardTitle>이메일 인증</CardTitle>
+        <CardTitle as="h1" className="text-xl">
+          이메일 인증
+        </CardTitle>
         <CardDescription>
           {status === "verifying"
             ? "인증 토큰을 확인하고 있습니다..."

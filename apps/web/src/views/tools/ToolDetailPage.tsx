@@ -50,7 +50,7 @@ export default function ToolDetailPage({
 
   return (
     <div className="flex w-full flex-col gap-6">
-      <Card>
+      <Card variant="surface">
         <CardHeader className="gap-3">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div className="flex flex-wrap items-center gap-2">
@@ -96,7 +96,9 @@ export default function ToolDetailPage({
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">요금 · 무료 한도</CardTitle>
+          <CardTitle as="h2" className="text-base">
+            요금 · 무료 한도
+          </CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-2">
           <div className="flex items-center gap-2">
@@ -113,7 +115,9 @@ export default function ToolDetailPage({
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">강점 · 적합 업무</CardTitle>
+            <CardTitle as="h2" className="text-base">
+              강점 · 적합 업무
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <ul className="list-disc space-y-2 pl-4 text-sm text-foreground">
@@ -126,7 +130,9 @@ export default function ToolDetailPage({
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">한계 · 주의사항</CardTitle>
+            <CardTitle as="h2" className="text-base">
+              한계 · 주의사항
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <ul className="list-disc space-y-2 pl-4 text-sm text-muted-foreground">
@@ -138,7 +144,7 @@ export default function ToolDetailPage({
         </Card>
       </div>
 
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-border bg-card p-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-transparent bg-surface-sunken p-4 dark:border-border">
         <Button asChild>
           <a
             href={tool.officialUrl}
@@ -146,7 +152,7 @@ export default function ToolDetailPage({
             rel="noopener noreferrer"
           >
             공식 사이트에서 바로 쓰기
-            <ExternalLink className="h-4 w-4" strokeWidth={1.75} />
+            <ExternalLink className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
           </a>
         </Button>
         {engagementSlot ?? (

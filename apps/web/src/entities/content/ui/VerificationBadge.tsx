@@ -73,7 +73,7 @@ export const VerificationBadge = ({
       className="inline-flex items-center gap-2 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
     >
       <Badge variant={meta.variant}>
-        <Icon className="h-3 w-3" strokeWidth={1.75} />
+        <Icon className="h-3 w-3" strokeWidth={1.75} aria-hidden="true" />
         <span>{meta.label}</span>
       </Badge>
       {formattedDate ? (
