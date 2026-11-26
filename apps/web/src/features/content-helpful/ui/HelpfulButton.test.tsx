@@ -1,34 +1,29 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { resetAuthStore, useAuthStore } from "@alkok/core";
 import { helpfulApi } from "../api/helpful.api";
 import { HelpfulButton } from "./HelpfulButton";
 
 const pushMock = vi.fn();
-let authed = false;
 
 vi.mock("next/navigation", () => ({
   useRouter: () => ({ push: pushMock }),
   usePathname: () => "/guides/sample",
 }));
 
-vi.mock("@alkok/core", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@alkok/core")>();
-  return {
-    ...actual,
-  useAuth: () => ({ isAuthenticated: authed }),
-};
-});
-
 describe("HelpfulButton", () => {
+  beforeEach(() => {
+    resetAuthStore();
+  });
+
   it("toggles helpful state for authenticated users and avoids mutation for guests", async () => {
     const markSpy = vi
       .spyOn(helpfulApi, "markHelpful")
       .mockResolvedValueOnce({ data: { helpfulCount: 5, isHelpful: true } });
 
     const qc = new QueryClient();
-    authed = false;
-    const { rerender } = render(
+    render(
       <QueryClientProvider client={qc}>
         <HelpfulButton contentId="c1" initialCount={4} initialHelpful={false} />
       </QueryClientProvider>,
@@ -37,12 +32,18 @@ describe("HelpfulButton", () => {
     fireEvent.click(screen.getByRole("button", { name: /도움이 되었어요/ }));
     expect(markSpy).not.toHaveBeenCalled();
 
-    authed = true;
-    rerender(
-      <QueryClientProvider client={qc}>
-        <HelpfulButton contentId="c1" initialCount={4} initialHelpful={false} />
-      </QueryClientProvider>,
-    );
+    act(() => {
+      useAuthStore.setState({
+        user: {
+          id: "u1",
+          email: "user@alkok.kr",
+          nickname: "테스터",
+          role: "USER",
+          status: "ACTIVE",
+        },
+        isLoading: false,
+      });
+    });
 
     fireEvent.click(screen.getByRole("button", { name: /도움이 되었어요/ }));
 

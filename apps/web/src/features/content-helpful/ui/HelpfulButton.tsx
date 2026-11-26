@@ -5,7 +5,7 @@ import { ThumbsUp } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
-import { useAuth } from "@alkok/core";
+import { selectIsAuthenticated, useAuthStore } from "@alkok/core";
 import { Button } from "@alkok/ui";
 import { helpfulApi } from "../api/helpful.api";
 
@@ -22,7 +22,7 @@ export const HelpfulButton = ({
 }: HelpfulButtonProps) => {
   const router = useRouter();
   const pathname = usePathname() || "/";
-  const { isAuthenticated } = useAuth();
+  const isAuthenticated = useAuthStore(selectIsAuthenticated);
 
   const [isHelpful, setIsHelpful] = useState(initialHelpful);
   const [count, setCount] = useState(initialCount);

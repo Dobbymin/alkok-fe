@@ -1,13 +1,10 @@
 "use client";
 
 import { Check, Scale } from "lucide-react";
+import { useEffect } from "react";
 import { toast } from "sonner";
 import { Button } from "@alkok/ui";
-import {
-  compareStore,
-  getCompareMaxLimit,
-  useCompareSelection,
-} from "../model/compare-store";
+import { getCompareMaxLimit, useCompareStore } from "../model/compare.store";
 
 export const CompareToggleButton = ({
   slug,
@@ -16,11 +13,17 @@ export const CompareToggleButton = ({
   slug: string;
   title: string;
 }) => {
-  const items = useCompareSelection();
-  const isSelected = items.some((i) => i.slug === slug);
+  const isSelected = useCompareStore((s) =>
+    s.selectedItems.some((i) => i.slug === slug),
+  );
+  const toggle = useCompareStore((s) => s.toggle);
+
+  useEffect(() => {
+    void useCompareStore.persist.rehydrate();
+  }, []);
 
   const handleToggle = () => {
-    const ok = compareStore.toggle({ slug, title });
+    const ok = toggle({ slug, title });
     if (!ok) {
       const max = getCompareMaxLimit();
       toast.info(`비교함에는 최대 ${max}개까지 담을 수 있습니다.`);

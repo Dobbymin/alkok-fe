@@ -3,12 +3,13 @@
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { SettingsForms } from "@/features/auth-forms";
-import { useAuth } from "@alkok/core";
+import { selectIsAuthenticated, useAuthStore } from "@alkok/core";
 import { Skeleton } from "@alkok/ui";
 
 export default function SettingsPage() {
   const router = useRouter();
-  const { isAuthenticated, isLoading } = useAuth();
+  const isAuthenticated = useAuthStore(selectIsAuthenticated);
+  const isLoading = useAuthStore((s) => s.isLoading);
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {

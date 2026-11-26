@@ -3,7 +3,7 @@
 import { ShieldAlert } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useEffect, type ReactNode } from "react";
-import { useAuth } from "@alkok/core";
+import { selectIsAuthenticated, useAuthStore } from "@alkok/core";
 import { Button, Card, CardContent, CardHeader, CardTitle, Skeleton } from "@alkok/ui";
 
 export interface AdminGuardProps {
@@ -15,7 +15,9 @@ export const AdminGuard = ({
   children,
   onRedirectToLogin,
 }: AdminGuardProps) => {
-  const { user, isAuthenticated, isLoading } = useAuth();
+  const user = useAuthStore((s) => s.user);
+  const isAuthenticated = useAuthStore(selectIsAuthenticated);
+  const isLoading = useAuthStore((s) => s.isLoading);
   const pathname = usePathname();
 
   useEffect(() => {

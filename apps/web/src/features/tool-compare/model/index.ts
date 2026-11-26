@@ -1,1 +1,1 @@
-export * from "./compare-store";
+export * from "./compare.store";

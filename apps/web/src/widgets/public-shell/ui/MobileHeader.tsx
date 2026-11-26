@@ -16,7 +16,8 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { cn, useAuth } from "@alkok/core";
+import { useQuickSearchStore } from "@/features/quick-search";
+import { cn, selectIsAuthenticated, useAuthStore } from "@alkok/core";
 import {
   Button,
   Sheet,
@@ -56,14 +57,13 @@ const MOBILE_NAV = [
   },
 ] as const;
 
-export const MobileHeader = ({
-  onOpenSearch,
-}: {
-  onOpenSearch?: () => void;
-}) => {
+export const MobileHeader = () => {
   const [open, setOpen] = useState(false);
   const pathname = usePathname() || "/";
-  const { user, isAuthenticated, logout } = useAuth();
+  const openSearch = useQuickSearchStore((s) => s.openModal);
+  const user = useAuthStore((s) => s.user);
+  const isAuthenticated = useAuthStore(selectIsAuthenticated);
+  const logout = useAuthStore((s) => s.logout);
 
   return (
     <header className="sticky top-0 z-40 h-14 border-b border-border bg-sidebar/95 px-6 backdrop-blur-sm md:hidden">
@@ -75,7 +75,7 @@ export const MobileHeader = ({
           variant="ghost"
           size="icon"
           aria-label="통합 검색 열기"
-          onClick={onOpenSearch}
+          onClick={openSearch}
           className="h-11 w-11"
         >
           <Search

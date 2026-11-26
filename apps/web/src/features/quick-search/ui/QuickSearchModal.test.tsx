@@ -1,7 +1,11 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import {
+  resetQuickSearchStore,
+  useQuickSearchStore,
+} from "../model/quick-search.store";
 import { QuickSearchModal } from "./QuickSearchModal";
 import { searchApi } from "../api/search.api";
 
@@ -23,19 +27,24 @@ vi.mock("../api/search.api", () => ({
 }));
 
 describe("QuickSearchModal", () => {
+  beforeEach(() => {
+    resetQuickSearchStore();
+    useQuickSearchStore.setState({ open: true });
+  });
+
   afterEach(() => {
     vi.useRealTimers();
     pushMock.mockReset();
+    resetQuickSearchStore();
   });
 
   it("debounces suggest calls by 250ms and navigates to /search?q= on submit", async () => {
     vi.useFakeTimers();
     const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
-    const onOpenChange = vi.fn();
 
     render(
       <QueryClientProvider client={qc}>
-        <QuickSearchModal open={true} onOpenChange={onOpenChange} />
+        <QuickSearchModal />
       </QueryClientProvider>,
     );
 
@@ -52,16 +61,17 @@ describe("QuickSearchModal", () => {
 
     fireEvent.submit(input.closest("form")!);
     expect(pushMock).toHaveBeenCalledWith("/search?q=%ED%9A%8C%EC%9D%98%EB%A1%9D");
+    expect(useQuickSearchStore.getState().open).toBe(false);
+    expect(useQuickSearchStore.getState().recentSearches).toEqual(["회의록"]);
   });
 
   it("shows popular search chips when query is empty", async () => {
     const user = userEvent.setup();
     const qc = new QueryClient();
-    const onOpenChange = vi.fn();
 
     render(
       <QueryClientProvider client={qc}>
-        <QuickSearchModal open={true} onOpenChange={onOpenChange} />
+        <QuickSearchModal />
       </QueryClientProvider>,
     );
 

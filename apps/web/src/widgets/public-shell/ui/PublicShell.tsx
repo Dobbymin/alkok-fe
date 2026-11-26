@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import type { ReactNode } from "react";
 import { QuickSearchModal } from "@/features/quick-search";
 import { DesktopSidebar } from "./DesktopSidebar";
 import { MobileBottomTabs } from "./MobileBottomTabs";
@@ -11,8 +11,6 @@ export interface PublicShellProps {
 }
 
 export const PublicShell = ({ children }: PublicShellProps) => {
-  const [searchOpen, setSearchOpen] = useState(false);
-
   return (
     <div className="flex min-h-dvh flex-col bg-background text-foreground md:flex-row">
       <a
@@ -22,8 +20,8 @@ export const PublicShell = ({ children }: PublicShellProps) => {
         본문으로 건너뛰기
       </a>
 
-      <DesktopSidebar onOpenSearch={() => setSearchOpen(true)} />
-      <MobileHeader onOpenSearch={() => setSearchOpen(true)} />
+      <DesktopSidebar />
+      <MobileHeader />
 
       <div className="flex min-w-0 flex-1 flex-col">
         <main
@@ -37,7 +35,7 @@ export const PublicShell = ({ children }: PublicShellProps) => {
 
       <MobileBottomTabs />
 
-      <QuickSearchModal open={searchOpen} onOpenChange={setSearchOpen} />
+      <QuickSearchModal />
     </div>
   );
 };

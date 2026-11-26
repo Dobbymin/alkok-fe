@@ -12,7 +12,7 @@ import {
 } from "@/entities/vault";
 import { VaultFolderSidebar, VaultItemCard } from "@/features/vault-manage";
 import { ExternalUrlModal } from "@/features/vault-save";
-import { useAuth } from "@alkok/core";
+import { selectIsAuthenticated, useAuthStore } from "@alkok/core";
 import type { VaultItemType } from "@alkok/core";
 import {
   Badge,
@@ -26,7 +26,8 @@ import {
 
 export default function VaultPage() {
   const router = useRouter();
-  const { isAuthenticated, isLoading } = useAuth();
+  const isAuthenticated = useAuthStore(selectIsAuthenticated);
+  const isLoading = useAuthStore((s) => s.isLoading);
 
   const [selectedFolderId, setSelectedFolderId] = useState("");
   const [selectedTag, setSelectedTag] = useState("");

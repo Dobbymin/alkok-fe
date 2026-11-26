@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
 import { toast } from "sonner";
 import { WORK_DOMAINS } from "@/entities/taxonomy";
-import { useAuth } from "@alkok/core";
+import { useAuthStore } from "@alkok/core";
 import {
   Button,
   Card,
@@ -29,7 +29,8 @@ import { useDeleteAccountMutation } from "../model/useAuthMutations";
 
 export const SettingsForms = () => {
   const router = useRouter();
-  const { user, updateUser } = useAuth();
+  const user = useAuthStore((s) => s.user);
+  const updateUser = useAuthStore((s) => s.updateUser);
   const { theme, setTheme } = useTheme();
 
   const [nickname, setNickname] = useState(user?.nickname ?? "");

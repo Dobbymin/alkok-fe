@@ -1,20 +1,13 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { resetAuthStore } from "@alkok/core";
 import SearchPage from "./SearchPage";
 
 vi.mock("next/navigation", () => ({
   useRouter: () => ({ push: vi.fn() }),
   useSearchParams: () => new URLSearchParams("q=회의록"),
 }));
-
-vi.mock("@alkok/core", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@alkok/core")>();
-  return {
-    ...actual,
-  useAuth: () => ({ isAuthenticated: false }),
-};
-});
 
 vi.mock("@/features/quick-search", () => ({
   useUnifiedSearch: () => ({
@@ -26,6 +19,9 @@ vi.mock("@/features/quick-search", () => ({
 }));
 
 describe("SearchPage", () => {
+  beforeEach(() => {
+    resetAuthStore();
+  });
   it("hides 내 보관함 tab for unauthenticated users", () => {
     const qc = new QueryClient();
     render(

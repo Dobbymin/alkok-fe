@@ -16,7 +16,7 @@ import {
   DialogTitle,
   Input,
 } from "@alkok/ui";
-import { addRecentSearch, getRecentSearches } from "../model/recent-searches";
+import { useQuickSearchStore } from "../model/quick-search.store";
 import { useSearchSuggest } from "../model/useQuickSearch";
 
 const TYPE_PATH: Record<ContentType, { prefix: string; label: string }> = {
@@ -32,36 +32,36 @@ const QUICK_LINKS = [
   { href: "/news", label: "최신 AI 소식" },
 ] as const;
 
-export interface QuickSearchModalProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-}
-
-export const QuickSearchModal = ({
-  open,
-  onOpenChange,
-}: QuickSearchModalProps) => {
+export const QuickSearchModal = () => {
   const router = useRouter();
   const [query, setQuery] = useState("");
-  const [recent, setRecent] = useState<string[]>(() => getRecentSearches());
+  const open = useQuickSearchStore((s) => s.open);
+  const setOpen = useQuickSearchStore((s) => s.setOpen);
+  const toggleOpen = useQuickSearchStore((s) => s.toggleOpen);
+  const recent = useQuickSearchStore((s) => s.recentSearches);
+  const addRecentSearch = useQuickSearchStore((s) => s.addRecentSearch);
   const suggestQuery = useSearchSuggest(query);
+
+  useEffect(() => {
+    void useQuickSearchStore.persist.rehydrate();
+  }, []);
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
         e.preventDefault();
-        onOpenChange(!open);
+        toggleOpen();
       }
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [open, onOpenChange]);
+  }, [toggleOpen]);
 
   const submitSearch = (term: string) => {
     const trimmed = term.trim();
     if (!trimmed) return;
-    setRecent(addRecentSearch(trimmed));
-    onOpenChange(false);
+    addRecentSearch(trimmed);
+    setOpen(false);
     router.push(`/search?q=${encodeURIComponent(trimmed)}`);
   };
 
@@ -73,7 +73,7 @@ export const QuickSearchModal = ({
   const suggestions = (suggestQuery.data?.data ?? []).slice(0, 8);
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="max-h-[90dvh] max-w-xl overflow-y-auto overscroll-contain p-4 sm:h-auto sm:p-6">
         <DialogHeader className="sr-only">
           <DialogTitle>통합 빠른 검색</DialogTitle>
@@ -119,7 +119,7 @@ export const QuickSearchModal = ({
                       <li key={item.id}>
                         <Link
                           href={`${meta.prefix}/${item.slug}`}
-                          onClick={() => onOpenChange(false)}
+                          onClick={() => setOpen(false)}
                           className="flex items-center justify-between rounded-md px-3 py-2 text-sm hover:bg-secondary"
                         >
                           <span className="truncate font-medium text-foreground">
@@ -187,7 +187,7 @@ export const QuickSearchModal = ({
                     <Link
                       key={link.href}
                       href={link.href}
-                      onClick={() => onOpenChange(false)}
+                      onClick={() => setOpen(false)}
                       className="flex items-center rounded-md px-3 py-2 text-sm text-foreground hover:bg-secondary"
                     >
                       <span>{link.label}</span>

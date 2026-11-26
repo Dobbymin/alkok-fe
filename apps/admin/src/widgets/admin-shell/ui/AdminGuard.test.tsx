@@ -1,34 +1,23 @@
 import { render, screen } from "@testing-library/react";
-import { describe, expect, it, vi, beforeEach } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { resetAuthStore, useAuthStore } from "@alkok/core";
 import { AdminGuard } from "./AdminGuard";
 import { ADMIN_NAV_ITEMS, AdminShell } from "./AdminShell";
 
 const replaceMock = vi.fn();
-let mockAuthState = {
-  user: null as { id: string; email: string; nickname: string; role: "USER" | "ADMIN"; status: "ACTIVE" } | null,
-  isAuthenticated: false,
-  isLoading: false,
-};
 
 vi.mock("next/navigation", () => ({
   usePathname: () => "/contents",
 }));
 
-vi.mock("@alkok/core", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@alkok/core")>();
-  return {
-    ...actual,
-    useAuth: () => mockAuthState,
-  };
-});
-
 describe("AdminGuard & AdminShell", () => {
   beforeEach(() => {
     replaceMock.mockReset();
+    resetAuthStore();
   });
 
   it("redirects unauthenticated user to /login?next=...", () => {
-    mockAuthState = { user: null, isAuthenticated: false, isLoading: false };
+    useAuthStore.setState({ user: null, isLoading: false });
 
     render(
       <AdminGuard onRedirectToLogin={replaceMock}>
@@ -41,7 +30,7 @@ describe("AdminGuard & AdminShell", () => {
   });
 
   it("blocks USER role with 403 message", () => {
-    mockAuthState = {
+    useAuthStore.setState({
       user: {
         id: "u1",
         email: "user@alkok.kr",
@@ -49,9 +38,8 @@ describe("AdminGuard & AdminShell", () => {
         role: "USER",
         status: "ACTIVE",
       },
-      isAuthenticated: true,
       isLoading: false,
-    };
+    });
 
     render(
       <AdminGuard>
@@ -64,7 +52,7 @@ describe("AdminGuard & AdminShell", () => {
   });
 
   it("renders AdminShell with all 6 navigation items for ADMIN role", () => {
-    mockAuthState = {
+    useAuthStore.setState({
       user: {
         id: "a1",
         email: "admin@alkok.kr",
@@ -72,9 +60,8 @@ describe("AdminGuard & AdminShell", () => {
         role: "ADMIN",
         status: "ACTIVE",
       },
-      isAuthenticated: true,
       isLoading: false,
-    };
+    });
 
     render(
       <AdminGuard>

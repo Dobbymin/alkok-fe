@@ -2,11 +2,11 @@
 
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { useAuth } from "@alkok/core";
+import { useAuthStore } from "@alkok/core";
 import { authApi } from "../api/auth.api";
 
 export function useLoginMutation() {
-  const { setSession } = useAuth();
+  const setSession = useAuthStore((s) => s.setSession);
   return useMutation({
     mutationFn: (payload: { email: string; password: string }) =>
       authApi.login(payload),
@@ -43,7 +43,7 @@ export function useResendVerificationMutation() {
 }
 
 export function useDeleteAccountMutation() {
-  const { clearSession } = useAuth();
+  const clearSession = useAuthStore((s) => s.clearSession);
   return useMutation({
     mutationFn: () => authApi.deleteAccount(),
     onSuccess: () => {
