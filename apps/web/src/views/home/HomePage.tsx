@@ -23,6 +23,7 @@ import {
   type ToolDetailData,
 } from "@alkok/core";
 import { Button, EmptyState, Input } from "@alkok/ui";
+import { AlkokHeroMark } from "./AlkokHeroMark";
 
 export type HomeCatalogTab = "guides" | "tools" | "news";
 
@@ -322,26 +323,35 @@ export default function HomePage({ initialCatalog }: HomePageProps) {
           className="rounded-2xl border border-border bg-surface-sunken/70 p-6 sm:p-8"
         >
           <div className="flex flex-col gap-4">
-            <div className="flex flex-col gap-2">
-              <p className="text-xs font-semibold text-primary">
-                실무자를 위한 검증된 AI 지식 허브
-              </p>
-              <h1 className="break-keep text-2xl font-bold leading-[1.28] tracking-[-0.025em] text-foreground sm:text-3xl">
-                흩어진 AI 정보, 실무에 바로 쓰는 알맹이만 콕
-                <span className="text-primary">.</span>
-              </h1>
-              <p className="break-keep max-w-2xl text-sm leading-[1.6] text-muted-foreground sm:text-base">
-                알콕은 공식 출처와 최신성을 확인한 업무 프롬프트 가이드, 무료 한도·한국어 지원 기준 도구 비교, 실무 영향 중심 AI 소식을 한곳에서 찾아 바로 적용하고 보관하는 실무 카탈로그입니다.
-              </p>
-            </div>
+            <div className="grid grid-cols-[1fr_auto] items-center gap-x-4 gap-y-3 sm:gap-x-6 sm:gap-y-4">
+              <div className="flex min-w-0 flex-col gap-2">
+                <p className="text-xs font-semibold text-primary">
+                  실무자를 위한 검증된 AI 지식 허브
+                </p>
+                <h1 className="break-keep text-2xl font-bold leading-[1.28] tracking-[-0.025em] text-foreground sm:text-3xl">
+                  흩어진 AI 정보, 실무에 바로 쓰는 알맹이만 콕
+                  <span className="text-primary">!</span>
+                </h1>
+              </div>
 
-            <div className="flex flex-wrap items-center gap-2">
-              <Button asChild size="sm" className="min-h-11 sm:min-h-9">
-                <Link href="/tools/compare">AI 도구 한눈에 비교하기</Link>
-              </Button>
-              <Button asChild variant="outline" size="sm" className="min-h-11 sm:min-h-9">
-                <Link href="/vault">내 보관함 열기</Link>
-              </Button>
+              <div className="flex items-center justify-center self-center sm:row-span-2">
+                <AlkokHeroMark className="h-[54px] w-14 sm:h-[112px] sm:w-[116px]" />
+              </div>
+
+              <div className="col-span-2 flex min-w-0 flex-col gap-4 sm:col-span-1">
+                <p className="break-keep max-w-2xl text-sm leading-[1.6] text-muted-foreground sm:text-base">
+                  알콕은 공식 출처와 최신성을 확인한 업무 프롬프트 가이드, 무료 한도·한국어 지원 기준 도구 비교, 실무 영향 중심 AI 소식을 한곳에서 찾아 바로 적용하고 보관하는 실무 카탈로그입니다.
+                </p>
+
+                <div className="flex flex-wrap items-center gap-2">
+                  <Button asChild size="sm" className="min-h-11 sm:min-h-9">
+                    <Link href="/tools/compare">AI 도구 한눈에 비교하기</Link>
+                  </Button>
+                  <Button asChild variant="outline" size="sm" className="min-h-11 sm:min-h-9">
+                    <Link href="/vault">내 보관함 열기</Link>
+                  </Button>
+                </div>
+              </div>
             </div>
 
             <dl className="grid grid-cols-2 gap-3 border-t border-separator pt-5 sm:grid-cols-4">

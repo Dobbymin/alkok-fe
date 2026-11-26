@@ -10,12 +10,19 @@ export default function PublicHomeLoading() {
     >
       <div className="rounded-2xl border border-border bg-surface-sunken/70 p-6 sm:p-8">
         <div className="flex flex-col gap-4">
-          <Skeleton className="h-4 w-44" />
-          <Skeleton className="h-8 w-3/4 max-w-xl" />
-          <Skeleton className="h-4 w-full max-w-2xl" />
-          <div className="flex gap-2">
-            <Skeleton className="h-9 w-40 rounded-md" />
-            <Skeleton className="h-9 w-28 rounded-md" />
+          <div className="grid grid-cols-[1fr_auto] items-center gap-x-4 gap-y-3 sm:gap-x-6 sm:gap-y-4">
+            <div className="flex min-w-0 flex-col gap-2">
+              <Skeleton className="h-4 w-44" />
+              <Skeleton className="h-8 w-3/4 max-w-xl" />
+            </div>
+            <Skeleton className="h-[54px] w-14 rounded-2xl sm:row-span-2 sm:h-[112px] sm:w-[116px]" />
+            <div className="col-span-2 flex min-w-0 flex-col gap-4 sm:col-span-1">
+              <Skeleton className="h-4 w-full max-w-2xl" />
+              <div className="flex gap-2">
+                <Skeleton className="h-9 w-40 rounded-md" />
+                <Skeleton className="h-9 w-28 rounded-md" />
+              </div>
+            </div>
           </div>
           <div className="grid grid-cols-2 gap-3 border-t border-separator pt-5 sm:grid-cols-4">
             {[0, 1, 2, 3].map((i) => (
