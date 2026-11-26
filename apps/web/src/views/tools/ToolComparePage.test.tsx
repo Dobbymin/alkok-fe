@@ -139,6 +139,10 @@ describe("ToolComparePage", () => {
     );
 
     expect(
+      screen.getByRole("heading", { name: "AI 도구 한눈에 비교하기" }),
+    ).toBeInTheDocument();
+    expect(screen.queryByText(/7축/)).not.toBeInTheDocument();
+    expect(
       screen.getByText("어떤 상황에 어떤 도구가 유리한가요?"),
     ).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "회의록·음성 AI" })).toHaveAttribute(

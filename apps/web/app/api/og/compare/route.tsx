@@ -43,7 +43,7 @@ export async function GET(request: NextRequest) {
       ? tools.map((t) => t.title).join(" vs ")
       : slugs.length >= 2
         ? slugs.join(" vs ")
-        : "AI 도구·모델 7축 비교표";
+        : "AI 도구 한눈에 비교하기";
 
   const verifiedDates = tools
     .map((t) => t.verifiedAt?.slice(0, 10))
@@ -53,7 +53,7 @@ export async function GET(request: NextRequest) {
     verifiedDates.length > 0 ? verifiedDates[verifiedDates.length - 1] : null;
 
   const glyphSource = [
-    "알콕 Alkok AI 도구·모델 7축 비교표 무료 플랜 있음 유료 전용 한국어 완전 부분 미지원 확인일 출처 검증 실무 비교",
+    "알콕 Alkok AI 도구 한눈에 비교하기 AI 도구 비교표 무료 플랜 있음 유료 전용 한국어 완전 부분 미지원 확인일 출처 검증 실무 비교",
     hostLabel,
     title,
     latestVerified ?? "",
@@ -126,7 +126,7 @@ export async function GET(request: NextRequest) {
         {/* Title & subtitle */}
         <div style={{ display: "flex", flexDirection: "column", gap: "10px", marginTop: "20px" }}>
           <span style={{ fontSize: "18px", fontWeight: 700, color: "#2563eb" }}>
-            7축 AI 도구 비교 카드
+            AI 도구 한눈에 비교
           </span>
           <span style={{ fontSize: "38px", fontWeight: 700, color: "#0f172a", lineHeight: 1.2 }}>
             {title}
@@ -245,7 +245,7 @@ export async function GET(request: NextRequest) {
         >
           <span>출처·최신성 검증 기반 실무 비교</span>
           <span>
-            {latestVerified ? `최근 확인일 ${latestVerified}` : "7축 비교표"}
+            {latestVerified ? `최근 확인일 ${latestVerified}` : "AI 도구 비교표"}
           </span>
         </div>
       </div>

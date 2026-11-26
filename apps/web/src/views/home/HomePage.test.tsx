@@ -169,7 +169,20 @@ describe("HomePage", () => {
       screen.getByText(/흩어진 AI 정보, 실무에 바로 쓰는 알맹이만 콕/),
     ).toBeInTheDocument();
     expect(screen.getAllByText("2026-11-25").length).toBeGreaterThanOrEqual(1);
-    expect(screen.getByText("알콕, 3단계로 바로 쓰세요")).toBeInTheDocument();
+    const stepsHeading = screen.getByRole("heading", {
+      name: "알콕, 3단계로 바로 쓰세요",
+    });
+    const catalogHeading = screen.getByRole("heading", {
+      name: "실무 카탈로그",
+    });
+    expect(
+      stepsHeading.compareDocumentPosition(catalogHeading) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+    expect(
+      screen.getByRole("link", { name: "AI 도구 한눈에 비교하기" }),
+    ).toBeInTheDocument();
+    expect(screen.queryByText(/7축/)).not.toBeInTheDocument();
     expect(screen.getByText("주간 보고서 10분 완성 가이드")).toBeInTheDocument();
     expect(screen.getByText("회의록 자동 정리 가이드")).toBeInTheDocument();
     expect(screen.queryByText("도움됨 0")).not.toBeInTheDocument();

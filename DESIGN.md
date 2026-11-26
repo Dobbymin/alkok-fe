@@ -20,7 +20,7 @@
 ### Reference Synthesis (Role-Separated, Non-Cloning)
 - **`toss.tech` / TDS**: 한국어 에디토리얼 타이포그래피와 여백 리듬, `(public)`·`(vault)` 목록 및 요약 블록의 보더리스/표면 톤(surface tint) 위계, 모바일(`390×844`) 하단 탭 및 `Sheet` 터치 조작성, 친절하고 직관적인 한국어 마이크로카피.
 - **`Notion`**: `/vault` 개인 지식 보관함의 1단계 폴더·태그 레일 및 인라인 메모 미리보기, 장문 업무 가이드 본문(`max-w-3xl`)의 방해 없는 집중 읽기 경험.
-- **`Stripe Docs`**: 가이드 상단 구조화 "알맹이 요약" 카드, `PromptCopyBlock`, 우측 sticky 목차(TOC), `/tools/compare` 7축 비교표 및 `/admin` 2단 분할 검수(`AdminReviewSplitView`)의 고밀도 `Compact` 정밀성.
+- **`Stripe Docs`**: 가이드 상단 구조화 "알맹이 요약" 카드, `PromptCopyBlock`, 우측 sticky 목차(TOC), `/tools/compare` AI 도구 비교표 및 `/admin` 2단 분할 검수(`AdminReviewSplitView`)의 고밀도 `Compact` 정밀성.
 
 ---
 
@@ -29,7 +29,7 @@
 - **One Focal Point Per Screen**:
   - `/` (홈): 컴팩트 헤더 + 실시간 카탈로그 검색(`/`) + 단일 탭 디렉터리(`업무 가이드` · `AI 도구` · `AI 소식`)
   - `/guides/[slug]`: 상단 알맹이 요약 카드 + 현재 실행 단계
-  - `/tools/compare`: 7축 비교표 + `차이점만 보기` 토글
+  - `/tools/compare`: AI 도구 비교표 + `차이점만 보기` 토글
   - `/vault`: 저장된 자료 리스트 + `+ 외부 URL 저장` 액션
   - `/admin/inbox`: 50:50 원문·초안 분할 검수 뷰
 - **One Deliberate Accent**:
@@ -52,7 +52,7 @@
 - **Dark Mode Parity**: 다크 모드(`.dark`)에서는 `--background` (`--alkok-slate-950`), `--card` (`--alkok-slate-900`), `--surface-sunken`의 명도 대비와 함께, 면 구분이 약해지는 카드·패널에만 반투명 `1px` 보더(`--border`: `oklch(1 0 0 / 12%)`)를 보조 적용한다.
 
 ### 3.2 Precision & High-Density Surfaces : Stripe/shadcn `1px` Border (`Compact` 밀도)
-- `/tools/compare` 7축 비교표, `PromptCopyBlock`, `/admin/**` 관리 테이블 및 50:50 `AdminReviewSplitView`, 폼 입력 컨트롤은 선명한 `1px` 보더(`--border`, `--prompt-border`, `--input`)와 `Compact` 행 높이(`36~40px`)를 유지한다.
+- `/tools/compare` AI 도구 비교표, `PromptCopyBlock`, `/admin/**` 관리 테이블 및 50:50 `AdminReviewSplitView`, 폼 입력 컨트롤은 선명한 `1px` 보더(`--border`, `--prompt-border`, `--input`)와 `Compact` 행 높이(`36~40px`)를 유지한다.
 
 ### 3.3 Floating Overlays & Radius Scale
 - **Elevation**: `--shadow-elevated`는 플로팅 요소(`Popover`, `DropdownMenu`, `Dialog`, `Sheet`, `Toast`, 하단 플로팅 비교 트레이)에만 사용한다. 일반 카드·사이드바·테이블에는 그림자를 쓰지 않는다.
@@ -108,10 +108,10 @@
 ### 6.1 Home (`/`) Service Intro + Tabbed Catalog (`RHYTHM 2`)
 홈 첫 화면은 `sphereai.work`의 명확한 서비스 소개·활용법과 `getskillbook.com`의 즉시 탐색 가능한 카탈로그를 결합해 구성한다. (도구 비교는 `/tools/compare` 전용으로 분리)
 1. **서비스 소개 히어로 (기본 `/` 진입 시)**: 서비스 한 줄 정체성(`흩어진 AI 정보, 실무에 바로 쓰는 알맹이만 콕.`), 2줄 설명, 비교표·보관함 바로가기, 실시간 4축 통계(`업무 가이드`, `AI 도구·모델`, `최신 AI 소식`, `최근 검증일`). (업무 도메인 필터 활성 시 컴팩트 도메인 헤더로 자동 축약)
-2. **풀폭 실시간 검색바**: `/` 단축키 지원, 입력 즉시 현재 탭 목록 필터링 + URL `?q=` 동기화
-3. **1줄 탭·필터 컨트롤 바**: `업무 가이드` (기본) · `AI 도구` · `AI 소식` 탭 + `업무 분야` / `세부 조건` 드롭다운 + `저장한 항목` 토글 (`?tab`, `?domain`, `?use`, `?saved=1` 동기화)
-4. **3열 카탈로그 그리드**: 1px `outline` 카드(`ContentCard` / `ToolSpecCard`). `ContentCard`는 상단 도메인 아이콘·라벨 + 아이콘 북마크(`iconOnly`), `break-keep` 제목·요약, 보더리스 보조 태그, 하단 `VerificationBadge` + `가이드 열기 →` 풋터로 구성해 1초 스캔 가독성을 확보
-5. **3단계 활용법 밴드**: `01 막힌 업무 찾기` · `02 프롬프트·도구 바로 적용` · `03 보관함에 콕 저장` + 하단 플로팅 `CompareTray`
+2. **3단계 활용법 밴드**: `01 막힌 업무 찾기` · `02 프롬프트·도구 바로 적용` · `03 보관함에 콕 저장` (서비스 소개 바로 아래, 카탈로그 상단 배치)
+3. **풀폭 실시간 검색바**: `/` 단축키 지원, 입력 즉시 현재 탭 목록 필터링 + URL `?q=` 동기화
+4. **1줄 탭·필터 컨트롤 바**: `업무 가이드` (기본) · `AI 도구` · `AI 소식` 탭 + `업무 분야` / `세부 조건` 드롭다운 + `저장한 항목` 토글 (`?tab`, `?domain`, `?use`, `?saved=1` 동기화)
+5. **3열 카탈로그 그리드**: 1px `outline` 카드(`ContentCard` / `ToolSpecCard`). `ContentCard`는 상단 도메인 아이콘·라벨 + 아이콘 북마크(`iconOnly`), `break-keep` 제목·요약, 보더리스 보조 태그, 하단 `VerificationBadge` + `가이드 열기 →` 풋터로 구성해 1초 스캔 가독성을 확보 + 하단 플로팅 `CompareTray`
 
 ### 6.2 Container Widths
 - 가이드 상세 본문: `max-w-3xl` (`768px`)
@@ -133,7 +133,7 @@
 
 1. **`VerificationBadge`** (`entities/content/ui`): 3단계(`유효` / `확인 필요` / `만료`) 배지 + `verifiedAt` + 출처 유형(`공식` / `전문 미디어` / `커뮤니티`). 호버/탭 시 Tooltip(모바일은 Popover)으로 출처 근거 표시.
 2. **`PromptCopyBlock`** (`entities/guide/ui`): `JetBrains Mono` + `--prompt-surface` + `1px solid var(--prompt-border)`, `[입력 변수]` 하이라이트, 우측 상단 원클릭 복사 버튼 및 2초 체크 피드백.
-3. **`ToolCompareTable`** (`widgets/tool-compare/ui`): 7축 비교표, `1px` 보더(`Compact` 밀도), `tabular-nums`, `차이점만 보기` 토글. 데스크톱 좌측 도구명 `sticky`, 모바일(`390px`)은 카드 스택 기본 + 2~3개 선택 시 좌측 속성 컬럼 `sticky` 횡비교 전환.
+3. **`ToolCompareTable`** (`widgets/tool-compare/ui`): AI 도구 비교표, `1px` 보더(`Compact` 밀도), `tabular-nums`, `차이점만 보기` 토글. 데스크톱 좌측 도구명 `sticky`, 모바일(`390px`)은 카드 스택 기본 + 2~3개 선택 시 좌측 속성 컬럼 `sticky` 횡비교 전환.
 4. **`ContentCard`** (`entities/content/ui`): `(public)`/`(vault)`에서 보더리스 또는 옅은 `--surface-sunken` 톤 기반으로 구성하며 호버 시 배경 톤 전환(그림자 없음). 유형 배지, 제목, 2줄 요약, 이중 분류 태그, `VerificationBadge`, `도움됨` 수, 북마크 슬롯 포함. Skeleton 로딩 상태 필수.
 5. **`BookmarkAction`** (`features/vault-save/ui`): `보관함에 콕 담기` / `저장됨` 토글. 저장 후 데스크톱 `Popover`, 모바일 `Sheet`로 1단계 폴더·태그·메모 퀵 편집.
 6. **`AdminReviewSplitView`** (`widgets/admin-review/ui`): `Compact` 밀도 + `1px` 보더. 데스크톱 `50:50` 분할(좌: 원문 URL·출처 근거 / 우: AI 한국어 초안 에디터·승인/반려), 모바일 `원문` / `초안 편집` 탭 전환.

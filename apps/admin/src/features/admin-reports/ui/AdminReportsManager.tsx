@@ -16,6 +16,7 @@ import {
   ErrorState,
   FieldGroup,
   FilterBar,
+  Skeleton,
   Textarea,
   type DataTableColumn,
 } from "@alkok/ui";
@@ -146,12 +147,23 @@ export const AdminReportsManager = () => {
         </div>
       </FilterBar>
 
-      {reportsQuery.isError ? (
+      {reportsQuery.isLoading ? (
+        <div
+          role="status"
+          aria-label="오류 제보 불러오는 중"
+          className="space-y-2"
+        >
+          {[0, 1, 2, 3].map((i) => (
+            <Skeleton key={i} className="h-10 w-full" />
+          ))}
+          <span className="sr-only">오류 제보 목록을 불러오고 있습니다.</span>
+        </div>
+      ) : reportsQuery.isError ? (
         <ErrorState
           title="오류 제보 목록을 불러오지 못했습니다."
           description="잠시 후 다시 시도해 주세요."
         />
-      ) : rows.length === 0 && !reportsQuery.isLoading ? (
+      ) : rows.length === 0 ? (
         <EmptyState
           title="접수된 제보가 없습니다."
           description="선택한 상태의 오류·최신화 제보가 없습니다."

@@ -65,7 +65,7 @@ export default function ToolsListPage() {
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div>
             <h2 className="text-sm font-semibold text-foreground">
-              업무 목적별 원클릭 7축 비교
+              업무 목적별 원클릭 도구 비교
             </h2>
             <p className="text-xs text-muted-foreground">
               자주 비교하는 조합을 바로 열어 무료 한도와 한국어 지원을 확인하세요.
@@ -188,10 +188,15 @@ export default function ToolsListPage() {
       </FilterBar>
 
       {query.isLoading ? (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <ContentCardSkeleton />
-          <ContentCardSkeleton />
-          <ContentCardSkeleton />
+        <div
+          role="status"
+          aria-label="AI 도구 목록 불러오는 중"
+          className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
+        >
+          {[0, 1, 2, 3, 4, 5].map((i) => (
+            <ContentCardSkeleton key={i} />
+          ))}
+          <span className="sr-only">AI 도구 목록을 불러오고 있습니다.</span>
         </div>
       ) : query.isError ? (
         <ErrorState onRetry={() => query.refetch()} />
