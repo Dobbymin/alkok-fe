@@ -64,18 +64,24 @@ export const ContentCard = ({
           </div>
         ) : null}
 
-        <div className="flex items-center justify-between border-t border-separator pt-3 text-xs text-muted-foreground">
-          <span className="inline-flex items-center gap-1 tabular-nums">
-            <ThumbsUp
-              className="h-3.5 w-3.5"
-              strokeWidth={1.75}
-              absoluteStrokeWidth
-              aria-hidden="true"
-            />
-            도움됨 {item.helpfulCount}
-          </span>
-          {footerSlot}
-        </div>
+        {item.helpfulCount > 0 || footerSlot ? (
+          <div className="flex items-center justify-between border-t border-separator pt-3 text-xs text-muted-foreground">
+            {item.helpfulCount > 0 ? (
+              <span className="inline-flex items-center gap-1 tabular-nums">
+                <ThumbsUp
+                  className="h-3.5 w-3.5"
+                  strokeWidth={1.75}
+                  absoluteStrokeWidth
+                  aria-hidden="true"
+                />
+                도움됨 {item.helpfulCount}
+              </span>
+            ) : (
+              <span />
+            )}
+            {footerSlot}
+          </div>
+        ) : null}
       </CardContent>
     </Card>
   );

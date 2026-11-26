@@ -4,10 +4,14 @@ import { useQuery } from "@tanstack/react-query";
 import { GUIDE_QUERY_KEYS } from "@alkok/core";
 import { guideApi, type GuideListParams } from "../api/guide.api";
 
-export function useGuidesList(params: GuideListParams) {
+export function useGuidesList(
+  params: GuideListParams,
+  options?: { enabled?: boolean },
+) {
   return useQuery({
     queryKey: GUIDE_QUERY_KEYS.list({ ...params }),
     queryFn: () => guideApi.list(params),
+    enabled: options?.enabled ?? true,
   });
 }
 
