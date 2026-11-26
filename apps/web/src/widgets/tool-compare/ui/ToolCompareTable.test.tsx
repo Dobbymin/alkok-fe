@@ -4,6 +4,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { resetCompareStore, useCompareStore } from "@/features/tool-compare";
 import type { ToolDetailData } from "@alkok/core";
 import { TooltipProvider } from "@alkok/ui";
+import { ToolComparePageSkeleton } from "./ToolComparePageSkeleton";
 import { ToolCompareTable } from "./ToolCompareTable";
 
 const sampleTools: ToolDetailData[] = [
@@ -109,5 +110,39 @@ describe("ToolCompareTable & useCompareStore", () => {
     const copied = writeTextMock.mock.calls[0]?.[0] as string;
     expect(copied).toContain("[알콕 AI 도구 비교] ChatGPT vs Claude");
     expect(copied).toContain("무료 플랜 있음");
+  });
+
+  it("renders responsive mobile card stack and 7-axis desktop table skeleton when isLoading", () => {
+    const { container } = render(
+      <ToolCompareTable tools={[]} isLoading toolCount={2} />,
+    );
+
+    expect(
+      screen.getByRole("status", { name: "도구 비교표 불러오는 중" }),
+    ).toBeInTheDocument();
+    // Desktop table skeleton: 1 axis col + 2 tool cols = 3 column headers, 7 axis rows
+    expect(container.querySelectorAll("thead th")).toHaveLength(3);
+    expect(container.querySelectorAll("tbody tr")).toHaveLength(7);
+    // Mobile card stack skeleton: 2 cards
+    const mobileStack = container.querySelector(".md\\:hidden.flex-col");
+    expect(mobileStack?.children).toHaveLength(2);
+  });
+
+  it("renders 7 preset card skeletons in hub mode and summary + table skeletons in compare mode", () => {
+    const { container, rerender } = render(
+      <ToolComparePageSkeleton mode="hub" />,
+    );
+
+    expect(
+      screen.getByRole("status", { name: "도구 비교표 불러오는 중" }),
+    ).toBeInTheDocument();
+    const hubGrid = container.querySelector(".lg\\:grid-cols-3");
+    expect(hubGrid?.children).toHaveLength(7);
+
+    rerender(<ToolComparePageSkeleton mode="compare" toolCount={3} />);
+    expect(
+      screen.getByRole("status", { name: "비교 요약 불러오는 중" }),
+    ).toBeInTheDocument();
+    expect(container.querySelectorAll("thead th")).toHaveLength(4);
   });
 });

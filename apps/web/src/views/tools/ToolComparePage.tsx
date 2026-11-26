@@ -205,6 +205,7 @@ export default function ToolComparePage({
           <ToolCompareTable
             tools={tools}
             isLoading={showCompareLoading}
+            toolCount={slugs.length}
             error={query.isError ? "비교 데이터를 불러오지 못했습니다." : null}
             onRetry={() => query.refetch()}
           />

@@ -164,14 +164,75 @@ const COMPARE_AXES: CompareAxis[] = [
 export interface ToolCompareTableProps {
   tools: ToolDetailData[];
   isLoading?: boolean;
+  toolCount?: number;
   error?: string | null;
   onRetry?: () => void;
   onShareUrl?: () => void;
 }
 
+const SKELETON_AXIS_ROWS = [
+  { key: "provider", kind: "badge-line" },
+  { key: "pricing", kind: "badge-line" },
+  { key: "korean", kind: "single-line" },
+  { key: "strengths", kind: "bullets-3" },
+  { key: "limitations", kind: "bullets-2" },
+  { key: "platforms", kind: "pills" },
+  { key: "source", kind: "badge-link" },
+] as const;
+
+type SkeletonAxisKind = (typeof SKELETON_AXIS_ROWS)[number]["kind"];
+
+function renderSkeletonAxisCell(kind: SkeletonAxisKind) {
+  switch (kind) {
+    case "badge-line":
+      return (
+        <div className="flex flex-col gap-1.5">
+          <Skeleton className="h-5 w-16 rounded-full" />
+          <Skeleton className="h-3.5 w-28" />
+        </div>
+      );
+    case "single-line":
+      return <Skeleton className="h-4 w-16" />;
+    case "bullets-3":
+      return (
+        <div className="space-y-1.5">
+          <Skeleton className="h-3.5 w-11/12" />
+          <Skeleton className="h-3.5 w-4/5" />
+          <Skeleton className="h-3.5 w-3/4" />
+        </div>
+      );
+    case "bullets-2":
+      return (
+        <div className="space-y-1.5">
+          <Skeleton className="h-3.5 w-10/12" />
+          <Skeleton className="h-3.5 w-3/4" />
+        </div>
+      );
+    case "pills":
+      return (
+        <div className="flex flex-wrap gap-1">
+          <Skeleton className="h-5 w-11 rounded-full" />
+          <Skeleton className="h-5 w-10 rounded-full" />
+          <Skeleton className="h-5 w-14 rounded-full" />
+        </div>
+      );
+    case "badge-link":
+      return (
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center gap-2">
+            <Skeleton className="h-5 w-12 rounded-full" />
+            <Skeleton className="h-3.5 w-20" />
+          </div>
+          <Skeleton className="h-3.5 w-20" />
+        </div>
+      );
+  }
+}
+
 export const ToolCompareTable = ({
   tools,
   isLoading = false,
+  toolCount,
   error = null,
   onRetry,
   onShareUrl,
@@ -181,31 +242,91 @@ export const ToolCompareTable = ({
   const [copiedSummary, setCopiedSummary] = useState(false);
 
   if (isLoading) {
+    const colCount = Math.min(Math.max(toolCount ?? 3, 2), 4);
+    const cols = Array.from({ length: colCount });
+
     return (
       <div
         role="status"
         aria-label="도구 비교표 불러오는 중"
         className="flex flex-col gap-4"
       >
-        <div className="flex items-center justify-between gap-2">
-          <Skeleton className="h-8 w-36" />
-          <div className="flex gap-2">
-            <Skeleton className="h-8 w-24" />
-            <Skeleton className="h-8 w-24" />
+        {/* Toolbar Skeleton */}
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-border bg-card p-3">
+          <div className="flex items-center gap-2">
+            <Skeleton className="h-4 w-4 rounded-xs" />
+            <Skeleton className="h-4 w-20" />
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1 md:hidden">
+              <Skeleton className="h-8 w-16 rounded-md" />
+              <Skeleton className="h-8 w-16 rounded-md" />
+            </div>
+            <Skeleton className="h-8 w-20 rounded-md" />
+            <Skeleton className="h-8 w-20 rounded-md" />
           </div>
         </div>
-        <div className="rounded-xl border border-border bg-card p-4">
-          <div className="space-y-3">
-            {[0, 1, 2, 3, 4].map((row) => (
-              <div key={row} className="grid grid-cols-4 gap-3">
-                <Skeleton className="h-8 w-full" />
-                <Skeleton className="h-8 w-full" />
-                <Skeleton className="h-8 w-full" />
-                <Skeleton className="h-8 w-full" />
-              </div>
-            ))}
-          </div>
+
+        {/* Mobile Card Stack Skeleton */}
+        <div className="flex flex-col gap-4 md:hidden">
+          {cols.map((_, colIdx) => (
+            <Card key={colIdx} variant="outline">
+              <CardHeader className="pb-2">
+                <Skeleton className="h-5 w-24" />
+              </CardHeader>
+              <CardContent className="flex flex-col gap-3">
+                {SKELETON_AXIS_ROWS.map((axis) => (
+                  <div
+                    key={axis.key}
+                    className="border-t border-border pt-3 first:border-t-0 first:pt-0"
+                  >
+                    <Skeleton className="mb-1.5 h-3.5 w-20" />
+                    {renderSkeletonAxisCell(axis.kind)}
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+          ))}
         </div>
+
+        {/* Desktop Table Skeleton */}
+        <div className="hidden md:block">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead
+                  scope="col"
+                  className="sticky left-0 z-10 min-w-32 whitespace-nowrap bg-muted/95"
+                >
+                  <Skeleton className="h-4 w-16" />
+                </TableHead>
+                {cols.map((_, colIdx) => (
+                  <TableHead key={colIdx} scope="col" className="min-w-52">
+                    <Skeleton className="h-4 w-24" />
+                  </TableHead>
+                ))}
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {SKELETON_AXIS_ROWS.map((axis) => (
+                <TableRow key={axis.key}>
+                  <th
+                    scope="row"
+                    className="sticky left-0 z-10 min-w-32 whitespace-nowrap bg-card px-3 py-3 text-left align-top"
+                  >
+                    <Skeleton className="h-4 w-20" />
+                  </th>
+                  {cols.map((_, colIdx) => (
+                    <TableCell key={colIdx} className="align-top py-3">
+                      {renderSkeletonAxisCell(axis.kind)}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+
         <span className="sr-only">도구 비교표를 불러오고 있습니다.</span>
       </div>
     );
