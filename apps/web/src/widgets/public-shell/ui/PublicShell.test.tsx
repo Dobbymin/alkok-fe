@@ -10,10 +10,12 @@ import { MOBILE_BOTTOM_TABS, MobileBottomTabs } from "./MobileBottomTabs";
 import { PublicShell } from "./PublicShell";
 
 let mockPathname = "/";
+let mockSearchParams = new URLSearchParams();
 
 vi.mock("next/navigation", () => ({
   usePathname: () => mockPathname,
   useRouter: () => ({ push: vi.fn() }),
+  useSearchParams: () => mockSearchParams,
 }));
 
 const setThemeMock = vi.fn();
@@ -22,13 +24,28 @@ vi.mock("next-themes", () => ({
   useTheme: () => ({ theme: "light", resolvedTheme: "light", setTheme: setThemeMock }),
 }));
 
-function renderShell(pathname = "/") {
+function renderShell(
+  pathname = "/",
+  counts = {
+    guides: 14,
+    tools: 20,
+    news: 12,
+    domains: {
+      "docs-reports": 4,
+      "meetings-comms": 3,
+      research: 2,
+      "data-sheets": 2,
+      "planning-slides": 2,
+      "content-design": 1,
+    },
+  },
+) {
   mockPathname = pathname;
   const qc = new QueryClient();
   return render(
     <QueryClientProvider client={qc}>
       <TooltipProvider>
-        <PublicShell>
+        <PublicShell counts={counts}>
           <div>본문</div>
         </PublicShell>
       </TooltipProvider>
@@ -38,6 +55,7 @@ function renderShell(pathname = "/") {
 
 describe("PublicShell, DesktopSidebar & MobileBottomTabs", () => {
   beforeEach(() => {
+    mockSearchParams = new URLSearchParams();
     resetAuthStore();
     resetSidebarStore();
     resetQuickSearchStore();
@@ -103,5 +121,16 @@ describe("PublicShell, DesktopSidebar & MobileBottomTabs", () => {
     const toggleButtons = screen.getAllByRole("button", { name: "테마 전환" });
     await user.click(toggleButtons[0]!);
     expect(setThemeMock).toHaveBeenCalledWith("dark");
+  });
+
+  it("renders work domain navigation links and count badges in sidebar", () => {
+    mockSearchParams = new URLSearchParams("domain=docs-reports");
+    renderShell("/");
+
+    const docsLink = screen.getByRole("link", { name: "문서·보고서" });
+    expect(docsLink).toHaveAttribute("href", "/?domain=docs-reports");
+    expect(docsLink).toHaveAttribute("aria-current", "page");
+    expect(screen.getByText("14")).toBeInTheDocument();
+    expect(screen.getByText("20")).toBeInTheDocument();
   });
 });

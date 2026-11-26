@@ -8,46 +8,59 @@ Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
 [?2026h
  Test Files 0 passed (7)
       Tests 0 passed (0)
-   Start at 01:16:00
-   Duration 946ms
+   Start at 19:42:58
+   Duration 954ms
 [?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K
  Test Files 0 passed (7)
       Tests 0 passed (0)
-   Start at 01:16:00
-   Duration 1.97s
+   Start at 19:42:58
+   Duration 1.98s
 [?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K
- ❯ src/features/admin-contents/ui/AdminContentsManager.test.tsx [queued]
+ ❯ src/features/admin-reports/ui/AdminReportsManager.test.tsx [queued]
 
  Test Files 0 passed (7)
       Tests 0 passed (0)
-   Start at 01:16:00
-   Duration 2.18s
+   Start at 19:42:58
+   Duration 2.82s
 [?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
- ❯ src/features/admin-contents/ui/AdminContentsManager.test.tsx [queued]
- ❯ src/features/admin-dashboard/ui/AdminDashboardOverview.test.tsx [queued]
  ❯ src/features/admin-reports/ui/AdminReportsManager.test.tsx [queued]
- ❯ src/features/admin-sources/ui/AdminSourcesManager.test.tsx [queued]
- ❯ src/features/admin-users/ui/AdminUsersManager.test.tsx [queued]
- ❯ src/widgets/admin-review/ui/AdminReviewSplitView.test.tsx [queued]
- ❯ src/widgets/admin-shell/ui/AdminGuard.test.tsx [queued]
 
  Test Files 0 passed (7)
       Tests 0 passed (0)
-   Start at 01:16:00
-   Duration 2.28s
-[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
- ❯ src/features/admin-contents/ui/AdminContentsManager.test.tsx [queued]
- ❯ src/features/admin-dashboard/ui/AdminDashboardOverview.test.tsx [queued]
- ❯ src/features/admin-reports/ui/AdminReportsManager.test.tsx [queued]
- ❯ src/features/admin-sources/ui/AdminSourcesManager.test.tsx [queued]
- ❯ src/features/admin-users/ui/AdminUsersManager.test.tsx [queued]
- ❯ src/widgets/admin-review/ui/AdminReviewSplitView.test.tsx [queued]
- ❯ src/widgets/admin-shell/ui/AdminGuard.test.tsx [queued]
-
- Test Files 0 passed (7)
-      Tests 0 passed (0)
-   Start at 01:16:00
+   Start at 19:42:58
    Duration 2.92s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
+ ❯ src/features/admin-reports/ui/AdminReportsManager.test.tsx [queued]
+ ❯ src/features/admin-sources/ui/AdminSourcesManager.test.tsx [queued]
+
+ Test Files 0 passed (7)
+      Tests 0 passed (0)
+   Start at 19:42:58
+   Duration 3.03s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
+ ❯ src/features/admin-contents/ui/AdminContentsManager.test.tsx [queued]
+ ❯ src/features/admin-reports/ui/AdminReportsManager.test.tsx [queued]
+ ❯ src/features/admin-sources/ui/AdminSourcesManager.test.tsx [queued]
+ ❯ src/widgets/admin-review/ui/AdminReviewSplitView.test.tsx [queued]
+ ❯ src/widgets/admin-shell/ui/AdminGuard.test.tsx [queued]
+
+ Test Files 0 passed (7)
+      Tests 0 passed (0)
+   Start at 19:42:58
+   Duration 3.28s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
+ ❯ src/features/admin-contents/ui/AdminContentsManager.test.tsx [queued]
+ ❯ src/features/admin-dashboard/ui/AdminDashboardOverview.test.tsx [queued]
+ ❯ src/features/admin-reports/ui/AdminReportsManager.test.tsx [queued]
+ ❯ src/features/admin-sources/ui/AdminSourcesManager.test.tsx [queued]
+ ❯ src/features/admin-users/ui/AdminUsersManager.test.tsx [queued]
+ ❯ src/widgets/admin-review/ui/AdminReviewSplitView.test.tsx [queued]
+ ❯ src/widgets/admin-shell/ui/AdminGuard.test.tsx [queued]
+
+ Test Files 0 passed (7)
+      Tests 0 passed (0)
+   Start at 19:42:58
+   Duration 3.58s
 [?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
  ❯ src/features/admin-contents/ui/AdminContentsManager.test.tsx [queued]
  ❯ src/features/admin-dashboard/ui/AdminDashboardOverview.test.tsx [queued]
@@ -59,8 +72,8 @@ Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
 
  Test Files 0 passed (7)
       Tests 0 passed (0)
-   Start at 01:16:00
-   Duration 4.00s
+   Start at 19:42:58
+   Duration 3.91s
 [?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
  ❯ src/features/admin-contents/ui/AdminContentsManager.test.tsx [queued]
  ❯ src/features/admin-dashboard/ui/AdminDashboardOverview.test.tsx [queued]
@@ -72,8 +85,8 @@ Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
 
  Test Files 0 passed (7)
       Tests 0 passed (0)
-   Start at 01:16:00
-   Duration 4.95s
+   Start at 19:42:58
+   Duration 4.96s
 [?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
  ❯ src/features/admin-contents/ui/AdminContentsManager.test.tsx [queued]
  ❯ src/features/admin-dashboard/ui/AdminDashboardOverview.test.tsx [queued]
@@ -85,21 +98,60 @@ Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
 
  Test Files 0 passed (7)
       Tests 0 passed (0)
-   Start at 01:16:00
-   Duration 5.97s
+   Start at 19:42:58
+   Duration 5.99s
 [?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
  ❯ src/features/admin-contents/ui/AdminContentsManager.test.tsx [queued]
- ❯ src/features/admin-dashboard/ui/AdminDashboardOverview.test.tsx 0/1
- ❯ src/features/admin-reports/ui/AdminReportsManager.test.tsx 0/1
- ❯ src/features/admin-sources/ui/AdminSourcesManager.test.tsx 0/1
+ ❯ src/features/admin-dashboard/ui/AdminDashboardOverview.test.tsx [queued]
+ ❯ src/features/admin-reports/ui/AdminReportsManager.test.tsx [queued]
+ ❯ src/features/admin-sources/ui/AdminSourcesManager.test.tsx [queued]
+ ❯ src/features/admin-users/ui/AdminUsersManager.test.tsx [queued]
+ ❯ src/widgets/admin-review/ui/AdminReviewSplitView.test.tsx [queued]
+ ❯ src/widgets/admin-shell/ui/AdminGuard.test.tsx [queued]
+
+ Test Files 0 passed (7)
+      Tests 0 passed (0)
+   Start at 19:42:58
+   Duration 6.98s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
+ ❯ src/features/admin-contents/ui/AdminContentsManager.test.tsx [queued]
+ ❯ src/features/admin-dashboard/ui/AdminDashboardOverview.test.tsx [queued]
+ ❯ src/features/admin-reports/ui/AdminReportsManager.test.tsx [queued]
+ ❯ src/features/admin-sources/ui/AdminSourcesManager.test.tsx [queued]
  ❯ src/features/admin-users/ui/AdminUsersManager.test.tsx [queued]
  ❯ src/widgets/admin-review/ui/AdminReviewSplitView.test.tsx 0/1
  ❯ src/widgets/admin-shell/ui/AdminGuard.test.tsx [queued]
 
  Test Files 0 passed (7)
+      Tests 0 passed (1)
+   Start at 19:42:58
+   Duration 7.45s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
+ ❯ src/features/admin-contents/ui/AdminContentsManager.test.tsx [queued]
+ ❯ src/features/admin-dashboard/ui/AdminDashboardOverview.test.tsx 0/1
+ ❯ src/features/admin-reports/ui/AdminReportsManager.test.tsx 0/1
+ ❯ src/features/admin-sources/ui/AdminSourcesManager.test.tsx [queued]
+ ❯ src/features/admin-users/ui/AdminUsersManager.test.tsx 0/1
+ ❯ src/widgets/admin-review/ui/AdminReviewSplitView.test.tsx 0/1
+ ❯ src/widgets/admin-shell/ui/AdminGuard.test.tsx [queued]
+
+ Test Files 0 passed (7)
       Tests 0 passed (4)
-   Start at 01:16:00
-   Duration 6.07s
+   Start at 19:42:58
+   Duration 7.67s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
+ ❯ src/features/admin-contents/ui/AdminContentsManager.test.tsx 0/1
+ ❯ src/features/admin-dashboard/ui/AdminDashboardOverview.test.tsx 0/1
+ ❯ src/features/admin-reports/ui/AdminReportsManager.test.tsx 0/1
+ ❯ src/features/admin-sources/ui/AdminSourcesManager.test.tsx 0/1
+ ❯ src/features/admin-users/ui/AdminUsersManager.test.tsx 0/1
+ ❯ src/widgets/admin-review/ui/AdminReviewSplitView.test.tsx 0/1
+ ❯ src/widgets/admin-shell/ui/AdminGuard.test.tsx [queued]
+
+ Test Files 0 passed (7)
+      Tests 0 passed (6)
+   Start at 19:42:58
+   Duration 7.98s
 [?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
  ❯ src/features/admin-contents/ui/AdminContentsManager.test.tsx 0/1
  ❯ src/features/admin-dashboard/ui/AdminDashboardOverview.test.tsx 1/1
@@ -107,15 +159,39 @@ Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
  ❯ src/features/admin-sources/ui/AdminSourcesManager.test.tsx 0/1
  ❯ src/features/admin-users/ui/AdminUsersManager.test.tsx 0/1
  ❯ src/widgets/admin-review/ui/AdminReviewSplitView.test.tsx 0/1
- ❯ src/widgets/admin-shell/ui/AdminGuard.test.tsx 0/3
+ ❯ src/widgets/admin-shell/ui/AdminGuard.test.tsx [queued]
 
  Test Files 0 passed (7)
-      Tests 1 passed (9)
-   Start at 01:16:00
-   Duration 6.51s
-[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K ✓ src/features/admin-dashboard/ui/AdminDashboardOverview.test.tsx (1 test) 352ms
-     ✓ renders 4 KPI cards with links  324ms
+      Tests 1 passed (6)
+   Start at 19:42:58
+   Duration 8.49s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K ✓ src/features/admin-dashboard/ui/AdminDashboardOverview.test.tsx (1 test) 962ms
+     ✓ renders 4 KPI cards with links  950ms
 
+ ❯ src/features/admin-contents/ui/AdminContentsManager.test.tsx 0/1
+ ❯ src/features/admin-reports/ui/AdminReportsManager.test.tsx 0/1
+ ❯ src/features/admin-sources/ui/AdminSourcesManager.test.tsx 0/1
+ ❯ src/features/admin-users/ui/AdminUsersManager.test.tsx 0/1
+ ❯ src/widgets/admin-review/ui/AdminReviewSplitView.test.tsx 0/1
+ ❯ src/widgets/admin-shell/ui/AdminGuard.test.tsx 0/3
+
+ Test Files 1 passed (7)
+      Tests 1 passed (9)
+   Start at 19:42:58
+   Duration 8.70s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
+ ❯ src/features/admin-contents/ui/AdminContentsManager.test.tsx 0/1
+ ❯ src/features/admin-reports/ui/AdminReportsManager.test.tsx 0/1
+ ❯ src/features/admin-sources/ui/AdminSourcesManager.test.tsx 0/1
+ ❯ src/features/admin-users/ui/AdminUsersManager.test.tsx 0/1
+ ❯ src/widgets/admin-review/ui/AdminReviewSplitView.test.tsx 0/1
+ ❯ src/widgets/admin-shell/ui/AdminGuard.test.tsx 0/3
+
+ Test Files 1 passed (7)
+      Tests 1 passed (9)
+   Start at 19:42:58
+   Duration 9.00s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
  ❯ src/features/admin-contents/ui/AdminContentsManager.test.tsx 0/1
  ❯ src/features/admin-reports/ui/AdminReportsManager.test.tsx 0/1
  ❯ src/features/admin-sources/ui/AdminSourcesManager.test.tsx 0/1
@@ -125,22 +201,22 @@ Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
 
  Test Files 1 passed (7)
       Tests 3 passed (9)
-   Start at 01:16:00
-   Duration 6.62s
-[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K ✓ src/widgets/admin-shell/ui/AdminGuard.test.tsx (3 tests) 482ms
+   Start at 19:42:58
+   Duration 9.10s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K ✓ src/widgets/admin-shell/ui/AdminGuard.test.tsx (3 tests) 430ms
 
  ❯ src/features/admin-contents/ui/AdminContentsManager.test.tsx 0/1
  ❯ src/features/admin-reports/ui/AdminReportsManager.test.tsx 0/1
  ❯ src/features/admin-sources/ui/AdminSourcesManager.test.tsx 0/1
- ❯ src/features/admin-users/ui/AdminUsersManager.test.tsx 0/1
+ ❯ src/features/admin-users/ui/AdminUsersManager.test.tsx 1/1
  ❯ src/widgets/admin-review/ui/AdminReviewSplitView.test.tsx 0/1
 
  Test Files 2 passed (7)
-      Tests 4 passed (9)
-   Start at 01:16:00
-   Duration 6.92s
-[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K ✓ src/features/admin-users/ui/AdminUsersManager.test.tsx (1 test) 843ms
-     ✓ renders user list with verification badge  840ms
+      Tests 5 passed (9)
+   Start at 19:42:58
+   Duration 9.51s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K ✓ src/features/admin-users/ui/AdminUsersManager.test.tsx (1 test) 1917ms
+     ✓ renders user list with verification badge  1910ms
 
  ❯ src/features/admin-contents/ui/AdminContentsManager.test.tsx 0/1
  ❯ src/features/admin-reports/ui/AdminReportsManager.test.tsx 0/1
@@ -149,10 +225,10 @@ Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
 
  Test Files 3 passed (7)
       Tests 6 passed (9)
-   Start at 01:16:00
-   Duration 7.22s
-[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K ✓ src/features/admin-sources/ui/AdminSourcesManager.test.tsx (1 test) 1112ms
-     ✓ renders sources and triggers immediate fetch  1107ms
+   Start at 19:42:58
+   Duration 9.82s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K ✓ src/features/admin-sources/ui/AdminSourcesManager.test.tsx (1 test) 2197ms
+     ✓ renders sources and triggers immediate fetch  2193ms
 
  ❯ src/features/admin-contents/ui/AdminContentsManager.test.tsx 0/1
  ❯ src/features/admin-reports/ui/AdminReportsManager.test.tsx 0/1
@@ -160,25 +236,26 @@ Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
 
  Test Files 4 passed (7)
       Tests 7 passed (9)
-   Start at 01:16:00
-   Duration 7.43s
-[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K ✓ src/widgets/admin-review/ui/AdminReviewSplitView.test.tsx (1 test) 1413ms
-     ✓ renders source evidence, unverified highlight, and triggers approve callback  1407ms
- ✓ src/features/admin-contents/ui/AdminContentsManager.test.tsx (1 test) 1292ms
-     ✓ lists contents and calls verify when clicking 확인 완료  1287ms
+   Start at 19:42:58
+   Duration 10.12s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K ✓ src/widgets/admin-review/ui/AdminReviewSplitView.test.tsx (1 test) 2628ms
+     ✓ renders source evidence, unverified highlight, and triggers approve callback  2617ms
 
- ❯ src/features/admin-reports/ui/AdminReportsManager.test.tsx 1/1
+ ❯ src/features/admin-contents/ui/AdminContentsManager.test.tsx 1/1
+ ❯ src/features/admin-reports/ui/AdminReportsManager.test.tsx 0/1
 
- Test Files 6 passed (7)
-      Tests 9 passed (9)
-   Start at 01:16:00
-   Duration 7.63s
-[?2026l[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K ✓ src/features/admin-reports/ui/AdminReportsManager.test.tsx (1 test) 1606ms
-     ✓ lists reports and updates status with memo  1603ms
+ Test Files 5 passed (7)
+      Tests 8 passed (9)
+   Start at 19:42:58
+   Duration 10.22s
+[?2026l[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K ✓ src/features/admin-contents/ui/AdminContentsManager.test.tsx (1 test) 2528ms
+     ✓ lists contents and calls verify when clicking 확인 완료  2520ms
+ ✓ src/features/admin-reports/ui/AdminReportsManager.test.tsx (1 test) 2819ms
+     ✓ lists reports and updates status with memo  2809ms
 
  Test Files  7 passed (7)
       Tests  9 passed (9)
-   Start at  01:16:00
-   Duration  7.70s (transform 4.68s, setup 1.95s, import 24.93s, tests 7.10s, environment 13.37s)
+   Start at  19:42:58
+   Duration  10.34s (transform 4.20s, setup 3.11s, import 28.57s, tests 13.48s, environment 17.88s)
 
 [?25h

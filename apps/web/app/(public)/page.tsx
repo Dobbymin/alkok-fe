@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
-import type { HomeDataPayload } from "@/entities/content";
-import { serverApiGet } from "@alkok/core/server";
+import { Suspense } from "react";
 import { buildPageMetadata, buildWebsiteJsonLd } from "@alkok/core";
-import type { ApiEnvelope } from "@alkok/core";
 import { JsonLdScript } from "@alkok/ui";
 import { HomePage } from "@/views/home";
+import { fetchHomeCatalog } from "../_lib/public-catalog";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "알콕(Alkok) · AI 정보, 알맹이만 콕.",
@@ -14,13 +13,13 @@ export const metadata: Metadata = buildPageMetadata({
 });
 
 export default async function Page() {
-  const res = await serverApiGet<ApiEnvelope<HomeDataPayload>>("/api/v1/home", {
-    revalidate: 60,
-  });
+  const catalog = await fetchHomeCatalog();
   return (
     <>
       <JsonLdScript data={buildWebsiteJsonLd()} />
-      <HomePage initialData={res?.data ?? null} />
+      <Suspense>
+        <HomePage initialCatalog={catalog} />
+      </Suspense>
     </>
   );
 }

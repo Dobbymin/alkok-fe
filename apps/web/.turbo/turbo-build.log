@@ -1,34 +1,35 @@
 $ next build
 ▲ Next.js 16.4.6 (Turbopack)
-✓ Running next.config.ts took 182ms
+✓ Running next.config.ts took 107ms
 
   Creating an optimized production build ...
-✓ Compiled successfully in 2.3s
-  Finished TypeScript in 4.5s    ✓ Finished TypeScript in 4.5s 
-  Collecting page data using 7 workers in 750ms    ✓ Collecting page data using 7 workers in 750ms 
-✓ Generating static pages using 7 workers (17/17) in 596ms
-  Finalizing page optimization in 385ms    ✓ Finalizing page optimization in 385ms 
+✓ Compiled successfully in 2.2s
+  Finished TypeScript in 3.0s    ✓ Finished TypeScript in 3.0s 
+  Collecting page data using 7 workers in 558ms    ✓ Collecting page data using 7 workers in 558ms 
+✓ Generating static pages using 7 workers (17/17) in 534ms
+  Finalizing page optimization in 287ms    ✓ Finalizing page optimization in 287ms 
 
 Route (app)                Revalidate  Expire
 ┌ ○ /                              1m      1y
 ├ ○ /_not-found
-├ ○ /guides
+├ ƒ /api/og/compare
+├ ○ /guides                        1m      1y
 ├ ƒ /guides/[slug]
 ├ ○ /login
 ├ ○ /manifest.webmanifest
-├ ○ /news
+├ ○ /news                          1m      1y
 ├ ƒ /news/[slug]
 ├ ○ /offline
 ├ ○ /reset-password
-├ ○ /robots.txt
-├ ○ /search
-├ ○ /settings
+├ ƒ /robots.txt
+├ ○ /search                        1m      1y
+├ ○ /settings                      1m      1y
 ├ ○ /signup
 ├ ƒ /sitemap.xml
-├ ○ /tools
+├ ○ /tools                         1m      1y
 ├ ƒ /tools/[slug]
-├ ○ /tools/compare
-├ ○ /vault
+├ ƒ /tools/compare
+├ ○ /vault                         1m      1y
 └ ○ /verify-email
 
 

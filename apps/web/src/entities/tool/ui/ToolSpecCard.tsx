@@ -17,19 +17,24 @@ function formatVerifiedDate(iso?: string | null): string | null {
 export interface ToolSpecCardProps {
   tool: ToolDetailData;
   verificationSlot?: ReactNode;
+  bookmarkSlot?: ReactNode;
   compareSlot?: ReactNode;
 }
 
 export const ToolSpecCard = ({
   tool,
   verificationSlot,
+  bookmarkSlot,
   compareSlot,
 }: ToolSpecCardProps) => {
   const verifiedDate = formatVerifiedDate(tool.verifiedAt);
   const primaryStrength = tool.strengths[0] ?? tool.summary;
 
   return (
-    <Card className="flex h-full flex-col justify-between transition-colors duration-150 ease-out hover:bg-surface-sunken">
+    <Card
+      variant="outline"
+      className="flex h-full flex-col justify-between transition-colors duration-150 ease-out hover:border-primary/40 hover:bg-surface-sunken/50"
+    >
       <CardHeader className="gap-2 pb-3">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="flex flex-wrap items-center gap-1.5">
@@ -43,7 +48,10 @@ export const ToolSpecCard = ({
               {KOREAN_SUPPORT_LABEL[tool.koreanSupport]}
             </Badge>
           </div>
-          {verificationSlot}
+          <div className="flex items-center gap-1">
+            {verificationSlot}
+            {bookmarkSlot}
+          </div>
         </div>
 
         <div className="flex items-baseline justify-between gap-2">
@@ -64,8 +72,9 @@ export const ToolSpecCard = ({
           {tool.pricingSummary}
         </p>
 
-        <p className="line-clamp-2 text-pretty text-sm leading-[1.5] text-muted-foreground">
-          {primaryStrength}
+        <p className="line-clamp-2 rounded-md bg-surface-sunken px-3 py-2 text-xs leading-[1.5] text-foreground">
+          <span className="font-semibold text-primary">핵심 강점: </span>
+          <span>{primaryStrength}</span>
         </p>
       </CardHeader>
 
