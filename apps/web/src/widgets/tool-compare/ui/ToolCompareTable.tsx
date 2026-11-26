@@ -182,8 +182,30 @@ export const ToolCompareTable = ({
 
   if (isLoading) {
     return (
-      <div role="status" aria-label="도구 비교표 불러오는 중">
-        <Skeleton className="h-80 w-full" />
+      <div
+        role="status"
+        aria-label="도구 비교표 불러오는 중"
+        className="flex flex-col gap-4"
+      >
+        <div className="flex items-center justify-between gap-2">
+          <Skeleton className="h-8 w-36" />
+          <div className="flex gap-2">
+            <Skeleton className="h-8 w-24" />
+            <Skeleton className="h-8 w-24" />
+          </div>
+        </div>
+        <div className="rounded-xl border border-border bg-card p-4">
+          <div className="space-y-3">
+            {[0, 1, 2, 3, 4].map((row) => (
+              <div key={row} className="grid grid-cols-4 gap-3">
+                <Skeleton className="h-8 w-full" />
+                <Skeleton className="h-8 w-full" />
+                <Skeleton className="h-8 w-full" />
+                <Skeleton className="h-8 w-full" />
+              </div>
+            ))}
+          </div>
+        </div>
         <span className="sr-only">도구 비교표를 불러오고 있습니다.</span>
       </div>
     );

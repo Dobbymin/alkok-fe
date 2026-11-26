@@ -15,6 +15,7 @@ import {
   DialogHeader,
   DialogTitle,
   Input,
+  Skeleton,
 } from "@alkok/ui";
 import { useQuickSearchStore } from "../model/quick-search.store";
 import { useSearchSuggest } from "../model/useQuickSearch";
@@ -28,7 +29,7 @@ const TYPE_PATH: Record<ContentType, { prefix: string; label: string }> = {
 const QUICK_LINKS = [
   { href: "/guides", label: "업무 활용 가이드" },
   { href: "/tools", label: "AI 도구·모델 디렉터리" },
-  { href: "/tools/compare", label: "도구 7축 비교표" },
+  { href: "/tools/compare", label: "AI 도구 비교하기" },
   { href: "/news", label: "최신 AI 소식" },
 ] as const;
 
@@ -110,7 +111,22 @@ export const QuickSearchModal = () => {
                 자동완성 추천 (최대 8건)
               </p>
               {suggestQuery.isFetching ? (
-                <p className="text-xs text-muted-foreground">검색 중…</p>
+                <div
+                  role="status"
+                  aria-label="추천 검색어 불러오는 중"
+                  className="flex flex-col gap-2"
+                >
+                  {[0, 1, 2].map((i) => (
+                    <div
+                      key={i}
+                      className="flex items-center justify-between rounded-md px-3 py-2"
+                    >
+                      <Skeleton className="h-4 w-48" />
+                      <Skeleton className="h-5 w-12 rounded-full" />
+                    </div>
+                  ))}
+                  <span className="sr-only">추천 검색어를 불러오고 있습니다.</span>
+                </div>
               ) : suggestions.length > 0 ? (
                 <ul className="flex flex-col gap-1">
                   {suggestions.map((item) => {

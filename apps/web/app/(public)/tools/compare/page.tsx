@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import { normalizeCompareSlugs } from "@/entities/taxonomy";
 import { getSiteUrl } from "@alkok/core";
 import { ToolComparePage } from "@/views/tools";
+import ToolCompareLoading from "./loading";
 
 export async function generateMetadata({
   searchParams,
@@ -16,11 +17,11 @@ export async function generateMetadata({
   const title =
     slugs.length > 0
       ? `${slugs.join(" vs ")} 비교표`
-      : "AI 도구·모델 비교표";
+      : "AI 도구 한눈에 비교하기";
   const description =
     slugs.length > 0
-      ? `${slugs.join(", ")}의 무료 한도, 한국어 지원, 강점과 한계를 7축으로 비교합니다.`
-      : "AI 도구·모델의 무료 한도, 한국어 지원, 강점과 한계를 7축으로 비교합니다.";
+      ? `${slugs.join(", ")}의 무료 한도, 한국어 지원, 강점과 한계를 한눈에 비교합니다.`
+      : "AI 도구·모델의 무료 한도, 한국어 지원, 강점과 한계를 한눈에 비교합니다.";
   const ogImageUrl = `${siteUrl}/api/og/compare${query}`;
   const canonicalUrl = `${siteUrl}/tools/compare${query}`;
 
@@ -61,7 +62,7 @@ export async function generateMetadata({
 
 export default function Page() {
   return (
-    <Suspense>
+    <Suspense fallback={<ToolCompareLoading />}>
       <ToolComparePage />
     </Suspense>
   );

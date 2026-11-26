@@ -86,7 +86,7 @@ const USAGE_STEPS = [
     step: "02",
     title: "프롬프트·도구 바로 적용",
     description:
-      "가이드의 변수 프롬프트를 복사해 쓰거나, 도구 7축 비교표에서 무료 한도·한국어 지원을 비교합니다.",
+      "가이드의 변수 프롬프트를 복사해 쓰거나, AI 도구 비교에서 무료 한도·한국어 지원을 확인합니다.",
   },
   {
     step: "03",
@@ -337,7 +337,7 @@ export default function HomePage({ initialCatalog }: HomePageProps) {
 
             <div className="flex flex-wrap items-center gap-2">
               <Button asChild size="sm" className="min-h-11 sm:min-h-9">
-                <Link href="/tools/compare">AI 도구 7축 비교표 보기</Link>
+                <Link href="/tools/compare">AI 도구 한눈에 비교하기</Link>
               </Button>
               <Button asChild variant="outline" size="sm" className="min-h-11 sm:min-h-9">
                 <Link href="/vault">내 보관함 열기</Link>
@@ -357,7 +357,7 @@ export default function HomePage({ initialCatalog }: HomePageProps) {
                 <dd className="tabular-nums text-lg font-bold text-foreground">
                   {toolsTotal}종
                 </dd>
-                <dd className="text-[11px] text-muted-foreground">무료·한국어 7축 비교</dd>
+                <dd className="text-[11px] text-muted-foreground">무료·한국어·장단점 비교</dd>
               </div>
               <div>
                 <dt className="text-xs text-muted-foreground">최신 AI 소식</dt>
@@ -377,6 +377,38 @@ export default function HomePage({ initialCatalog }: HomePageProps) {
           </div>
         </section>
       )}
+
+      {/* 2. 3-Step Usage Band (Above Catalog) */}
+      {!activeDomain ? (
+        <section aria-label="알콕 활용 방법" className="flex flex-col gap-4">
+          <div className="flex flex-col gap-1">
+            <h2 className="text-lg font-bold tracking-[-0.02em] text-foreground">
+              알콕, 3단계로 바로 쓰세요
+            </h2>
+            <p className="break-keep text-sm text-muted-foreground">
+              가입이나 설치 없이 지금 막힌 업무부터 바로 해결할 수 있습니다.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+            {USAGE_STEPS.map((item) => (
+              <div
+                key={item.step}
+                className="flex flex-col gap-2 rounded-xl border border-border bg-card p-5"
+              >
+                <span className="tabular-nums font-mono text-xs font-semibold text-primary">
+                  {item.step}
+                </span>
+                <h3 className="break-keep text-base font-semibold text-foreground">
+                  {item.title}
+                </h3>
+                <p className="break-keep text-sm leading-[1.55] text-muted-foreground">
+                  {item.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </section>
+      ) : null}
 
       {!activeDomain ? (
         <div className="flex items-baseline justify-between gap-3">
@@ -644,7 +676,7 @@ export default function HomePage({ initialCatalog }: HomePageProps) {
                   필터 초기화
                 </Button>
                 <Button variant="secondary" size="sm" asChild>
-                  <Link href="/tools/compare">7축 비교표 보기</Link>
+                  <Link href="/tools/compare">AI 도구 비교하기</Link>
                 </Button>
               </div>
             }
@@ -687,38 +719,6 @@ export default function HomePage({ initialCatalog }: HomePageProps) {
           }
         />
       )}
-
-      {/* 5. 3-Step Usage Band */}
-      {!activeDomain && !hasAnyFilter ? (
-        <section aria-label="알콕 활용 방법" className="flex flex-col gap-4 pt-4">
-          <div className="flex flex-col gap-1">
-            <h2 className="text-lg font-bold tracking-[-0.02em] text-foreground">
-              알콕, 3단계로 바로 쓰세요
-            </h2>
-            <p className="break-keep text-sm text-muted-foreground">
-              가입이나 설치 없이 지금 막힌 업무부터 바로 해결할 수 있습니다.
-            </p>
-          </div>
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-            {USAGE_STEPS.map((item) => (
-              <div
-                key={item.step}
-                className="flex flex-col gap-2 rounded-xl border border-border bg-card p-5"
-              >
-                <span className="tabular-nums font-mono text-xs font-semibold text-primary">
-                  {item.step}
-                </span>
-                <h3 className="break-keep text-base font-semibold text-foreground">
-                  {item.title}
-                </h3>
-                <p className="break-keep text-sm leading-[1.55] text-muted-foreground">
-                  {item.description}
-                </p>
-              </div>
-            ))}
-          </div>
-        </section>
-      ) : null}
 
       <CompareTray />
     </div>

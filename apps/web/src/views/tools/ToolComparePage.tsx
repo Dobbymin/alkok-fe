@@ -59,7 +59,7 @@ export default function ToolComparePage() {
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">AI 도구·모델 7축 비교표</h1>
+        <h1 className="text-2xl font-bold tracking-tight">AI 도구 한눈에 비교하기</h1>
         <p className="mt-1 text-sm text-muted-foreground">
           업무 목적별 프리셋을 고르거나 최대 4개 도구를 조합해 URL로 바로 공유하세요.
         </p>

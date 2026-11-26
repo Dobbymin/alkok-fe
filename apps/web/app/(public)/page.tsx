@@ -4,6 +4,7 @@ import { buildPageMetadata, buildWebsiteJsonLd } from "@alkok/core";
 import { JsonLdScript } from "@alkok/ui";
 import { HomePage } from "@/views/home";
 import { fetchHomeCatalog } from "../_lib/public-catalog";
+import PublicHomeLoading from "./loading";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "알콕(Alkok) · AI 정보, 알맹이만 콕.",
@@ -17,7 +18,7 @@ export default async function Page() {
   return (
     <>
       <JsonLdScript data={buildWebsiteJsonLd()} />
-      <Suspense>
+      <Suspense fallback={<PublicHomeLoading />}>
         <HomePage initialCatalog={catalog} />
       </Suspense>
     </>

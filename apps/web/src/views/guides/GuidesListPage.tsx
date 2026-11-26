@@ -131,10 +131,15 @@ export default function GuidesListPage() {
       </FilterBar>
 
       {query.isLoading ? (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <ContentCardSkeleton />
-          <ContentCardSkeleton />
-          <ContentCardSkeleton />
+        <div
+          role="status"
+          aria-label="업무 가이드 불러오는 중"
+          className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
+        >
+          {[0, 1, 2, 3, 4, 5].map((i) => (
+            <ContentCardSkeleton key={i} />
+          ))}
+          <span className="sr-only">업무 가이드를 불러오고 있습니다.</span>
         </div>
       ) : query.isError ? (
         <ErrorState onRetry={() => query.refetch()} />
