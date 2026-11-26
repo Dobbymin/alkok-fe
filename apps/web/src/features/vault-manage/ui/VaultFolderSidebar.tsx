@@ -10,18 +10,20 @@ import {
   type VaultFolder,
 } from "@/entities/vault";
 import { cn } from "@alkok/core";
-import { Button, Input } from "@alkok/ui";
+import { Button, Input, Skeleton } from "@alkok/ui";
 
 export interface VaultFolderSidebarProps {
   folders: VaultFolder[];
   selectedFolderId: string;
   onSelectFolder: (folderId: string) => void;
+  isLoading?: boolean;
 }
 
 export const VaultFolderSidebar = ({
   folders,
   selectedFolderId,
   onSelectFolder,
+  isLoading = false,
 }: VaultFolderSidebarProps) => {
   const [newName, setNewName] = useState("");
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -76,6 +78,26 @@ export const VaultFolderSidebar = ({
         </h2>
       </div>
 
+      <form onSubmit={handleCreate} className="flex gap-2">
+        <Input
+          value={newName}
+          onChange={(e) => setNewName(e.target.value)}
+          placeholder="새 폴더 이름"
+          aria-label="새 폴더 이름"
+          className="h-8 text-xs"
+        />
+        <Button
+          type="submit"
+          variant="outline"
+          size="sm"
+          disabled={createFolder.isPending || !newName.trim()}
+          aria-label="폴더 추가"
+          className="h-8 px-3"
+        >
+          <FolderPlus className="h-3.5 w-3.5" aria-hidden="true" />
+        </Button>
+      </form>
+
       {/* Mobile selector */}
       <div className="md:hidden">
         <select
@@ -111,86 +133,74 @@ export const VaultFolderSidebar = ({
           </span>
         </button>
 
-        {folders.map((folder) =>
-          editingId === folder.id ? (
-            <form
-              key={folder.id}
-              onSubmit={handleRename}
-              className="flex items-center gap-1 py-1"
-            >
-              <Input
-                value={editingName}
-                onChange={(e) => setEditingName(e.target.value)}
-                className="h-8 text-xs"
-                autoFocus
-              />
-              <Button type="submit" size="sm" className="h-8 px-2 text-xs">
-                확인
-              </Button>
-            </form>
-          ) : (
-            <div
-              key={folder.id}
-              className={cn(
-                "group flex items-center justify-between rounded-md px-3 py-2 text-sm transition-colors",
-                selectedFolderId === folder.id
-                  ? "bg-accent font-medium text-accent-foreground"
-                  : "text-muted-foreground hover:bg-secondary hover:text-foreground",
-              )}
-            >
-              <button
-                type="button"
-                onClick={() => onSelectFolder(folder.id)}
-                className="flex flex-1 items-center gap-2 truncate text-left"
+        {isLoading && folders.length === 0 ? (
+          <div role="status" aria-label="폴더 목록 불러오는 중" className="flex flex-col gap-1">
+            <Skeleton className="h-9 w-full rounded-md" />
+            <Skeleton className="h-9 w-full rounded-md" />
+            <span className="sr-only">폴더 목록을 불러오고 있습니다.</span>
+          </div>
+        ) : (
+          folders.map((folder) =>
+            editingId === folder.id ? (
+              <form
+                key={folder.id}
+                onSubmit={handleRename}
+                className="flex items-center gap-1 py-1"
               >
-                <Folder className="h-4 w-4 shrink-0" aria-hidden="true" />
-                <span className="truncate">{folder.name}</span>
-              </button>
-              <div className="flex items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100 focus-within:opacity-100">
+                <Input
+                  value={editingName}
+                  onChange={(e) => setEditingName(e.target.value)}
+                  className="h-8 text-xs"
+                  autoFocus
+                />
+                <Button type="submit" size="sm" className="h-8 px-2 text-xs">
+                  확인
+                </Button>
+              </form>
+            ) : (
+              <div
+                key={folder.id}
+                className={cn(
+                  "group flex items-center justify-between rounded-md px-3 py-2 text-sm transition-colors",
+                  selectedFolderId === folder.id
+                    ? "bg-accent font-medium text-accent-foreground"
+                    : "text-muted-foreground hover:bg-secondary hover:text-foreground",
+                )}
+              >
                 <button
                   type="button"
-                  aria-label={`${folder.name} 이름 변경`}
-                  onClick={() => {
-                    setEditingId(folder.id);
-                    setEditingName(folder.name);
-                  }}
-                  className="rounded p-1 hover:bg-background"
+                  onClick={() => onSelectFolder(folder.id)}
+                  className="flex flex-1 items-center gap-2 truncate text-left"
                 >
-                  <Pencil className="h-3 w-3" aria-hidden="true" />
+                  <Folder className="h-4 w-4 shrink-0" aria-hidden="true" />
+                  <span className="truncate">{folder.name}</span>
                 </button>
-                <button
-                  type="button"
-                  aria-label={`${folder.name} 삭제`}
-                  onClick={() => handleDelete(folder.id)}
-                  className="rounded p-1 text-destructive hover:bg-background"
-                >
-                  <Trash2 className="h-3 w-3" aria-hidden="true" />
-                </button>
+                <div className="flex items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100 focus-within:opacity-100">
+                  <button
+                    type="button"
+                    aria-label={`${folder.name} 이름 변경`}
+                    onClick={() => {
+                      setEditingId(folder.id);
+                      setEditingName(folder.name);
+                    }}
+                    className="rounded p-1 hover:bg-background"
+                  >
+                    <Pencil className="h-3 w-3" aria-hidden="true" />
+                  </button>
+                  <button
+                    type="button"
+                    aria-label={`${folder.name} 삭제`}
+                    onClick={() => handleDelete(folder.id)}
+                    className="rounded p-1 text-destructive hover:bg-background"
+                  >
+                    <Trash2 className="h-3 w-3" aria-hidden="true" />
+                  </button>
+                </div>
               </div>
-            </div>
-          ),
+            ),
+          )
         )}
       </nav>
-
-      <form onSubmit={handleCreate} className="flex gap-2 pt-1">
-        <Input
-          value={newName}
-          onChange={(e) => setNewName(e.target.value)}
-          placeholder="새 폴더 이름"
-          aria-label="새 폴더 이름"
-          className="h-8 text-xs"
-        />
-        <Button
-          type="submit"
-          variant="outline"
-          size="sm"
-          disabled={createFolder.isPending || !newName.trim()}
-          aria-label="폴더 추가"
-          className="h-8 px-3"
-        >
-          <FolderPlus className="h-3.5 w-3.5" aria-hidden="true" />
-        </Button>
-      </form>
     </aside>
   );
 };

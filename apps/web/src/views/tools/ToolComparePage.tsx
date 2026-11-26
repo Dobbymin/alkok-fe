@@ -11,9 +11,20 @@ import {
 } from "@/entities/taxonomy";
 import { useToolCompare, useToolsList } from "@/entities/tool";
 import { ToolCompareSummary, ToolCompareTable } from "@/widgets/tool-compare";
+import type { ToolDetailData } from "@alkok/core";
 import { Badge, Button, Skeleton } from "@alkok/ui";
 
-export default function ToolComparePage() {
+export interface ToolComparePageProps {
+  initialAllTools?: ToolDetailData[];
+  initialCompareTools?: ToolDetailData[];
+  initialSlugs?: string[];
+}
+
+export default function ToolComparePage({
+  initialAllTools = [],
+  initialCompareTools = [],
+  initialSlugs = [],
+}: ToolComparePageProps = {}) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const slugsRaw = searchParams.get("slugs") ?? "";
@@ -24,11 +35,18 @@ export default function ToolComparePage() {
   const query = useToolCompare(slugs);
   const allToolsQuery = useToolsList({ limit: 50, validOnly: false });
 
-  const tools = slugs.length > 0 ? (query.data?.data ?? []) : [];
+  const matchesInitialSlugs = initialSlugs.join(",") === slugs.join(",");
+  const tools =
+    slugs.length > 0
+      ? (query.data?.data ?? (matchesInitialSlugs ? initialCompareTools : []))
+      : [];
   const allTools = useMemo(
-    () => allToolsQuery.data?.data ?? [],
-    [allToolsQuery.data?.data],
+    () => allToolsQuery.data?.data ?? initialAllTools,
+    [allToolsQuery.data?.data, initialAllTools],
   );
+  const showCompareLoading = query.isLoading && tools.length === 0;
+  const showAllToolsLoading =
+    allToolsQuery.isLoading && allTools.length === 0;
   const matchedPreset = useMemo(() => findMatchingComparePreset(slugs), [slugs]);
 
   const availableToAdd = useMemo(() => {
@@ -89,7 +107,7 @@ export default function ToolComparePage() {
       </div>
 
       {/* Tool Add / Remove Controls */}
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-border bg-surface-sunken p-3">
+      <div className="flex min-h-[58px] flex-wrap items-center justify-between gap-3 rounded-xl border border-border bg-surface-sunken p-3">
         <div className="flex flex-wrap items-center gap-2">
           <span className="tabular-nums text-xs font-medium text-muted-foreground">
             비교 대상 ({slugs.length}/4):
@@ -117,7 +135,7 @@ export default function ToolComparePage() {
           )}
         </div>
 
-        {slugs.length < 4 && allToolsQuery.isLoading ? (
+        {slugs.length < 4 && showAllToolsLoading ? (
           <div
             role="status"
             aria-label="추가 가능한 도구 불러오는 중"
@@ -132,7 +150,7 @@ export default function ToolComparePage() {
               aria-label="비교에 추가할 도구 선택"
               value={selectedCandidate || availableToAdd[0]?.slug || ""}
               onChange={(e) => setSelectedCandidate(e.target.value)}
-              className="min-h-11 rounded-md border border-input bg-background px-2.5 text-xs text-foreground sm:min-h-8"
+              className="min-h-11 w-36 truncate rounded-md border border-input bg-background px-2.5 text-xs text-foreground sm:min-h-8"
             >
               {availableToAdd.map((tool) => (
                 <option key={tool.slug} value={tool.slug}>
@@ -181,12 +199,12 @@ export default function ToolComparePage() {
           <ToolCompareSummary
             tools={tools}
             matchedPreset={matchedPreset}
-            isLoading={query.isLoading}
+            isLoading={showCompareLoading}
             toolCount={slugs.length}
           />
           <ToolCompareTable
             tools={tools}
-            isLoading={query.isLoading}
+            isLoading={showCompareLoading}
             error={query.isError ? "비교 데이터를 불러오지 못했습니다." : null}
             onRetry={() => query.refetch()}
           />

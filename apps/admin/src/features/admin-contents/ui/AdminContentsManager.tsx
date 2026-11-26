@@ -204,28 +204,36 @@ export const AdminContentsManager = () => {
         </Select>
       </FilterBar>
 
-      {isLoading ? (
-        <div className="flex flex-col gap-2">
-          <Skeleton className="h-10 w-full" />
-          <Skeleton className="h-10 w-full" />
-          <Skeleton className="h-10 w-full" />
-        </div>
-      ) : isError ? (
-        <ErrorState onRetry={() => refetch()} />
-      ) : (
-        <DataTable
-          compact
-          columns={columns}
-          rows={rows}
-          getRowKey={(r) => r.id}
-          emptyState={
-            <EmptyState
-              title="등록된 콘텐츠가 없습니다."
-              description="새 콘텐츠 작성 버튼으로 가이드·도구·소식을 추가해 보세요."
-            />
-          }
-        />
-      )}
+      <div className="min-h-[180px]">
+        {isLoading ? (
+          <div
+            role="status"
+            aria-label="콘텐츠 목록 불러오는 중"
+            className="space-y-2 rounded-lg border border-border bg-card p-3"
+          >
+            <Skeleton className="h-9 w-full" />
+            <Skeleton className="h-10 w-full" />
+            <Skeleton className="h-10 w-full" />
+            <Skeleton className="h-10 w-full" />
+            <span className="sr-only">콘텐츠 목록을 불러오고 있습니다.</span>
+          </div>
+        ) : isError ? (
+          <ErrorState onRetry={() => refetch()} />
+        ) : (
+          <DataTable
+            compact
+            columns={columns}
+            rows={rows}
+            getRowKey={(r) => r.id}
+            emptyState={
+              <EmptyState
+                title="등록된 콘텐츠가 없습니다."
+                description="새 콘텐츠 작성 버튼으로 가이드·도구·소식을 추가해 보세요."
+              />
+            }
+          />
+        )}
+      </div>
 
       <AdminContentFormDialog
         open={dialogOpen}

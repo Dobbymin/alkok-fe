@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 import { VaultPage } from "@/views/vault";
 
 export const metadata: Metadata = {
@@ -9,6 +10,8 @@ export const metadata: Metadata = {
   },
 };
 
-export default function Page() {
-  return <VaultPage />;
+export default async function Page() {
+  const cookieStore = await cookies();
+  const initialHasSessionHint = cookieStore.get("alkok_logged_in")?.value === "1";
+  return <VaultPage initialHasSessionHint={initialHasSessionHint} />;
 }

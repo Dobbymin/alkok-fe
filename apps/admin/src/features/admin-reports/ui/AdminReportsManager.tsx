@@ -147,35 +147,38 @@ export const AdminReportsManager = () => {
         </div>
       </FilterBar>
 
-      {reportsQuery.isLoading ? (
-        <div
-          role="status"
-          aria-label="오류 제보 불러오는 중"
-          className="space-y-2"
-        >
-          {[0, 1, 2, 3].map((i) => (
-            <Skeleton key={i} className="h-10 w-full" />
-          ))}
-          <span className="sr-only">오류 제보 목록을 불러오고 있습니다.</span>
-        </div>
-      ) : reportsQuery.isError ? (
-        <ErrorState
-          title="오류 제보 목록을 불러오지 못했습니다."
-          description="잠시 후 다시 시도해 주세요."
-        />
-      ) : rows.length === 0 ? (
-        <EmptyState
-          title="접수된 제보가 없습니다."
-          description="선택한 상태의 오류·최신화 제보가 없습니다."
-        />
-      ) : (
-        <DataTable<AdminReportItem>
-          columns={columns}
-          rows={rows}
-          getRowKey={(r) => r.id}
-          emptyState={<p className="text-sm text-muted-foreground">제보 없음</p>}
-        />
-      )}
+      <div className="min-h-[180px]">
+        {reportsQuery.isLoading ? (
+          <div
+            role="status"
+            aria-label="오류 제보 불러오는 중"
+            className="space-y-2 rounded-lg border border-border bg-card p-3"
+          >
+            <Skeleton className="h-9 w-full" />
+            <Skeleton className="h-10 w-full" />
+            <Skeleton className="h-10 w-full" />
+            <Skeleton className="h-10 w-full" />
+            <span className="sr-only">오류 제보 목록을 불러오고 있습니다.</span>
+          </div>
+        ) : reportsQuery.isError ? (
+          <ErrorState
+            title="오류 제보 목록을 불러오지 못했습니다."
+            description="잠시 후 다시 시도해 주세요."
+          />
+        ) : rows.length === 0 ? (
+          <EmptyState
+            title="접수된 제보가 없습니다."
+            description="선택한 상태의 오류·최신화 제보가 없습니다."
+          />
+        ) : (
+          <DataTable<AdminReportItem>
+            columns={columns}
+            rows={rows}
+            getRowKey={(r) => r.id}
+            emptyState={<p className="text-sm text-muted-foreground">제보 없음</p>}
+          />
+        )}
+      </div>
 
       <Dialog open={Boolean(selected)} onOpenChange={(o) => !o && setSelected(null)}>
         <DialogContent>

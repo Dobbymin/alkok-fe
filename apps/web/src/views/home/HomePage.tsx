@@ -519,7 +519,7 @@ export default function HomePage({ initialCatalog }: HomePageProps) {
             aria-label="업무 분야 필터"
             value={activeDomainSlug}
             onChange={(e) => updateParams({ domain: e.target.value || null })}
-            className="min-h-11 rounded-md border border-input bg-card px-3 text-xs text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:min-h-9"
+            className="min-h-11 w-40 truncate rounded-md border border-input bg-card px-3 text-xs text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:min-h-9"
           >
             <option value="">업무 분야 전체</option>
             {WORK_DOMAINS.map((domain) => (
@@ -533,7 +533,7 @@ export default function HomePage({ initialCatalog }: HomePageProps) {
             aria-label="세부 조건 필터"
             value={activeUseFilter}
             onChange={(e) => updateParams({ use: e.target.value || null })}
-            className="min-h-11 rounded-md border border-input bg-card px-3 text-xs text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:min-h-9"
+            className="min-h-11 w-36 truncate rounded-md border border-input bg-card px-3 text-xs text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:min-h-9"
           >
             {activeTab === "guides" ? (
               <>
@@ -566,7 +566,7 @@ export default function HomePage({ initialCatalog }: HomePageProps) {
             aria-pressed={savedOnly}
             onClick={() => updateParams({ saved: savedOnly ? null : "1" })}
             className={cn(
-              "inline-flex min-h-11 items-center gap-1.5 rounded-md border px-3 text-xs font-medium transition-colors sm:min-h-9",
+              "inline-flex min-h-11 min-w-[124px] items-center justify-center gap-1.5 rounded-md border px-3 text-xs font-medium transition-colors sm:min-h-9",
               savedOnly
                 ? "border-primary bg-primary text-primary-foreground"
                 : "border-border bg-card text-foreground hover:bg-surface-sunken",

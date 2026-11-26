@@ -205,29 +205,56 @@ export const AdminSourcesManager = () => {
         </Button>
       </div>
 
-      {isLoading ? (
-        <Skeleton className="h-36 w-full" />
-      ) : isError ? (
-        <ErrorState onRetry={() => refetch()} />
-      ) : (
-        <DataTable
-          compact
-          columns={sourceColumns}
-          rows={sources}
-          getRowKey={(r) => r.id}
-          emptyState={<EmptyState title="등록된 수집 출처가 없습니다." />}
-        />
-      )}
+      <div className="min-h-[180px]">
+        {isLoading ? (
+          <div
+            role="status"
+            aria-label="수집 출처 불러오는 중"
+            className="space-y-2 rounded-lg border border-border bg-card p-3"
+          >
+            <Skeleton className="h-9 w-full" />
+            <Skeleton className="h-10 w-full" />
+            <Skeleton className="h-10 w-full" />
+            <span className="sr-only">수집 출처 목록을 불러오고 있습니다.</span>
+          </div>
+        ) : isError ? (
+          <ErrorState onRetry={() => refetch()} />
+        ) : (
+          <DataTable
+            compact
+            columns={sourceColumns}
+            rows={sources}
+            getRowKey={(r) => r.id}
+            emptyState={<EmptyState title="등록된 수집 출처가 없습니다." />}
+          />
+        )}
+      </div>
 
       <section className="flex flex-col gap-3">
         <h2 className="text-base font-semibold">최근 수집 작업(JobRun) 상태</h2>
-        <DataTable
-          compact
-          columns={jobColumns}
-          rows={jobs}
-          getRowKey={(j) => j.id}
-          emptyState={<EmptyState title="최근 실행된 작업이 없습니다." />}
-        />
+        <div className="min-h-[160px]">
+          {jobsQuery.isLoading ? (
+            <div
+              role="status"
+              aria-label="수집 작업 이력 불러오는 중"
+              className="space-y-2 rounded-lg border border-border bg-card p-3"
+            >
+              <Skeleton className="h-9 w-full" />
+              <Skeleton className="h-10 w-full" />
+              <span className="sr-only">수집 작업 이력을 불러오고 있습니다.</span>
+            </div>
+          ) : jobsQuery.isError ? (
+            <ErrorState onRetry={() => jobsQuery.refetch()} />
+          ) : (
+            <DataTable
+              compact
+              columns={jobColumns}
+              rows={jobs}
+              getRowKey={(j) => j.id}
+              emptyState={<EmptyState title="최근 실행된 작업이 없습니다." />}
+            />
+          )}
+        </div>
       </section>
 
       <SourceFormDialog

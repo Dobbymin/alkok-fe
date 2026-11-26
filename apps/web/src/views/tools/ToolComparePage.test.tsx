@@ -193,4 +193,52 @@ describe("ToolComparePage", () => {
       screen.getByRole("status", { name: "도구 비교표 불러오는 중" }),
     ).toBeInTheDocument();
   });
+
+  it("omits preset badge and description skeletons for non-preset slugs while loading", () => {
+    currentSearch = "slugs=claude,chatgpt";
+    mockCompareLoading = true;
+    mockToolsListLoading = true;
+
+    const qc = new QueryClient();
+    render(
+      <QueryClientProvider client={qc}>
+        <TooltipProvider>
+          <ToolComparePage />
+        </TooltipProvider>
+      </QueryClientProvider>,
+    );
+
+    const summary = screen.getByRole("status", { name: "비교 요약 불러오는 중" });
+    expect(summary).toBeInTheDocument();
+    expect(summary.querySelectorAll(".rounded-full")).toHaveLength(0);
+  });
+
+  it("renders SSR initialAllTools and initialCompareTools immediately without skeletons", () => {
+    currentSearch = "slugs=claude,chatgpt";
+    mockCompareLoading = true;
+    mockToolsListLoading = true;
+
+    const qc = new QueryClient();
+    render(
+      <QueryClientProvider client={qc}>
+        <TooltipProvider>
+          <ToolComparePage
+            initialAllTools={mockTools}
+            initialCompareTools={[mockTools[0]!, mockTools[1]!]}
+            initialSlugs={["claude", "chatgpt"]}
+          />
+        </TooltipProvider>
+      </QueryClientProvider>,
+    );
+
+    expect(
+      screen.queryByRole("status", { name: "추가 가능한 도구 불러오는 중" }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("status", { name: "비교 요약 불러오는 중" }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.getByText("어떤 상황에 어떤 도구가 유리한가요?"),
+    ).toBeInTheDocument();
+  });
 });

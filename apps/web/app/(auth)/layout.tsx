@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 export default function AuthLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="mx-auto flex min-h-dvh w-full max-w-6xl flex-col items-center justify-center bg-background px-6 py-12">
+    <div className="mx-auto flex min-h-dvh w-full max-w-6xl flex-col items-center justify-start bg-background px-6 pt-16 pb-12 sm:pt-[14vh]">
       <Link
         href="/"
         className="mb-6 flex items-center gap-2 font-semibold text-foreground text-lg tracking-tight"

@@ -111,4 +111,36 @@ describe("VaultPage", () => {
 
     expect(screen.getByText("서버 저장 가이드")).toBeInTheDocument();
   });
+
+  it("renders guest local vault immediately while auth is loading when initialHasSessionHint is false", () => {
+    useAuthStore.setState({ user: null, isLoading: true });
+    const qc = new QueryClient();
+    render(
+      <QueryClientProvider client={qc}>
+        <VaultPage initialHasSessionHint={false} />
+      </QueryClientProvider>,
+    );
+
+    expect(
+      screen.getByText("내 보관함 (로컬 저장)"),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole("status", { name: "보관함 불러오는 중" }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("renders 240px (md:w-60) aligned loading skeleton when initialHasSessionHint is true", () => {
+    useAuthStore.setState({ user: null, isLoading: true });
+    const qc = new QueryClient();
+    const { container } = render(
+      <QueryClientProvider client={qc}>
+        <VaultPage initialHasSessionHint={true} />
+      </QueryClientProvider>,
+    );
+
+    expect(
+      screen.getByRole("status", { name: "보관함 불러오는 중" }),
+    ).toBeInTheDocument();
+    expect(container.innerHTML).toContain("md:w-60");
+  });
 });
