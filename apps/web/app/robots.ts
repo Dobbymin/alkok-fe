@@ -1,13 +1,15 @@
 import type { MetadataRoute } from "next";
-import { env } from "@alkok/core";
+import { getSiteUrl } from "@alkok/core";
+
+export const dynamic = "force-dynamic";
 
 export default function robots(): MetadataRoute.Robots {
-  const siteUrl = env.siteUrl.replace(/\/$/, "");
+  const siteUrl = getSiteUrl();
   return {
     rules: [
       {
         userAgent: "*",
-        allow: ["/", "/guides", "/tools", "/news"],
+        allow: ["/", "/guides", "/tools", "/news", "/api/og/"],
         disallow: ["/admin", "/vault", "/settings", "/api"],
       },
     ],

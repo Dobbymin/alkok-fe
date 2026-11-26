@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { resetCompareStore, useCompareStore } from "@/features/tool-compare";
 import type { ToolDetailData } from "@alkok/core";
 import { TooltipProvider } from "@alkok/ui";
@@ -89,5 +89,25 @@ describe("ToolCompareTable & useCompareStore", () => {
 
     expect(toggle({ slug: "d", title: "D" }, false)).toBe(true);
     expect(toggle({ slug: "e", title: "E" }, false)).toBe(false);
+  });
+
+  it("copies formatted comparison summary when clicking 요약 복사", async () => {
+    const user = userEvent.setup();
+    const writeTextMock = vi
+      .spyOn(navigator.clipboard, "writeText")
+      .mockResolvedValue(undefined);
+
+    render(
+      <TooltipProvider>
+        <ToolCompareTable tools={sampleTools} />
+      </TooltipProvider>,
+    );
+
+    await user.click(screen.getByRole("button", { name: "요약 복사" }));
+
+    expect(writeTextMock).toHaveBeenCalledTimes(1);
+    const copied = writeTextMock.mock.calls[0]?.[0] as string;
+    expect(copied).toContain("[알콕 AI 도구 비교] ChatGPT vs Claude");
+    expect(copied).toContain("무료 플랜 있음");
   });
 });

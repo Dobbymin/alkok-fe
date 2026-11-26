@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import type { ReactNode } from "react";
 import { AppProviders } from "@/app/providers";
+import { getSiteUrl } from "@alkok/core";
 import "./globals.css";
 
 const pretendard = localFont({
@@ -25,6 +26,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
+  metadataBase: new URL(getSiteUrl()),
   title: {
     default: "알콕(Alkok) · AI 정보, 알맹이만 콕.",
     template: "%s | 알콕(Alkok)",
