@@ -38,11 +38,14 @@ export const ToolCompareSummary = ({
             {Array.from({ length: Math.min(toolCount, 4) }).map((_, i) => (
               <div
                 key={i}
-                className="flex min-h-[76px] flex-col gap-2 rounded-lg border border-border bg-card p-3"
+                className="flex min-h-[76px] flex-col gap-1.5 rounded-lg border border-border bg-card p-3"
               >
                 <div className="flex items-center justify-between gap-2">
                   <Skeleton className="h-4 w-20" />
-                  <Skeleton className="h-4 w-12" />
+                  <div className="flex items-center gap-1">
+                    <Skeleton className="h-4 w-9 rounded-full" />
+                    <Skeleton className="h-4 w-10 rounded-full" />
+                  </div>
                 </div>
                 <Skeleton className="h-3.5 w-full" />
                 <Skeleton className="h-3.5 w-4/5" />

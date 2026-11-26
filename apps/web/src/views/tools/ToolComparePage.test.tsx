@@ -210,7 +210,7 @@ describe("ToolComparePage", () => {
 
     const summary = screen.getByRole("status", { name: "비교 요약 불러오는 중" });
     expect(summary).toBeInTheDocument();
-    expect(summary.querySelectorAll(".rounded-full")).toHaveLength(0);
+    expect(summary.firstElementChild?.querySelectorAll(".rounded-full")).toHaveLength(0);
   });
 
   it("renders SSR initialAllTools and initialCompareTools immediately without skeletons", () => {

@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { normalizeCompareSlugs } from "@/entities/taxonomy";
+import {
+  findMatchingComparePreset,
+  normalizeCompareSlugs,
+} from "@/entities/taxonomy";
 import {
   getSiteUrl,
   type ApiEnvelope,
@@ -8,7 +11,7 @@ import {
 } from "@alkok/core";
 import { serverApiGet } from "@alkok/core/server";
 import { ToolComparePage } from "@/views/tools";
-import ToolCompareLoading from "./loading";
+import { ToolComparePageSkeleton } from "@/widgets/tool-compare";
 
 export async function generateMetadata({
   searchParams,
@@ -86,8 +89,18 @@ export default async function Page({
       : Promise.resolve(null),
   ]);
 
+  const matchedPreset = findMatchingComparePreset(slugs);
+
   return (
-    <Suspense fallback={<ToolCompareLoading />}>
+    <Suspense
+      fallback={
+        <ToolComparePageSkeleton
+          mode={slugs.length > 0 ? "compare" : "hub"}
+          toolCount={slugs.length}
+          matchedPreset={matchedPreset}
+        />
+      }
+    >
       <ToolComparePage
         initialAllTools={allToolsRes?.data ?? []}
         initialCompareTools={compareRes?.data ?? []}
