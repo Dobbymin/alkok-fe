@@ -166,8 +166,12 @@ describe("HomePage", () => {
     expect(screen.queryByText("라이브 도구 비교 프리뷰")).not.toBeInTheDocument();
     expect(screen.queryByText("개인 지식 보관함")).not.toBeInTheDocument();
     expect(
-      screen.getByText(/흩어진 AI 정보, 실무에 바로 쓰는 알맹이만 콕/),
+      screen.getByRole("heading", {
+        level: 1,
+        name: "흩어진 AI 정보, 실무에 바로 쓰는 알맹이만 콕!",
+      }),
     ).toBeInTheDocument();
+    expect(screen.getByTestId("alkok-hero-mark")).toBeInTheDocument();
     expect(screen.getAllByText("2026-11-25").length).toBeGreaterThanOrEqual(1);
     const stepsHeading = screen.getByRole("heading", {
       name: "알콕, 3단계로 바로 쓰세요",
