@@ -41,6 +41,7 @@ export interface BookmarkActionProps {
   summary?: string;
   initialSavedItem?: VaultItem | null;
   size?: "sm" | "default";
+  iconOnly?: boolean;
   className?: string;
 }
 
@@ -57,6 +58,7 @@ export const BookmarkAction = ({
   summary,
   initialSavedItem = null,
   size = "sm",
+  iconOnly = false,
   className,
 }: BookmarkActionProps) => {
   const router = useRouter();
@@ -247,7 +249,35 @@ export const BookmarkAction = ({
     </form>
   );
 
-  const triggerButton = (
+  const ariaLabel = isSaved
+    ? isAuthenticated
+      ? "보관함 저장됨 (편집)"
+      : "보관함에 저장됨 (해제)"
+    : "보관함에 콕 담기";
+
+  const triggerButton = iconOnly ? (
+    <Button
+      type="button"
+      variant="ghost"
+      size="icon-sm"
+      onClick={handleToggle}
+      disabled={createBookmark.isPending}
+      aria-pressed={isSaved}
+      aria-label={ariaLabel}
+      title={ariaLabel}
+      className={cn(
+        "h-8 w-8 shrink-0 text-muted-foreground hover:text-foreground",
+        isSaved && "text-primary hover:text-primary",
+        className,
+      )}
+    >
+      <Bookmark
+        className={cn("h-4 w-4", isSaved && "fill-current")}
+        strokeWidth={1.75}
+        aria-hidden="true"
+      />
+    </Button>
+  ) : (
     <Button
       type="button"
       variant={isSaved ? "secondary" : "outline"}
@@ -255,13 +285,7 @@ export const BookmarkAction = ({
       onClick={handleToggle}
       disabled={createBookmark.isPending}
       aria-pressed={isSaved}
-      aria-label={
-        isSaved
-          ? isAuthenticated
-            ? "보관함 저장됨 (편집)"
-            : "보관함에 저장됨 (해제)"
-          : "보관함에 콕 담기"
-      }
+      aria-label={ariaLabel}
       className={cn("gap-2", className)}
     >
       {isSaved ? (

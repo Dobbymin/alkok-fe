@@ -33,7 +33,7 @@ export const ToolSpecCard = ({
   return (
     <Card
       variant="outline"
-      className="flex h-full flex-col justify-between transition-colors duration-150 ease-out hover:border-primary/40 hover:bg-surface-sunken/50"
+      className="group flex h-full flex-col justify-between transition-colors duration-150 ease-out hover:border-primary/40 hover:bg-card"
     >
       <CardHeader className="gap-2 pb-3">
         <div className="flex flex-wrap items-center justify-between gap-2">
@@ -57,7 +57,7 @@ export const ToolSpecCard = ({
         <div className="flex items-baseline justify-between gap-2">
           <Link
             href={`/tools/${tool.slug}`}
-            className="line-clamp-1 text-base font-semibold leading-[1.3] text-foreground transition-colors hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+            className="break-keep line-clamp-1 text-base font-semibold leading-[1.3] text-foreground transition-colors group-hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
           >
             {tool.title}
           </Link>
@@ -68,11 +68,11 @@ export const ToolSpecCard = ({
           ) : null}
         </div>
 
-        <p className="tabular-nums text-xs font-medium text-foreground">
+        <p className="break-keep tabular-nums text-xs font-medium text-foreground">
           {tool.pricingSummary}
         </p>
 
-        <p className="line-clamp-2 rounded-md bg-surface-sunken px-3 py-2 text-xs leading-[1.5] text-foreground">
+        <p className="break-keep line-clamp-2 rounded-md bg-surface-sunken px-3 py-2 text-xs leading-[1.5] text-foreground">
           <span className="font-semibold text-primary">핵심 강점: </span>
           <span>{primaryStrength}</span>
         </p>

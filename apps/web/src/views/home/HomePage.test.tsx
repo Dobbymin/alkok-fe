@@ -160,15 +160,40 @@ describe("HomePage", () => {
     resetLocalVaultStore();
   });
 
-  it("renders getskillbook-style catalog without compare preview or bottom vault strip", () => {
+  it("renders service intro, 4-stat strip, 3-step usage band, and clean domain-anchored guide cards", () => {
     renderHome();
 
     expect(screen.queryByText("라이브 도구 비교 프리뷰")).not.toBeInTheDocument();
     expect(screen.queryByText("개인 지식 보관함")).not.toBeInTheDocument();
+    expect(
+      screen.getByText(/흩어진 AI 정보, 실무에 바로 쓰는 알맹이만 콕/),
+    ).toBeInTheDocument();
+    expect(screen.getAllByText("2026-11-25").length).toBeGreaterThanOrEqual(1);
+    expect(screen.getByText("알콕, 3단계로 바로 쓰세요")).toBeInTheDocument();
     expect(screen.getByText("주간 보고서 10분 완성 가이드")).toBeInTheDocument();
     expect(screen.getByText("회의록 자동 정리 가이드")).toBeInTheDocument();
     expect(screen.queryByText("도움됨 0")).not.toBeInTheDocument();
     expect(screen.getByText("2 / 2개")).toBeInTheDocument();
+    expect(
+      screen.getAllByRole("button", { name: "보관함에 콕 담기" }),
+    ).toHaveLength(2);
+    expect(screen.queryByText("보관함에 콕 담기")).not.toBeInTheDocument();
+  });
+
+  it("collapses service intro into focused domain header when domain filter is active", () => {
+    mockSearchParams = new URLSearchParams("domain=docs-reports");
+    renderHome();
+
+    expect(
+      screen.queryByText("알콕, 3단계로 바로 쓰세요"),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "문서·보고서" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("주간 보고서 10분 완성 가이드")).toBeInTheDocument();
+    expect(
+      screen.queryByText("회의록 자동 정리 가이드"),
+    ).not.toBeInTheDocument();
   });
 
   it("filters guides in real time via search input and focuses search on '/' key", () => {

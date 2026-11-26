@@ -1,15 +1,44 @@
-import { ArrowRight, ThumbsUp } from "lucide-react";
+import {
+  ArrowRight,
+  BookOpen,
+  FileText,
+  MessageSquare,
+  Newspaper,
+  Palette,
+  Presentation,
+  Search,
+  Table2,
+  ThumbsUp,
+  Wrench,
+} from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import type { ContentSummary, ContentType } from "@alkok/core";
-import { Badge, Card, CardContent, CardHeader, Skeleton } from "@alkok/ui";
+import { Card, CardContent, CardHeader, Skeleton } from "@alkok/ui";
 import { VerificationBadge } from "./VerificationBadge";
 
-const TYPE_META: Record<ContentType, { label: string; hrefPrefix: string }> = {
-  GUIDE: { label: "업무 가이드", hrefPrefix: "/guides" },
-  TOOL: { label: "도구·모델", hrefPrefix: "/tools" },
-  NEWS: { label: "AI 소식", hrefPrefix: "/news" },
+const TYPE_META: Record<
+  ContentType,
+  { label: string; hrefPrefix: string; Icon: typeof BookOpen }
+> = {
+  GUIDE: { label: "업무 가이드", hrefPrefix: "/guides", Icon: BookOpen },
+  TOOL: { label: "도구·모델", hrefPrefix: "/tools", Icon: Wrench },
+  NEWS: { label: "AI 소식", hrefPrefix: "/news", Icon: Newspaper },
 };
+
+const DOMAIN_ICON_MAP: Record<string, typeof FileText> = {
+  "docs-reports": FileText,
+  "meetings-comms": MessageSquare,
+  research: Search,
+  "data-sheets": Table2,
+  "planning-slides": Presentation,
+  "content-design": Palette,
+};
+
+function renderHeaderIcon(domainSlug: string | undefined, type: ContentType) {
+  const Icon = (domainSlug && DOMAIN_ICON_MAP[domainSlug]) || TYPE_META[type].Icon;
+  return <Icon className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden="true" />;
+}
 
 export interface ContentCardProps {
   item: ContentSummary;
@@ -17,6 +46,7 @@ export interface ContentCardProps {
   footerSlot?: ReactNode;
   highlightLine?: { label: string; text: string };
   ctaLabel?: string;
+  hideTypeBadge?: boolean;
 }
 
 export const ContentCard = ({
@@ -25,9 +55,18 @@ export const ContentCard = ({
   footerSlot,
   highlightLine,
   ctaLabel,
+  hideTypeBadge = false,
 }: ContentCardProps) => {
   const typeMeta = TYPE_META[item.type];
   const href = `${typeMeta.hrefPrefix}/${item.slug}`;
+  const primaryDomain = item.categories?.find((c) => c.group === "WORK_DOMAIN");
+  const secondaryCategories = (item.categories ?? [])
+    .filter((c) => c.id !== primaryDomain?.id)
+    .slice(0, 2);
+
+  const headerLabel = primaryDomain?.name ?? typeMeta.label;
+  const showTypeSuffix = !hideTypeBadge && Boolean(primaryDomain);
+
   const resolvedFooterRight =
     footerSlot ??
     (ctaLabel ? (
@@ -43,37 +82,37 @@ export const ContentCard = ({
   return (
     <Card
       variant="outline"
-      className="flex h-full flex-col justify-between transition-colors duration-150 ease-out hover:border-primary/40 hover:bg-surface-sunken/50"
+      className="group flex h-full flex-col justify-between transition-colors duration-150 ease-out hover:border-primary/40 hover:bg-card"
     >
-      <CardHeader className="gap-2 pb-3">
+      <CardHeader className="gap-3 pb-3">
         <div className="flex items-center justify-between gap-2">
-          <div className="flex flex-wrap items-center gap-2">
-            <Badge variant="secondary">{typeMeta.label}</Badge>
-            <VerificationBadge
-              status={item.verificationStatus}
-              verifiedAt={item.verifiedAt}
-              sourceType={item.sourceType}
-              sourceName={item.sourceName}
-            />
+          <div className="flex min-w-0 items-center gap-2">
+            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-surface-sunken text-foreground/80">
+              {renderHeaderIcon(primaryDomain?.slug, item.type)}
+            </span>
+            <span className="truncate text-xs font-medium text-muted-foreground">
+              {headerLabel}
+              {showTypeSuffix ? ` · ${typeMeta.label}` : ""}
+            </span>
           </div>
           {bookmarkSlot}
         </div>
 
         <Link
           href={href}
-          className="line-clamp-2 text-balance rounded-sm text-base font-semibold leading-[1.3] text-foreground transition-colors hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+          className="break-keep line-clamp-2 rounded-sm text-[17px] font-bold leading-[1.38] tracking-[-0.015em] text-foreground transition-colors group-hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
         >
           {item.title}
         </Link>
 
-        <p className="line-clamp-2 text-pretty text-sm leading-[1.5] text-muted-foreground">
+        <p className="break-keep line-clamp-2 text-sm leading-[1.55] text-muted-foreground">
           {item.summary}
         </p>
       </CardHeader>
 
       <CardContent className="flex flex-col gap-3 pt-0">
         {highlightLine ? (
-          <p className="line-clamp-2 rounded-md bg-surface-sunken px-3 py-2 text-xs leading-[1.5] text-foreground">
+          <p className="break-keep line-clamp-2 rounded-md bg-surface-sunken px-3 py-2 text-xs leading-[1.5] text-foreground">
             <span className="font-semibold text-primary">
               {highlightLine.label}:{" "}
             </span>
@@ -81,18 +120,27 @@ export const ContentCard = ({
           </p>
         ) : null}
 
-        {item.categories && item.categories.length > 0 ? (
-          <div className="flex flex-wrap gap-2">
-            {item.categories.slice(0, 3).map((cat) => (
-              <Badge key={cat.id} variant="outline" className="text-[11px]">
+        {secondaryCategories.length > 0 ? (
+          <div className="flex flex-wrap gap-1.5">
+            {secondaryCategories.map((cat) => (
+              <span
+                key={cat.id}
+                className="rounded-sm bg-surface-sunken px-2 py-0.5 text-[11px] font-medium text-muted-foreground"
+              >
                 {cat.name}
-              </Badge>
+              </span>
             ))}
           </div>
         ) : null}
 
-        {item.helpfulCount > 0 || resolvedFooterRight ? (
-          <div className="flex items-center justify-between border-t border-separator pt-3 text-xs text-muted-foreground">
+        <div className="flex items-center justify-between gap-2 border-t border-separator pt-3 text-xs text-muted-foreground">
+          <div className="flex min-w-0 flex-wrap items-center gap-2">
+            <VerificationBadge
+              status={item.verificationStatus}
+              verifiedAt={item.verifiedAt}
+              sourceType={item.sourceType}
+              sourceName={item.sourceName}
+            />
             {item.helpfulCount > 0 ? (
               <span className="inline-flex items-center gap-1 tabular-nums">
                 <ThumbsUp
@@ -103,12 +151,10 @@ export const ContentCard = ({
                 />
                 도움됨 {item.helpfulCount}
               </span>
-            ) : (
-              <span />
-            )}
-            {resolvedFooterRight}
+            ) : null}
           </div>
-        ) : null}
+          {resolvedFooterRight}
+        </div>
       </CardContent>
     </Card>
   );
@@ -117,16 +163,19 @@ export const ContentCard = ({
 export const ContentCardSkeleton = () => (
   <Card variant="outline" className="flex h-full flex-col justify-between p-5">
     <div className="flex flex-col gap-3">
-      <div className="flex items-center gap-2">
-        <Skeleton className="h-5 w-16" />
-        <Skeleton className="h-5 w-12" />
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Skeleton className="h-7 w-7 rounded-md" />
+          <Skeleton className="h-4 w-20" />
+        </div>
+        <Skeleton className="h-7 w-7 rounded-md" />
       </div>
       <Skeleton className="h-5 w-4/5" />
       <Skeleton className="h-4 w-full" />
       <Skeleton className="h-4 w-2/3" />
     </div>
-    <div className="mt-4 flex items-center justify-between border-t border-border pt-3">
-      <Skeleton className="h-4 w-20" />
+    <div className="mt-4 flex items-center justify-between border-t border-separator pt-3">
+      <Skeleton className="h-4 w-24" />
       <Skeleton className="h-4 w-16" />
     </div>
   </Card>
