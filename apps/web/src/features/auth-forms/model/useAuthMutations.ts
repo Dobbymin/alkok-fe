@@ -1,18 +1,34 @@
 "use client";
 
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { syncLocalVaultToServer, useLocalVaultStore } from "@/entities/vault";
 import { useAuthStore } from "@alkok/core";
 import { authApi } from "../api/auth.api";
 
 export function useLoginMutation() {
+  const queryClient = useQueryClient();
   const setSession = useAuthStore((s) => s.setSession);
   return useMutation({
     mutationFn: (payload: { email: string; password: string }) =>
       authApi.login(payload),
-    onSuccess: (res) => {
+    onSuccess: async (res) => {
       setSession(res.data.accessToken, res.data.user);
       toast.success("로그인되었습니다.");
+
+      try {
+        await useLocalVaultStore.persist.rehydrate();
+        if (useLocalVaultStore.getState().items.length > 0) {
+          const result = await syncLocalVaultToServer(queryClient);
+          if (result.syncedCount > 0) {
+            toast.success(
+              `로컬 보관함 ${result.syncedCount}건을 서버 보관함에 동기화했습니다.`,
+            );
+          }
+        }
+      } catch {
+        // Keep local items intact if sync fails transiently
+      }
     },
   });
 }

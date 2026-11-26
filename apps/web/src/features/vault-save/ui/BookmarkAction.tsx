@@ -1,17 +1,23 @@
 "use client";
 
 import { Bookmark, Check, Folder, Trash2 } from "lucide-react";
-import { usePathname, useRouter } from "next/navigation";
-import { useState, type FormEvent } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState, type FormEvent } from "react";
 import { toast } from "sonner";
 import {
   useCreateBookmarkMutation,
   useDeleteVaultItemMutation,
+  useLocalVaultStore,
   useUpdateVaultItemMutation,
   useVaultFoldersQuery,
   type VaultItem,
 } from "@/entities/vault";
-import { cn, selectIsAuthenticated, useAuthStore } from "@alkok/core";
+import {
+  cn,
+  selectIsAuthenticated,
+  useAuthStore,
+  type ContentType,
+} from "@alkok/core";
 import {
   Button,
   FieldGroup,
@@ -30,6 +36,9 @@ import {
 export interface BookmarkActionProps {
   contentId: string;
   title?: string;
+  contentType?: ContentType;
+  slug?: string;
+  summary?: string;
   initialSavedItem?: VaultItem | null;
   size?: "sm" | "default";
   className?: string;
@@ -43,13 +52,24 @@ const isMobileViewport = () =>
 export const BookmarkAction = ({
   contentId,
   title,
+  contentType,
+  slug,
+  summary,
   initialSavedItem = null,
   size = "sm",
   className,
 }: BookmarkActionProps) => {
   const router = useRouter();
-  const pathname = usePathname() || "/";
   const isAuthenticated = useAuthStore(selectIsAuthenticated);
+
+  const localSaved = useLocalVaultStore((s) =>
+    s.items.some((i) => i.contentId === contentId),
+  );
+  const toggleLocalItem = useLocalVaultStore((s) => s.toggleItem);
+
+  useEffect(() => {
+    void useLocalVaultStore.persist.rehydrate();
+  }, []);
 
   const [savedItem, setSavedItem] = useState<VaultItem | null>(initialSavedItem);
   const [editorOpen, setEditorOpen] = useState(false);
@@ -68,16 +88,27 @@ export const BookmarkAction = ({
   const deleteItem = useDeleteVaultItemMutation();
 
   const folders = foldersQuery.data?.data ?? [];
+  const isSaved = isAuthenticated ? Boolean(savedItem) : localSaved;
 
   const handleToggle = async () => {
     if (!isAuthenticated) {
-      toast.info("로그인 후 내 보관함에 저장할 수 있습니다.", {
-        action: {
-          label: "로그인",
-          onClick: () =>
-            router.push(`/login?next=${encodeURIComponent(pathname)}`),
-        },
+      const added = toggleLocalItem({
+        contentId,
+        title: title ?? "저장한 자료",
+        contentType,
+        slug,
+        summary,
       });
+      if (added) {
+        toast.success("브라우저 보관함에 콕 저장했습니다.", {
+          action: {
+            label: "보관함 보기",
+            onClick: () => router.push("/vault"),
+          },
+        });
+      } else {
+        toast.success("브라우저 보관함에서 제거했습니다.");
+      }
       return;
     }
 
@@ -219,22 +250,32 @@ export const BookmarkAction = ({
   const triggerButton = (
     <Button
       type="button"
-      variant={savedItem ? "secondary" : "outline"}
+      variant={isSaved ? "secondary" : "outline"}
       size={size}
       onClick={handleToggle}
       disabled={createBookmark.isPending}
-      aria-pressed={Boolean(savedItem)}
-      aria-label={savedItem ? "보관함 저장됨 (편집)" : "보관함에 저장"}
+      aria-pressed={isSaved}
+      aria-label={
+        isSaved
+          ? isAuthenticated
+            ? "보관함 저장됨 (편집)"
+            : "보관함에 저장됨 (해제)"
+          : "보관함에 콕 담기"
+      }
       className={cn("gap-2", className)}
     >
-      {savedItem ? (
+      {isSaved ? (
         <Check className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
       ) : (
         <Bookmark className="h-3.5 w-3.5" aria-hidden="true" />
       )}
-      <span>{savedItem ? "저장됨" : "보관함 저장"}</span>
+      <span>{isSaved ? "저장됨" : "보관함에 콕 담기"}</span>
     </Button>
   );
+
+  if (!isAuthenticated) {
+    return triggerButton;
+  }
 
   if (useSheet) {
     return (

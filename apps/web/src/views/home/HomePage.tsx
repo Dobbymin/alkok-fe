@@ -3,7 +3,7 @@
 import { Bookmark, Search } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useMemo, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useState, type FormEvent } from "react";
 import {
   ContentCard,
   ContentCardSkeleton,
@@ -16,7 +16,9 @@ import {
   WORK_DOMAINS,
 } from "@/entities/taxonomy";
 import { ToolSpecCard } from "@/entities/tool";
+import { useLocalVaultStore } from "@/entities/vault";
 import { CompareToggleButton, CompareTray } from "@/features/tool-compare";
+import { BookmarkAction } from "@/features/vault-save";
 import { HomeComparePreview } from "@/widgets/home-compare-preview";
 import { selectIsAuthenticated, useAuthStore } from "@alkok/core";
 import {
@@ -50,8 +52,13 @@ function getLatestVerifiedDate(initialData?: HomeDataPayload | null): string | n
 export default function HomePage({ initialData }: HomePageProps) {
   const router = useRouter();
   const isAuthenticated = useAuthStore(selectIsAuthenticated);
+  const localVaultItems = useLocalVaultStore((s) => s.items);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedDomain, setSelectedDomain] = useState<string>("ALL");
+
+  useEffect(() => {
+    void useLocalVaultStore.persist.rehydrate();
+  }, []);
 
   const handleHeroSearch = (e: FormEvent) => {
     e.preventDefault();
@@ -246,7 +253,19 @@ export default function HomePage({ initialData }: HomePageProps) {
         ) : displayedGuides.length > 0 ? (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {displayedGuides.map((guide) => (
-              <ContentCard key={guide.id} item={guide} />
+              <ContentCard
+                key={guide.id}
+                item={guide}
+                bookmarkSlot={
+                  <BookmarkAction
+                    contentId={guide.id}
+                    title={guide.title}
+                    contentType={guide.type}
+                    slug={guide.slug}
+                    summary={guide.summary}
+                  />
+                }
+              />
             ))}
           </div>
         ) : (
@@ -380,8 +399,12 @@ export default function HomePage({ initialData }: HomePageProps) {
               <CardTitle as="h2">개인 지식 보관함</CardTitle>
             </div>
             <Button variant="outline" size="sm" asChild className="min-h-11 sm:min-h-8">
-              <Link href={isAuthenticated ? "/vault" : "/login?next=/vault"}>
-                {isAuthenticated ? "보관함 열기" : "로그인하고 보관함 열기"}
+              <Link href="/vault">
+                {isAuthenticated
+                  ? "보관함 열기"
+                  : localVaultItems.length > 0
+                    ? `로컬 보관함 열기 (${localVaultItems.length})`
+                    : "보관함 열기"}
               </Link>
             </Button>
           </CardHeader>
@@ -399,9 +422,22 @@ export default function HomePage({ initialData }: HomePageProps) {
                   </li>
                 ))}
               </ul>
+            ) : !isAuthenticated && localVaultItems.length > 0 ? (
+              <ul className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+                {localVaultItems.slice(0, 3).map((v) => (
+                  <li key={v.contentId}>
+                    <Link
+                      href="/vault"
+                      className="block rounded-lg border border-transparent bg-card p-3 text-sm font-medium text-foreground transition-colors hover:bg-secondary dark:border-border"
+                    >
+                      {v.title}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
             ) : (
               <p className="text-sm leading-[1.6] text-muted-foreground">
-                유용한 AI 가이드와 외부 참고 링크를 폴더·태그·메모와 함께 내 보관함에 콕 저장해 두세요.
+                로그인 없이도 가이드·도구·소식을 브라우저 보관함에 바로 콕 저장해 두고, 로그인하면 기기 간 동기화할 수 있어요.
               </p>
             )}
           </CardContent>
