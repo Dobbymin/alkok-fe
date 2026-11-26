@@ -54,7 +54,13 @@ export default function NewsDetailPage({
               showSourceBadge
             />
             {bookmarkSlot ?? (
-              <BookmarkAction contentId={news.id} title={news.title} />
+              <BookmarkAction
+                contentId={news.id}
+                title={news.title}
+                contentType={news.type}
+                slug={news.slug}
+                summary={news.summary}
+              />
             )}
           </div>
           <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">

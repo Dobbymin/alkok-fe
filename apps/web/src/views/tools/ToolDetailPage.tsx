@@ -71,7 +71,13 @@ export default function ToolDetailPage({
             <div className="flex items-center gap-2">
               <CompareToggleButton slug={tool.slug} title={tool.title} />
               {bookmarkSlot ?? (
-                <BookmarkAction contentId={tool.id} title={tool.title} />
+                <BookmarkAction
+                  contentId={tool.id}
+                  title={tool.title}
+                  contentType={tool.type}
+                  slug={tool.slug}
+                  summary={tool.summary}
+                />
               )}
             </div>
           </div>

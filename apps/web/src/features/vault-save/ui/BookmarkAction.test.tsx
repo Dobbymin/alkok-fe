@@ -2,38 +2,80 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { resetAuthStore, useAuthStore } from "@alkok/core";
+import { resetLocalVaultStore, useLocalVaultStore } from "@/entities/vault";
 import { BookmarkAction } from "./BookmarkAction";
 
 const createBookmarkMock = vi.fn();
 const updateItemMock = vi.fn();
 const deleteItemMock = vi.fn();
+const pushMock = vi.fn();
 
 vi.mock("next/navigation", () => ({
-  useRouter: () => ({ push: vi.fn() }),
-  usePathname: () => "/guides/sample",
+  useRouter: () => ({ push: pushMock }),
 }));
 
-vi.mock("@/entities/vault", () => ({
-  useVaultFoldersQuery: () => ({
-    data: { data: [{ id: "f1", name: "보고서" }] },
-  }),
-  useCreateBookmarkMutation: () => ({
-    mutateAsync: createBookmarkMock,
-    isPending: false,
-  }),
-  useUpdateVaultItemMutation: () => ({
-    mutateAsync: updateItemMock,
-    isPending: false,
-  }),
-  useDeleteVaultItemMutation: () => ({
-    mutateAsync: deleteItemMock,
-    isPending: false,
-  }),
-}));
+vi.mock("@/entities/vault", async () => {
+  const actual = await vi.importActual<typeof import("@/entities/vault")>(
+    "@/entities/vault",
+  );
+  return {
+    ...actual,
+    useVaultFoldersQuery: () => ({
+      data: { data: [{ id: "f1", name: "보고서" }] },
+    }),
+    useCreateBookmarkMutation: () => ({
+      mutateAsync: createBookmarkMock,
+      isPending: false,
+    }),
+    useUpdateVaultItemMutation: () => ({
+      mutateAsync: updateItemMock,
+      isPending: false,
+    }),
+    useDeleteVaultItemMutation: () => ({
+      mutateAsync: deleteItemMock,
+      isPending: false,
+    }),
+  };
+});
 
 describe("BookmarkAction", () => {
   beforeEach(() => {
     resetAuthStore();
+    resetLocalVaultStore();
+    pushMock.mockReset();
+    createBookmarkMock.mockReset();
+    updateItemMock.mockReset();
+    deleteItemMock.mockReset();
+  });
+
+  it("toggles local vault storage for guests without redirecting to login", () => {
+    const qc = new QueryClient();
+    render(
+      <QueryClientProvider client={qc}>
+        <BookmarkAction
+          contentId="c-guest"
+          title="비회원 가이드"
+          contentType="GUIDE"
+          slug="guest-guide"
+        />
+      </QueryClientProvider>,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "보관함에 콕 담기" }));
+
+    expect(pushMock).not.toHaveBeenCalled();
+    expect(useLocalVaultStore.getState().items).toHaveLength(1);
+    expect(
+      screen.getByRole("button", { name: "보관함에 저장됨 (해제)" }),
+    ).toBeInTheDocument();
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "보관함에 저장됨 (해제)" }),
+    );
+    expect(useLocalVaultStore.getState().items).toHaveLength(0);
+  });
+
+  it("saves server bookmark and opens quick edit popover for authenticated users", async () => {
     useAuthStore.setState({
       user: {
         id: "u1",
@@ -44,8 +86,7 @@ describe("BookmarkAction", () => {
       },
       isLoading: false,
     });
-  });
-  it("saves bookmark and opens quick edit popover", async () => {
+
     createBookmarkMock.mockResolvedValueOnce({
       data: {
         id: "v1",
@@ -76,7 +117,7 @@ describe("BookmarkAction", () => {
       </QueryClientProvider>,
     );
 
-    fireEvent.click(screen.getByRole("button", { name: "보관함에 저장" }));
+    fireEvent.click(screen.getByRole("button", { name: "보관함에 콕 담기" }));
 
     expect(await screen.findByText("보관함 빠른 정리")).toBeInTheDocument();
 

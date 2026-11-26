@@ -58,7 +58,13 @@ export default function GuideDetailPage({
                 showSourceBadge
               />
               {bookmarkSlot ?? (
-                <BookmarkAction contentId={guide.id} title={guide.title} />
+                <BookmarkAction
+                  contentId={guide.id}
+                  title={guide.title}
+                  contentType={guide.type}
+                  slug={guide.slug}
+                  summary={guide.summary}
+                />
               )}
             </div>
             <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
