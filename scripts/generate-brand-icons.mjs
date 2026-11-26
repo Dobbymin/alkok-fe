@@ -1,108 +1,12 @@
-import { mkdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
-import { deflateSync } from "node:zlib";
+import { fileURLToPath } from "node:url";
+import { chromium } from "@playwright/test";
 
-function crc32(buf) {
-  let c = 0xffffffff;
-  for (let i = 0; i < buf.length; i += 1) {
-    c ^= buf[i];
-    for (let k = 0; k < 8; k += 1) {
-      c = (c >>> 1) ^ (c & 1 ? 0xedb88320 : 0);
-    }
-  }
-  return (c ^ 0xffffffff) >>> 0;
-}
-
-function makeChunk(type, data) {
-  const len = Buffer.alloc(4);
-  len.writeUInt32BE(data.length, 0);
-  const typeBuf = Buffer.from(type, "ascii");
-  const crcBuf = Buffer.alloc(4);
-  crcBuf.writeUInt32BE(crc32(Buffer.concat([typeBuf, data])), 0);
-  return Buffer.concat([len, typeBuf, data, crcBuf]);
-}
-
-function encodePng(width, height, rgba) {
-  const signature = Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]);
-  const ihdr = Buffer.alloc(13);
-  ihdr.writeUInt32BE(width, 0);
-  ihdr.writeUInt32BE(height, 4);
-  ihdr[8] = 8; // bit depth
-  ihdr[9] = 6; // RGBA
-  ihdr[10] = 0;
-  ihdr[11] = 0;
-  ihdr[12] = 0;
-
-  const stride = width * 4;
-  const raw = Buffer.alloc((stride + 1) * height);
-  for (let y = 0; y < height; y += 1) {
-    raw[y * (stride + 1)] = 0; // filter none
-    rgba.copy(raw, y * (stride + 1) + 1, y * stride, (y + 1) * stride);
-  }
-
-  const idat = deflateSync(raw, { level: 9 });
-  return Buffer.concat([
-    signature,
-    makeChunk("IHDR", ihdr),
-    makeChunk("IDAT", idat),
-    makeChunk("IEND", Buffer.alloc(0)),
-  ]);
-}
-
-function renderBrandRgba(size, { maskable = false } = {}) {
-  const rgba = Buffer.alloc(size * size * 4);
-  const cx = size / 2;
-  const cy = size / 2;
-  const outerR = maskable ? size * 0.24 : size * 0.28;
-  const innerR = maskable ? size * 0.1 : size * 0.12;
-  const cornerR = maskable ? 0 : size * 0.24;
-
-  for (let y = 0; y < size; y += 1) {
-    for (let x = 0; x < size; x += 1) {
-      const idx = (y * size + x) * 4;
-      let insideRounded = true;
-
-      if (cornerR > 0) {
-        const dx = Math.max(0, Math.abs(x + 0.5 - cx) - (size / 2 - cornerR));
-        const dy = Math.max(0, Math.abs(y + 0.5 - cy) - (size / 2 - cornerR));
-        if (dx * dx + dy * dy > cornerR * cornerR) {
-          insideRounded = false;
-        }
-      }
-
-      if (!insideRounded) {
-        rgba[idx] = 0;
-        rgba[idx + 1] = 0;
-        rgba[idx + 2] = 0;
-        rgba[idx + 3] = 0;
-        continue;
-      }
-
-      const dist = Math.hypot(x + 0.5 - cx, y + 0.5 - cy);
-      if (dist <= innerR) {
-        // Emerald 500 (#10B981)
-        rgba[idx] = 16;
-        rgba[idx + 1] = 185;
-        rgba[idx + 2] = 129;
-        rgba[idx + 3] = 255;
-      } else if (dist <= outerR) {
-        // Pure white (#FFFFFF)
-        rgba[idx] = 255;
-        rgba[idx + 1] = 255;
-        rgba[idx + 2] = 255;
-        rgba[idx + 3] = 255;
-      } else {
-        // Indigo 600 (#4F46E5)
-        rgba[idx] = 79;
-        rgba[idx + 1] = 70;
-        rgba[idx + 2] = 229;
-        rgba[idx + 3] = 255;
-      }
-    }
-  }
-
-  return rgba;
-}
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const repoRoot = resolve(__dirname, "..");
+const webPublicDir = resolve(repoRoot, "apps/web/public");
+const symbolSvgPath = resolve(webPublicDir, "brand/alkok-symbol.svg");
 
 function encodeIcoFromPng(pngBuf, size) {
   const header = Buffer.alloc(6);
@@ -123,25 +27,72 @@ function encodeIcoFromPng(pngBuf, size) {
   return Buffer.concat([header, entry, pngBuf]);
 }
 
+function buildMaskableSvg(symbolSvg) {
+  const inner = symbolSvg
+    .replace(/^<svg[^>]*>/i, "")
+    .replace(/<\/svg>\s*$/i, "")
+    .replace(/<rect width="64" height="64" rx="16" fill="#2563EB"\s*\/>/, "");
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" fill="none">
+  <rect width="64" height="64" fill="#2563EB" />
+  <g transform="translate(7.04, 7.04) scale(0.78)">
+    ${inner}
+  </g>
+</svg>`;
+}
+
 function writeOut(relPath, buf) {
-  const full = resolve(process.cwd(), relPath);
+  const full = resolve(webPublicDir, relPath);
   mkdirSync(dirname(full), { recursive: true });
   writeFileSync(full, buf);
 }
 
-const icon192 = encodePng(192, 192, renderBrandRgba(192));
-const icon512 = encodePng(512, 512, renderBrandRgba(512));
-const iconMaskable512 = encodePng(
-  512,
-  512,
-  renderBrandRgba(512, { maskable: true }),
-);
-const faviconPng32 = encodePng(32, 32, renderBrandRgba(32));
-const faviconIco = encodeIcoFromPng(faviconPng32, 32);
+async function renderSvgToPng(page, svgMarkup, size, { omitBackground = true } = {}) {
+  await page.setViewportSize({ width: size, height: size });
+  const scaledSvg = svgMarkup
+    .replace(/width="64"/, `width="${size}"`)
+    .replace(/height="64"/, `height="${size}"`);
 
-writeOut("public/icons/icon-192.png", icon192);
-writeOut("public/icons/icon-512.png", icon512);
-writeOut("public/icons/icon-maskable-512.png", iconMaskable512);
-writeOut("public/favicon.ico", faviconIco);
+  await page.setContent(
+    `<!DOCTYPE html>
+<html>
+  <body style="margin:0;padding:0;background:transparent;overflow:hidden;width:${size}px;height:${size}px;">
+    ${scaledSvg}
+  </body>
+</html>`,
+    { waitUntil: "load" },
+  );
 
-console.log("Generated brand PNG/ICO icons successfully.");
+  return page.screenshot({
+    type: "png",
+    omitBackground,
+    clip: { x: 0, y: 0, width: size, height: size },
+  });
+}
+
+async function main() {
+  const symbolSvg = readFileSync(symbolSvgPath, "utf8");
+  const maskableSvg = buildMaskableSvg(symbolSvg);
+
+  const browser = await chromium.launch();
+  try {
+    const page = await browser.newPage({ deviceScaleFactor: 1 });
+    const icon192 = await renderSvgToPng(page, symbolSvg, 192, { omitBackground: true });
+    const icon512 = await renderSvgToPng(page, symbolSvg, 512, { omitBackground: true });
+    const iconMaskable512 = await renderSvgToPng(page, maskableSvg, 512, {
+      omitBackground: false,
+    });
+    const faviconPng32 = await renderSvgToPng(page, symbolSvg, 32, { omitBackground: true });
+
+    writeOut("icons/icon-192.png", icon192);
+    writeOut("icons/icon-512.png", icon512);
+    writeOut("icons/icon-maskable-512.png", iconMaskable512);
+    writeOut("favicon.ico", encodeIcoFromPng(faviconPng32, 32));
+  } finally {
+    await browser.close();
+  }
+
+  console.log("Generated brand PNG/ICO icons successfully.");
+}
+
+await main();
