@@ -14,10 +14,14 @@ export default function NewsLoading() {
       <Skeleton className="h-9 w-64" />
       <div className="divide-y divide-separator border-y border-separator">
         {[0, 1, 2, 3, 4].map((i) => (
-          <div key={i} className="flex flex-col gap-2 py-6">
-            <Skeleton className="h-5 w-32" />
+          <div key={i} className="flex min-h-[128px] flex-col gap-2 py-6">
+            <div className="flex items-center justify-between gap-2">
+              <Skeleton className="h-5 w-36" />
+              <Skeleton className="h-4 w-16" />
+            </div>
             <Skeleton className="h-6 w-3/4" />
             <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-2/3" />
           </div>
         ))}
       </div>

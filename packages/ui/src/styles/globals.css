@@ -70,6 +70,7 @@
 @layer base {
   html {
     scroll-padding-block-start: 4.5rem;
+    scrollbar-gutter: stable;
   }
 
   @media (min-width: 768px) {

@@ -42,7 +42,25 @@ export default function PublicHomeLoading() {
         ))}
       </div>
 
+      <div className="flex items-baseline justify-between gap-3">
+        <Skeleton className="h-6 w-28" />
+        <Skeleton className="h-4 w-16" />
+      </div>
+
       <Skeleton className="h-11 w-full rounded-md" />
+
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex gap-1.5">
+          <Skeleton className="h-9 w-24 rounded-md" />
+          <Skeleton className="h-9 w-20 rounded-md" />
+          <Skeleton className="h-9 w-20 rounded-md" />
+        </div>
+        <div className="flex gap-2">
+          <Skeleton className="h-9 w-32 rounded-md" />
+          <Skeleton className="h-9 w-32 rounded-md" />
+          <Skeleton className="h-9 w-24 rounded-md" />
+        </div>
+      </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {[0, 1, 2, 3, 4, 5].map((i) => (

@@ -28,6 +28,7 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  Skeleton,
   Tooltip,
   TooltipContent,
   TooltipTrigger,
@@ -197,6 +198,28 @@ function SidebarDomainSection({
   );
 }
 
+function SidebarDomainSectionSkeleton() {
+  return (
+    <div className="mt-6" aria-hidden="true">
+      <p className="px-3 pb-2 text-[11px] font-medium tracking-[0.04em] text-muted-foreground">
+        업무별 탐색
+      </p>
+      <div className="flex flex-col gap-0.5">
+        {WORK_DOMAINS.map((domain) => (
+          <div
+            key={domain.slug}
+            className="flex h-8 items-center gap-3 rounded-lg px-3"
+          >
+            <span className="h-3.5 w-1 shrink-0 rounded-full bg-transparent" />
+            <Skeleton className="h-3.5 w-24" />
+            <Skeleton className="ms-auto h-3 w-4" />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 const emptySubscribe = () => () => {};
 const getClientSnapshot = () => true;
 const getServerSnapshot = () => false;
@@ -204,6 +227,7 @@ const getServerSnapshot = () => false;
 export const DesktopSidebar = ({ counts }: { counts?: PublicShellCounts }) => {
   const pathname = usePathname() || "/";
   const user = useAuthStore((s) => s.user);
+  const authLoading = useAuthStore((s) => s.isLoading);
   const isAuthenticated = useAuthStore(selectIsAuthenticated);
   const logout = useAuthStore((s) => s.logout);
   const collapsed = useSidebarStore((s) => s.collapsed);
@@ -369,7 +393,7 @@ export const DesktopSidebar = ({ counts }: { counts?: PublicShellCounts }) => {
         </div>
 
         {!collapsed ? (
-          <Suspense fallback={null}>
+          <Suspense fallback={<SidebarDomainSectionSkeleton />}>
             <SidebarDomainSection pathname={pathname} counts={counts} />
           </Suspense>
         ) : null}
@@ -402,7 +426,13 @@ export const DesktopSidebar = ({ counts }: { counts?: PublicShellCounts }) => {
             : "items-center justify-between gap-2",
         )}
       >
-        {isAuthenticated && user ? (
+        {authLoading ? (
+          <Skeleton
+            role="status"
+            aria-label="계정 정보 확인 중"
+            className={cn("h-8 rounded-md", collapsed ? "w-8" : "flex-1")}
+          />
+        ) : isAuthenticated && user ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button

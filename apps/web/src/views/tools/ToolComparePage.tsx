@@ -11,7 +11,7 @@ import {
 } from "@/entities/taxonomy";
 import { useToolCompare, useToolsList } from "@/entities/tool";
 import { ToolCompareSummary, ToolCompareTable } from "@/widgets/tool-compare";
-import { Badge, Button } from "@alkok/ui";
+import { Badge, Button, Skeleton } from "@alkok/ui";
 
 export default function ToolComparePage() {
   const router = useRouter();
@@ -117,7 +117,16 @@ export default function ToolComparePage() {
           )}
         </div>
 
-        {slugs.length < 4 && availableToAdd.length > 0 ? (
+        {slugs.length < 4 && allToolsQuery.isLoading ? (
+          <div
+            role="status"
+            aria-label="추가 가능한 도구 불러오는 중"
+            className="flex items-center gap-2"
+          >
+            <Skeleton className="min-h-11 w-36 rounded-md sm:min-h-8" />
+            <Skeleton className="min-h-11 w-24 rounded-md sm:min-h-8" />
+          </div>
+        ) : slugs.length < 4 && availableToAdd.length > 0 ? (
           <div className="flex items-center gap-2">
             <select
               aria-label="비교에 추가할 도구 선택"
@@ -169,7 +178,12 @@ export default function ToolComparePage() {
         </section>
       ) : (
         <>
-          <ToolCompareSummary tools={tools} matchedPreset={matchedPreset} />
+          <ToolCompareSummary
+            tools={tools}
+            matchedPreset={matchedPreset}
+            isLoading={query.isLoading}
+            toolCount={slugs.length}
+          />
           <ToolCompareTable
             tools={tools}
             isLoading={query.isLoading}

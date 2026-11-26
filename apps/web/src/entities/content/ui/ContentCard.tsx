@@ -82,7 +82,7 @@ export const ContentCard = ({
   return (
     <Card
       variant="outline"
-      className="group flex h-full flex-col justify-between transition-colors duration-150 ease-out hover:border-primary/40 hover:bg-card"
+      className="group flex h-full min-h-[248px] flex-col justify-between transition-colors duration-150 ease-out hover:border-primary/40 hover:bg-card"
     >
       <CardHeader className="gap-3 pb-3">
         <div className="flex items-center justify-between gap-2">
@@ -161,22 +161,33 @@ export const ContentCard = ({
 };
 
 export const ContentCardSkeleton = () => (
-  <Card variant="outline" className="flex h-full flex-col justify-between p-5">
-    <div className="flex flex-col gap-3">
-      <div className="flex items-center justify-between">
+  <Card variant="outline" className="flex h-full min-h-[248px] flex-col justify-between">
+    <CardHeader className="gap-3 pb-3">
+      <div className="flex items-center justify-between gap-2">
         <div className="flex items-center gap-2">
           <Skeleton className="h-7 w-7 rounded-md" />
-          <Skeleton className="h-4 w-20" />
+          <Skeleton className="h-4 w-24" />
         </div>
-        <Skeleton className="h-7 w-7 rounded-md" />
+        <Skeleton className="h-8 w-8 rounded-md" />
       </div>
-      <Skeleton className="h-5 w-4/5" />
-      <Skeleton className="h-4 w-full" />
-      <Skeleton className="h-4 w-2/3" />
-    </div>
-    <div className="mt-4 flex items-center justify-between border-t border-separator pt-3">
-      <Skeleton className="h-4 w-24" />
-      <Skeleton className="h-4 w-16" />
-    </div>
+      <div className="space-y-2">
+        <Skeleton className="h-5 w-11/12" />
+        <Skeleton className="h-5 w-3/5" />
+      </div>
+      <div className="space-y-1.5">
+        <Skeleton className="h-4 w-full" />
+        <Skeleton className="h-4 w-4/5" />
+      </div>
+    </CardHeader>
+    <CardContent className="flex flex-col gap-3 pt-0">
+      <div className="flex gap-1.5">
+        <Skeleton className="h-5 w-16 rounded-sm" />
+        <Skeleton className="h-5 w-16 rounded-sm" />
+      </div>
+      <div className="flex items-center justify-between border-t border-separator pt-3">
+        <Skeleton className="h-5 w-28" />
+        <Skeleton className="h-4 w-16" />
+      </div>
+    </CardContent>
   </Card>
 );

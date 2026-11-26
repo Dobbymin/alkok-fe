@@ -5,12 +5,19 @@ import Link from "next/link";
 import { useState } from "react";
 import { VerificationBadge } from "@/entities/content";
 import { useNewsList } from "@/entities/news";
+import type { NewsDetailData } from "@alkok/core";
 import { Button, EmptyState, ErrorState, FilterBar, Input, Skeleton } from "@alkok/ui";
 
-export default function NewsListPage() {
+export interface NewsListPageProps {
+  initialNews?: NewsDetailData[];
+}
+
+export default function NewsListPage({ initialNews = [] }: NewsListPageProps) {
   const [tag, setTag] = useState("");
+  const isDefaultFilter = tag.trim() === "";
   const query = useNewsList({ tag: tag.trim() });
-  const items = query.data?.data ?? [];
+  const items = query.data?.data ?? (isDefaultFilter ? initialNews : []);
+  const showSkeleton = query.isLoading && items.length === 0;
 
   return (
     <div className="flex flex-col gap-6">
@@ -40,13 +47,17 @@ export default function NewsListPage() {
         />
       </FilterBar>
 
-      {query.isLoading ? (
+      {showSkeleton ? (
         <div role="status" aria-label="AI 소식 불러오는 중" className="divide-y divide-separator border-y border-separator">
-          {[0, 1, 2].map((i) => (
-            <div key={i} className="flex flex-col gap-2 py-6">
-              <Skeleton className="h-5 w-28" />
+          {[0, 1, 2, 3, 4].map((i) => (
+            <div key={i} className="flex min-h-[128px] flex-col gap-2 py-6">
+              <div className="flex items-center justify-between gap-2">
+                <Skeleton className="h-5 w-36" />
+                <Skeleton className="h-4 w-16" />
+              </div>
               <Skeleton className="h-6 w-3/4" />
               <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-2/3" />
             </div>
           ))}
           <span className="sr-only">AI 소식을 불러오고 있습니다.</span>

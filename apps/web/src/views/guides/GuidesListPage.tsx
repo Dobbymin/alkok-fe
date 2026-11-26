@@ -5,7 +5,7 @@ import { ContentCard, ContentCardSkeleton } from "@/entities/content";
 import { useGuidesList } from "@/entities/guide";
 import { AI_USES, WORK_DOMAINS } from "@/entities/taxonomy";
 import { BookmarkAction } from "@/features/vault-save";
-import type { DifficultyLevel, PricingModel } from "@alkok/core";
+import type { ContentSummary, DifficultyLevel, PricingModel } from "@alkok/core";
 import {
   Button,
   EmptyState,
@@ -18,12 +18,25 @@ import {
   SelectValue,
 } from "@alkok/ui";
 
-export default function GuidesListPage() {
+export interface GuidesListPageProps {
+  initialGuides?: ContentSummary[];
+}
+
+export default function GuidesListPage({
+  initialGuides = [],
+}: GuidesListPageProps) {
   const [workDomain, setWorkDomain] = useState("ALL");
   const [aiUse, setAiUse] = useState("ALL");
   const [difficulty, setDifficulty] = useState<DifficultyLevel | "ALL">("ALL");
   const [pricingModel, setPricingModel] = useState<PricingModel | "ALL">("ALL");
   const [sort, setSort] = useState<"recommended" | "latest" | "helpful">("recommended");
+
+  const isDefaultFilter =
+    workDomain === "ALL" &&
+    aiUse === "ALL" &&
+    difficulty === "ALL" &&
+    pricingModel === "ALL" &&
+    sort === "recommended";
 
   const query = useGuidesList({
     workDomain: workDomain === "ALL" ? "" : workDomain,
@@ -33,7 +46,8 @@ export default function GuidesListPage() {
     sort,
   });
 
-  const guides = query.data?.data ?? [];
+  const guides = query.data?.data ?? (isDefaultFilter ? initialGuides : []);
+  const showSkeleton = query.isLoading && guides.length === 0;
 
   const resetFilters = () => {
     setWorkDomain("ALL");
@@ -130,7 +144,7 @@ export default function GuidesListPage() {
         </Select>
       </FilterBar>
 
-      {query.isLoading ? (
+      {showSkeleton ? (
         <div
           role="status"
           aria-label="업무 가이드 불러오는 중"
