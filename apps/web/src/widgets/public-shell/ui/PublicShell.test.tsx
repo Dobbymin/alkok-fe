@@ -4,7 +4,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { resetQuickSearchStore } from "@/features/quick-search";
-import { resetAuthStore } from "@alkok/core";
+import { resetAuthStore, useAuthStore } from "@alkok/core";
 import { resetSidebarStore } from "../model/sidebar.store";
 import { MOBILE_BOTTOM_TABS, MobileBottomTabs } from "./MobileBottomTabs";
 import { PublicShell } from "./PublicShell";
@@ -132,5 +132,15 @@ describe("PublicShell, DesktopSidebar & MobileBottomTabs", () => {
     expect(docsLink).toHaveAttribute("aria-current", "page");
     expect(screen.getByText("14")).toBeInTheDocument();
     expect(screen.getByText("20")).toBeInTheDocument();
+  });
+
+  it("renders account skeleton instead of flashing login button while auth is loading", () => {
+    useAuthStore.setState({ user: null, isLoading: true });
+    renderShell("/");
+
+    expect(
+      screen.getByRole("status", { name: "계정 정보 확인 중" }),
+    ).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "로그인" })).not.toBeInTheDocument();
   });
 });

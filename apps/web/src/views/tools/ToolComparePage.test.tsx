@@ -108,16 +108,21 @@ const mockTools: ToolDetailData[] = [
   },
 ];
 
+let mockCompareLoading = false;
+let mockToolsListLoading = false;
+
 vi.mock("@/entities/tool", () => ({
   useToolCompare: (slugs: string[]) => ({
-    data: { data: mockTools.filter((t) => slugs.includes(t.slug)) },
-    isLoading: false,
+    data: mockCompareLoading
+      ? undefined
+      : { data: mockTools.filter((t) => slugs.includes(t.slug)) },
+    isLoading: mockCompareLoading,
     isError: false,
     refetch: vi.fn(),
   }),
   useToolsList: () => ({
-    data: { data: mockTools },
-    isLoading: false,
+    data: mockToolsListLoading ? undefined : { data: mockTools },
+    isLoading: mockToolsListLoading,
     isError: false,
   }),
 }));
@@ -126,6 +131,8 @@ describe("ToolComparePage", () => {
   beforeEach(() => {
     pushMock.mockReset();
     currentSearch = "slugs=chatgpt,claude,gemini";
+    mockCompareLoading = false;
+    mockToolsListLoading = false;
   });
 
   it("renders expanded presets, recommendation summary, and updates URL on add/remove", () => {
@@ -161,5 +168,29 @@ describe("ToolComparePage", () => {
     expect(pushMock).toHaveBeenCalledWith(
       "/tools/compare?slugs=chatgpt,gemini",
     );
+  });
+
+  it("renders add-tool and summary skeletons while loading", () => {
+    mockCompareLoading = true;
+    mockToolsListLoading = true;
+
+    const qc = new QueryClient();
+    render(
+      <QueryClientProvider client={qc}>
+        <TooltipProvider>
+          <ToolComparePage />
+        </TooltipProvider>
+      </QueryClientProvider>,
+    );
+
+    expect(
+      screen.getByRole("status", { name: "추가 가능한 도구 불러오는 중" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("status", { name: "비교 요약 불러오는 중" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("status", { name: "도구 비교표 불러오는 중" }),
+    ).toBeInTheDocument();
   });
 });

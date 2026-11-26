@@ -1,16 +1,56 @@
 import type { ComparePresetDefinition } from "@/entities/taxonomy";
 import type { ToolDetailData } from "@alkok/core";
-import { Badge, Card, CardContent, CardHeader, CardTitle } from "@alkok/ui";
+import { Badge, Card, CardContent, CardHeader, CardTitle, Skeleton } from "@alkok/ui";
 
 export interface ToolCompareSummaryProps {
   tools: ToolDetailData[];
   matchedPreset?: ComparePresetDefinition;
+  isLoading?: boolean;
+  toolCount?: number;
 }
 
 export const ToolCompareSummary = ({
   tools,
   matchedPreset,
+  isLoading = false,
+  toolCount = 0,
 }: ToolCompareSummaryProps) => {
+  if (isLoading && toolCount >= 2) {
+    return (
+      <Card
+        variant="surface"
+        role="status"
+        aria-label="비교 요약 불러오는 중"
+      >
+        <CardHeader className="gap-2 pb-3">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <Skeleton className="h-5 w-52" />
+            <Skeleton className="h-5 w-32 rounded-full" />
+          </div>
+          <Skeleton className="h-4 w-full max-w-2xl" />
+          <Skeleton className="h-4 w-3/4 max-w-xl" />
+        </CardHeader>
+        <CardContent className="pt-0">
+          <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-4">
+            {Array.from({ length: Math.min(toolCount, 4) }).map((_, i) => (
+              <div
+                key={i}
+                className="flex flex-col gap-2 rounded-lg border border-border bg-card p-3"
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <Skeleton className="h-4 w-20" />
+                  <Skeleton className="h-4 w-12" />
+                </div>
+                <Skeleton className="h-3.5 w-full" />
+                <Skeleton className="h-3.5 w-4/5" />
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
   if (tools.length < 2) return null;
 
   return (

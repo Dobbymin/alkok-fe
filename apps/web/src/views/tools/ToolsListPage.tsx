@@ -10,7 +10,7 @@ import {
 } from "@/entities/taxonomy";
 import { useToolsList } from "@/entities/tool";
 import { CompareToggleButton, CompareTray } from "@/features/tool-compare";
-import type { ToolKind } from "@alkok/core";
+import type { ToolDetailData, ToolKind } from "@alkok/core";
 import {
   Button,
   Checkbox,
@@ -28,7 +28,13 @@ import {
   TabsTrigger,
 } from "@alkok/ui";
 
-export default function ToolsListPage() {
+export interface ToolsListPageProps {
+  initialTools?: ToolDetailData[];
+}
+
+export default function ToolsListPage({
+  initialTools = [],
+}: ToolsListPageProps) {
   const [toolKind, setToolKind] = useState<ToolKind | "ALL">("ALL");
   const [hasFreePlan, setHasFreePlan] = useState(false);
   const [koreanFull, setKoreanFull] = useState(false);
@@ -36,6 +42,15 @@ export default function ToolsListPage() {
   const [workDomain, setWorkDomain] = useState("ALL");
   const [aiUse, setAiUse] = useState("ALL");
   const [sort, setSort] = useState<"recommended" | "latest" | "helpful">("recommended");
+
+  const isDefaultFilter =
+    toolKind === "ALL" &&
+    !hasFreePlan &&
+    !koreanFull &&
+    validOnly &&
+    workDomain === "ALL" &&
+    aiUse === "ALL" &&
+    sort === "recommended";
 
   const query = useToolsList({
     toolKind: toolKind === "ALL" ? "" : toolKind,
@@ -47,7 +62,8 @@ export default function ToolsListPage() {
     sort,
   });
 
-  const tools = query.data?.data ?? [];
+  const tools = query.data?.data ?? (isDefaultFilter ? initialTools : []);
+  const showSkeleton = query.isLoading && tools.length === 0;
 
   return (
     <div className="flex flex-col gap-6">
@@ -187,7 +203,7 @@ export default function ToolsListPage() {
         </Select>
       </FilterBar>
 
-      {query.isLoading ? (
+      {showSkeleton ? (
         <div
           role="status"
           aria-label="AI 도구 목록 불러오는 중"
