@@ -1,10 +1,11 @@
 "use client";
 
-import { ExternalLink, Share2 } from "lucide-react";
+import { Check, Copy, ExternalLink, Share2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { VerificationBadge } from "@/entities/content";
 import type { KoreanSupportLevel, ToolDetailData } from "@alkok/core";
+import { formatCompareSummaryText } from "../model/format-compare-summary";
 import {
   Badge,
   Button,
@@ -177,6 +178,7 @@ export const ToolCompareTable = ({
 }: ToolCompareTableProps) => {
   const [diffOnly, setDiffOnly] = useState(false);
   const [mobileMode, setMobileMode] = useState<"cards" | "horizontal">("cards");
+  const [copiedSummary, setCopiedSummary] = useState(false);
 
   if (isLoading) {
     return (
@@ -220,6 +222,18 @@ export const ToolCompareTable = ({
     }
   };
 
+  const handleCopySummary = async () => {
+    try {
+      const summaryText = formatCompareSummaryText(tools, window.location.href);
+      await navigator.clipboard.writeText(summaryText);
+      setCopiedSummary(true);
+      toast.success("비교 요약 텍스트를 복사했습니다.");
+      window.setTimeout(() => setCopiedSummary(false), 2000);
+    } catch {
+      toast.error("요약 복사에 실패했습니다.");
+    }
+  };
+
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-border bg-card p-3">
@@ -252,6 +266,14 @@ export const ToolCompareTable = ({
               횡비교
             </Button>
           </div>
+          <Button variant="outline" size="sm" onClick={handleCopySummary}>
+            {copiedSummary ? (
+              <Check className="h-3.5 w-3.5 text-primary" strokeWidth={1.75} aria-hidden="true" />
+            ) : (
+              <Copy className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden="true" />
+            )}
+            요약 복사
+          </Button>
           <Button variant="outline" size="sm" onClick={handleCopyUrl}>
             <Share2 className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden="true" />
             URL 공유
