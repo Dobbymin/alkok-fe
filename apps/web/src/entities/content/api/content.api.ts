@@ -1,10 +1,17 @@
 import { apiClient } from "@alkok/core";
 import type { ApiEnvelope, ContentSummary, NewsDetailData, ToolDetailData } from "@alkok/core";
 
+export interface HomeComparisonPreset {
+  id: string;
+  label: string;
+  slugs: string[];
+}
+
 export interface HomeDataPayload {
   guides: ContentSummary[];
   tools: ToolDetailData[];
   news: NewsDetailData[];
+  comparisonPresets?: HomeComparisonPreset[];
   recentVaultItems?: Array<{
     id: string;
     title: string;
