@@ -1,2 +1,2 @@
-export * from "./recent-searches";
+export * from "./quick-search.store";
 export * from "./useQuickSearch";

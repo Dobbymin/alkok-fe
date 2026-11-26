@@ -7,7 +7,7 @@ import { useState, type FormEvent } from "react";
 import { ContentCard, ContentCardSkeleton } from "@/entities/content";
 import { POPULAR_SEARCH_CHIPS, WORK_DOMAINS } from "@/entities/taxonomy";
 import { useUnifiedSearch } from "@/features/quick-search";
-import { useAuth } from "@alkok/core";
+import { selectIsAuthenticated, useAuthStore } from "@alkok/core";
 import type { ContentType } from "@alkok/core";
 import {
   Button,
@@ -32,7 +32,7 @@ type SearchTab = "ALL" | ContentType | "VAULT";
 export default function SearchPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { isAuthenticated } = useAuth();
+  const isAuthenticated = useAuthStore(selectIsAuthenticated);
 
   const initialQ = searchParams.get("q") ?? "";
   const [inputQ, setInputQ] = useState(initialQ);

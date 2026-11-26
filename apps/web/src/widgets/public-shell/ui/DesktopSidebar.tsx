@@ -16,8 +16,9 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useSyncExternalStore } from "react";
-import { cn, useAuth } from "@alkok/core";
+import { useEffect } from "react";
+import { useQuickSearchStore } from "@/features/quick-search";
+import { cn, selectIsAuthenticated, useAuthStore } from "@alkok/core";
 import {
   Button,
   DropdownMenu,
@@ -29,32 +30,9 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@alkok/ui";
+import { useSidebarStore } from "../model/sidebar.store";
 import { BrandLogo } from "./BrandLogo";
 import { ThemeToggle } from "./ThemeToggle";
-
-const SIDEBAR_STORAGE_KEY = "alkok-sidebar-collapsed";
-const SIDEBAR_CHANGE_EVENT = "alkok-sidebar-collapsed-change";
-
-function subscribeSidebar(callback: () => void): () => void {
-  window.addEventListener("storage", callback);
-  window.addEventListener(SIDEBAR_CHANGE_EVENT, callback);
-  return () => {
-    window.removeEventListener("storage", callback);
-    window.removeEventListener(SIDEBAR_CHANGE_EVENT, callback);
-  };
-}
-
-function getSidebarSnapshot(): boolean {
-  try {
-    return window.localStorage.getItem(SIDEBAR_STORAGE_KEY) === "true";
-  } catch {
-    return false;
-  }
-}
-
-function getSidebarServerSnapshot(): boolean {
-  return false;
-}
 
 interface NavItem {
   href: string;
@@ -152,27 +130,18 @@ function NavLink({
   );
 }
 
-export const DesktopSidebar = ({
-  onOpenSearch,
-}: {
-  onOpenSearch?: () => void;
-}) => {
+export const DesktopSidebar = () => {
   const pathname = usePathname() || "/";
-  const { user, isAuthenticated, logout } = useAuth();
-  const collapsed = useSyncExternalStore(
-    subscribeSidebar,
-    getSidebarSnapshot,
-    getSidebarServerSnapshot,
-  );
+  const user = useAuthStore((s) => s.user);
+  const isAuthenticated = useAuthStore(selectIsAuthenticated);
+  const logout = useAuthStore((s) => s.logout);
+  const collapsed = useSidebarStore((s) => s.collapsed);
+  const toggleCollapsed = useSidebarStore((s) => s.toggleCollapsed);
+  const openSearch = useQuickSearchStore((s) => s.openModal);
 
-  const toggleCollapsed = () => {
-    try {
-      window.localStorage.setItem(SIDEBAR_STORAGE_KEY, String(!collapsed));
-      window.dispatchEvent(new Event(SIDEBAR_CHANGE_EVENT));
-    } catch {
-      // ignore storage errors
-    }
-  };
+  useEffect(() => {
+    void useSidebarStore.persist.rehydrate();
+  }, []);
 
   const workspaceItems: NavItem[] = [
     {
@@ -206,7 +175,7 @@ export const DesktopSidebar = ({
   const searchButton = (
     <button
       type="button"
-      onClick={onOpenSearch}
+      onClick={openSearch}
       aria-label="빠른 검색 열기"
       className={cn(
         "flex h-9 w-full items-center gap-2 rounded-lg border border-border/80 bg-surface-sunken px-3 text-xs text-muted-foreground [-webkit-tap-highlight-color:transparent] transition-[color,background-color,border-color] duration-150 ease-out hover:bg-secondary hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",

@@ -1,6 +1,7 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { resetAuthStore, useAuthStore } from "@alkok/core";
 import { SettingsForms } from "./SettingsForms";
 
 const replaceMock = vi.fn();
@@ -14,24 +15,6 @@ vi.mock("next/navigation", () => ({
   useRouter: () => ({ replace: replaceMock }),
 }));
 
-vi.mock("@alkok/core", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@alkok/core")>();
-  return {
-    ...actual,
-  useAuth: () => ({
-    user: {
-      id: "u1",
-      email: "user@example.com",
-      nickname: "테스터",
-      role: "MEMBER",
-      emailVerified: true,
-      interestCategorySlugs: ["marketing"],
-    },
-    updateUser: vi.fn(),
-  }),
-};
-});
-
 vi.mock("../model/useAuthMutations", () => ({
   useDeleteAccountMutation: () => ({
     mutateAsync: deleteMutateAsyncMock,
@@ -40,6 +23,20 @@ vi.mock("../model/useAuthMutations", () => ({
 }));
 
 describe("SettingsForms", () => {
+  beforeEach(() => {
+    resetAuthStore();
+    useAuthStore.setState({
+      user: {
+        id: "u1",
+        email: "user@example.com",
+        nickname: "테스터",
+        role: "USER",
+        status: "ACTIVE",
+        interestCategorySlugs: ["marketing"],
+      },
+      isLoading: false,
+    });
+  });
   it("requires 2-step confirmation dialog before deleting account", async () => {
     deleteMutateAsyncMock.mockResolvedValueOnce(undefined);
     const queryClient = new QueryClient();

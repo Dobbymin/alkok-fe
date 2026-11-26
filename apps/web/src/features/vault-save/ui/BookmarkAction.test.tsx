@@ -1,6 +1,7 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { resetAuthStore, useAuthStore } from "@alkok/core";
 import { BookmarkAction } from "./BookmarkAction";
 
 const createBookmarkMock = vi.fn();
@@ -11,14 +12,6 @@ vi.mock("next/navigation", () => ({
   useRouter: () => ({ push: vi.fn() }),
   usePathname: () => "/guides/sample",
 }));
-
-vi.mock("@alkok/core", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@alkok/core")>();
-  return {
-    ...actual,
-  useAuth: () => ({ isAuthenticated: true }),
-};
-});
 
 vi.mock("@/entities/vault", () => ({
   useVaultFoldersQuery: () => ({
@@ -39,6 +32,19 @@ vi.mock("@/entities/vault", () => ({
 }));
 
 describe("BookmarkAction", () => {
+  beforeEach(() => {
+    resetAuthStore();
+    useAuthStore.setState({
+      user: {
+        id: "u1",
+        email: "user@alkok.kr",
+        nickname: "테스터",
+        role: "USER",
+        status: "ACTIVE",
+      },
+      isLoading: false,
+    });
+  });
   it("saves bookmark and opens quick edit popover", async () => {
     createBookmarkMock.mockResolvedValueOnce({
       data: {

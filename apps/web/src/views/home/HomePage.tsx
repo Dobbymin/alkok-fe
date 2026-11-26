@@ -9,7 +9,7 @@ import {
   POPULAR_COMPARE_PRESETS,
   POPULAR_SEARCH_CHIPS,
 } from "@/entities/taxonomy";
-import { useAuth } from "@alkok/core";
+import { selectIsAuthenticated, useAuthStore } from "@alkok/core";
 import type { HomeDataPayload } from "@/entities/content";
 import { Button, Card, CardContent, CardHeader, CardTitle, EmptyState, Input } from "@alkok/ui";
 
@@ -19,7 +19,7 @@ export interface HomePageProps {
 
 export default function HomePage({ initialData }: HomePageProps) {
   const router = useRouter();
-  const { isAuthenticated } = useAuth();
+  const isAuthenticated = useAuthStore(selectIsAuthenticated);
   const [searchTerm, setSearchTerm] = useState("");
 
   const handleHeroSearch = (e: FormEvent) => {

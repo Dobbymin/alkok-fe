@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it } from "vitest";
-import { compareStore } from "@/features/tool-compare";
+import { resetCompareStore, useCompareStore } from "@/features/tool-compare";
 import type { ToolDetailData } from "@alkok/core";
 import { TooltipProvider } from "@alkok/ui";
 import { ToolCompareTable } from "./ToolCompareTable";
@@ -56,9 +56,9 @@ const sampleTools: ToolDetailData[] = [
   },
 ];
 
-describe("ToolCompareTable & compareStore", () => {
+describe("ToolCompareTable & useCompareStore", () => {
   beforeEach(() => {
-    compareStore.clear();
+    resetCompareStore();
   });
 
   it("renders 7 comparison axes and filters identical rows with 차이점만 보기", async () => {
@@ -81,12 +81,13 @@ describe("ToolCompareTable & compareStore", () => {
   });
 
   it("enforces max 4 items on desktop and max 3 items on mobile", () => {
-    expect(compareStore.toggle({ slug: "a", title: "A" }, true)).toBe(true);
-    expect(compareStore.toggle({ slug: "b", title: "B" }, true)).toBe(true);
-    expect(compareStore.toggle({ slug: "c", title: "C" }, true)).toBe(true);
-    expect(compareStore.toggle({ slug: "d", title: "D" }, true)).toBe(false);
+    const { toggle } = useCompareStore.getState();
+    expect(toggle({ slug: "a", title: "A" }, true)).toBe(true);
+    expect(toggle({ slug: "b", title: "B" }, true)).toBe(true);
+    expect(toggle({ slug: "c", title: "C" }, true)).toBe(true);
+    expect(toggle({ slug: "d", title: "D" }, true)).toBe(false);
 
-    expect(compareStore.toggle({ slug: "d", title: "D" }, false)).toBe(true);
-    expect(compareStore.toggle({ slug: "e", title: "E" }, false)).toBe(false);
+    expect(toggle({ slug: "d", title: "D" }, false)).toBe(true);
+    expect(toggle({ slug: "e", title: "E" }, false)).toBe(false);
   });
 });

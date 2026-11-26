@@ -11,8 +11,7 @@ import {
   useVaultFoldersQuery,
   type VaultItem,
 } from "@/entities/vault";
-import { useAuth } from "@alkok/core";
-import { cn } from "@alkok/core";
+import { cn, selectIsAuthenticated, useAuthStore } from "@alkok/core";
 import {
   Button,
   FieldGroup,
@@ -50,7 +49,7 @@ export const BookmarkAction = ({
 }: BookmarkActionProps) => {
   const router = useRouter();
   const pathname = usePathname() || "/";
-  const { isAuthenticated } = useAuth();
+  const isAuthenticated = useAuthStore(selectIsAuthenticated);
 
   const [savedItem, setSavedItem] = useState<VaultItem | null>(initialSavedItem);
   const [editorOpen, setEditorOpen] = useState(false);
