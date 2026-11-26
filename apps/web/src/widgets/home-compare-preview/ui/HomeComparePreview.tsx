@@ -4,7 +4,10 @@ import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import type { HomeComparisonPreset } from "@/entities/content";
-import { POPULAR_COMPARE_PRESETS } from "@/entities/taxonomy";
+import {
+  mergeComparisonPresets,
+  type ComparePresetDefinition,
+} from "@/entities/taxonomy";
 import { useToolCompare } from "@/entities/tool";
 import type { KoreanSupportLevel, ToolDetailData } from "@alkok/core";
 import {
@@ -38,14 +41,10 @@ export const HomeComparePreview = ({
   presets,
   initialTools = [],
 }: HomeComparePreviewProps) => {
-  const effectivePresets = useMemo<HomeComparisonPreset[]>(() => {
-    if (presets && presets.length > 0) return presets;
-    return POPULAR_COMPARE_PRESETS.map((p, idx) => ({
-      id: `fallback-${idx}`,
-      label: p.label,
-      slugs: [...p.slugs],
-    }));
-  }, [presets]);
+  const effectivePresets = useMemo<ComparePresetDefinition[]>(
+    () => mergeComparisonPresets(presets),
+    [presets],
+  );
 
   const [activeId, setActiveId] = useState<string>(
     effectivePresets[0]?.id ?? "",
@@ -119,7 +118,7 @@ export const HomeComparePreview = ({
                       : "border-border bg-background text-muted-foreground hover:bg-surface-sunken hover:text-foreground"
                   }`}
                 >
-                  {preset.label}
+                  {preset.shortLabel}
                 </button>
               );
             })}

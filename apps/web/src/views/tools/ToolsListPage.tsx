@@ -1,8 +1,13 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { ContentCard, ContentCardSkeleton } from "@/entities/content";
-import { AI_USES, WORK_DOMAINS } from "@/entities/taxonomy";
+import {
+  AI_USES,
+  POPULAR_COMPARE_PRESETS,
+  WORK_DOMAINS,
+} from "@/entities/taxonomy";
 import { useToolsList } from "@/entities/tool";
 import { CompareToggleButton, CompareTray } from "@/features/tool-compare";
 import type { ToolKind } from "@alkok/core";
@@ -52,6 +57,40 @@ export default function ToolsListPage() {
           무료 플랜·한국어 지원 여부로 필터링하고, 최대 4개(모바일 3개)를 담아 비교하세요.
         </p>
       </div>
+
+      <section
+        aria-label="업무 목적별 원클릭 비교 프리셋"
+        className="flex flex-col gap-3 rounded-2xl border border-transparent bg-surface-sunken p-4 dark:border-border sm:p-5"
+      >
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <h2 className="text-sm font-semibold text-foreground">
+              업무 목적별 원클릭 7축 비교
+            </h2>
+            <p className="text-xs text-muted-foreground">
+              자주 비교하는 조합을 바로 열어 무료 한도와 한국어 지원을 확인하세요.
+            </p>
+          </div>
+          <Button variant="ghost" size="sm" asChild className="min-h-11 sm:min-h-8">
+            <Link href="/tools/compare">비교표 전체 보기</Link>
+          </Button>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {POPULAR_COMPARE_PRESETS.map((preset) => (
+            <Button
+              key={preset.id}
+              variant="outline"
+              size="sm"
+              asChild
+              className="min-h-11 sm:min-h-8"
+            >
+              <Link href={`/tools/compare?slugs=${preset.slugs.join(",")}`}>
+                {preset.shortLabel}
+              </Link>
+            </Button>
+          ))}
+        </div>
+      </section>
 
       <Tabs
         value={toolKind}
