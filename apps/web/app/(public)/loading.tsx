@@ -9,14 +9,16 @@ export default function PublicHomeLoading() {
       className="flex flex-col gap-6"
     >
       <div className="rounded-2xl border border-border bg-surface-sunken/70 p-6 sm:p-8">
-        <div className="flex flex-col gap-4">
-          <div className="grid grid-cols-[1fr_auto] items-center gap-x-4 gap-y-3 sm:gap-x-6 sm:gap-y-4">
+        <div className="@container flex flex-col gap-4">
+          <div className="grid grid-cols-[1fr_auto] items-center gap-x-4 gap-y-3 @[500px]:grid-cols-[minmax(0,42rem)_minmax(148px,1fr)] @[500px]:gap-x-0 @[500px]:gap-y-4 @[640px]:grid-cols-[minmax(0,42rem)_minmax(172px,1fr)] @[820px]:grid-cols-[minmax(0,42rem)_minmax(200px,1fr)]">
             <div className="flex min-w-0 flex-col gap-2">
               <Skeleton className="h-4 w-44" />
               <Skeleton className="h-8 w-3/4 max-w-xl" />
             </div>
-            <Skeleton className="h-[54px] w-14 rounded-2xl sm:row-span-2 sm:h-[112px] sm:w-[116px]" />
-            <div className="col-span-2 flex min-w-0 flex-col gap-4 sm:col-span-1">
+            <div className="flex items-center justify-center self-center @[500px]:row-span-2 @[500px]:px-3">
+              <Skeleton className="aspect-[54/52] w-16 rounded-2xl @[380px]:w-20 @[500px]:w-[124px] @[640px]:w-[148px] @[820px]:w-[176px]" />
+            </div>
+            <div className="col-span-2 flex min-w-0 flex-col gap-4 @[500px]:col-span-1">
               <Skeleton className="h-4 w-full max-w-2xl" />
               <div className="flex gap-2">
                 <Skeleton className="h-9 w-40 rounded-md" />

@@ -322,8 +322,8 @@ export default function HomePage({ initialCatalog }: HomePageProps) {
           aria-label="알콕 서비스 소개"
           className="rounded-2xl border border-border bg-surface-sunken/70 p-6 sm:p-8"
         >
-          <div className="flex flex-col gap-4">
-            <div className="grid grid-cols-[1fr_auto] items-center gap-x-4 gap-y-3 sm:gap-x-6 sm:gap-y-4">
+          <div className="@container flex flex-col gap-4">
+            <div className="grid grid-cols-[1fr_auto] items-center gap-x-4 gap-y-3 @[500px]:grid-cols-[minmax(0,42rem)_minmax(148px,1fr)] @[500px]:gap-x-0 @[500px]:gap-y-4 @[640px]:grid-cols-[minmax(0,42rem)_minmax(172px,1fr)] @[820px]:grid-cols-[minmax(0,42rem)_minmax(200px,1fr)]">
               <div className="flex min-w-0 flex-col gap-2">
                 <p className="text-xs font-semibold text-primary">
                   실무자를 위한 검증된 AI 지식 허브
@@ -334,11 +334,11 @@ export default function HomePage({ initialCatalog }: HomePageProps) {
                 </h1>
               </div>
 
-              <div className="flex items-center justify-center self-center sm:row-span-2">
-                <AlkokHeroMark className="h-[54px] w-14 sm:h-[112px] sm:w-[116px]" />
+              <div className="flex items-center justify-center self-center @[500px]:row-span-2 @[500px]:px-3">
+                <AlkokHeroMark className="h-auto aspect-[54/52] w-16 @[380px]:w-20 @[500px]:w-[124px] @[640px]:w-[148px] @[820px]:w-[176px]" />
               </div>
 
-              <div className="col-span-2 flex min-w-0 flex-col gap-4 sm:col-span-1">
+              <div className="col-span-2 flex min-w-0 flex-col gap-4 @[500px]:col-span-1">
                 <p className="break-keep max-w-2xl text-sm leading-[1.6] text-muted-foreground sm:text-base">
                   알콕은 공식 출처와 최신성을 확인한 업무 프롬프트 가이드, 무료 한도·한국어 지원 기준 도구 비교, 실무 영향 중심 AI 소식을 한곳에서 찾아 바로 적용하고 보관하는 실무 카탈로그입니다.
                 </p>
