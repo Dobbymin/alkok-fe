@@ -1,4 +1,4 @@
-import { ThumbsUp } from "lucide-react";
+import { ArrowRight, ThumbsUp } from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import type { ContentSummary, ContentType } from "@alkok/core";
@@ -15,18 +15,36 @@ export interface ContentCardProps {
   item: ContentSummary;
   bookmarkSlot?: ReactNode;
   footerSlot?: ReactNode;
+  highlightLine?: { label: string; text: string };
+  ctaLabel?: string;
 }
 
 export const ContentCard = ({
   item,
   bookmarkSlot,
   footerSlot,
+  highlightLine,
+  ctaLabel,
 }: ContentCardProps) => {
   const typeMeta = TYPE_META[item.type];
   const href = `${typeMeta.hrefPrefix}/${item.slug}`;
+  const resolvedFooterRight =
+    footerSlot ??
+    (ctaLabel ? (
+      <Link
+        href={href}
+        className="inline-flex items-center gap-1 font-medium text-foreground transition-colors hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+      >
+        {ctaLabel}
+        <ArrowRight className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden="true" />
+      </Link>
+    ) : null);
 
   return (
-    <Card className="flex h-full flex-col justify-between transition-colors duration-150 ease-out hover:bg-surface-sunken">
+    <Card
+      variant="outline"
+      className="flex h-full flex-col justify-between transition-colors duration-150 ease-out hover:border-primary/40 hover:bg-surface-sunken/50"
+    >
       <CardHeader className="gap-2 pb-3">
         <div className="flex items-center justify-between gap-2">
           <div className="flex flex-wrap items-center gap-2">
@@ -54,6 +72,15 @@ export const ContentCard = ({
       </CardHeader>
 
       <CardContent className="flex flex-col gap-3 pt-0">
+        {highlightLine ? (
+          <p className="line-clamp-2 rounded-md bg-surface-sunken px-3 py-2 text-xs leading-[1.5] text-foreground">
+            <span className="font-semibold text-primary">
+              {highlightLine.label}:{" "}
+            </span>
+            {highlightLine.text}
+          </p>
+        ) : null}
+
         {item.categories && item.categories.length > 0 ? (
           <div className="flex flex-wrap gap-2">
             {item.categories.slice(0, 3).map((cat) => (
@@ -64,7 +91,7 @@ export const ContentCard = ({
           </div>
         ) : null}
 
-        {item.helpfulCount > 0 || footerSlot ? (
+        {item.helpfulCount > 0 || resolvedFooterRight ? (
           <div className="flex items-center justify-between border-t border-separator pt-3 text-xs text-muted-foreground">
             {item.helpfulCount > 0 ? (
               <span className="inline-flex items-center gap-1 tabular-nums">
@@ -79,7 +106,7 @@ export const ContentCard = ({
             ) : (
               <span />
             )}
-            {footerSlot}
+            {resolvedFooterRight}
           </div>
         ) : null}
       </CardContent>
@@ -88,7 +115,7 @@ export const ContentCard = ({
 };
 
 export const ContentCardSkeleton = () => (
-  <Card className="flex h-full flex-col justify-between p-5">
+  <Card variant="outline" className="flex h-full flex-col justify-between p-5">
     <div className="flex flex-col gap-3">
       <div className="flex items-center gap-2">
         <Skeleton className="h-5 w-16" />

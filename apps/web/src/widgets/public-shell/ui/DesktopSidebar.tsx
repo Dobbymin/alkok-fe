@@ -15,8 +15,10 @@ import {
   Wrench,
 } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useEffect } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
+import { Suspense, useEffect, useSyncExternalStore } from "react";
+import { WORK_DOMAINS } from "@/entities/taxonomy";
+import { useLocalVaultStore, useVaultItemsQuery } from "@/entities/vault";
 import { useQuickSearchStore } from "@/features/quick-search";
 import { cn, selectIsAuthenticated, useAuthStore } from "@alkok/core";
 import {
@@ -30,6 +32,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@alkok/ui";
+import type { PublicShellCounts } from "../model/shell-counts.types";
 import { useSidebarStore } from "../model/sidebar.store";
 import { BrandLogo } from "./BrandLogo";
 import { ThemeToggle } from "./ThemeToggle";
@@ -39,6 +42,7 @@ interface NavItem {
   label: string;
   icon: typeof Home;
   match: (pathname: string) => boolean;
+  count?: number;
 }
 
 const EXPLORE_NAV: readonly NavItem[] = [
@@ -117,6 +121,14 @@ function NavLink({
         aria-hidden="true"
       />
       {!collapsed ? <span className="truncate">{item.label}</span> : null}
+      {!collapsed && typeof item.count === "number" ? (
+        <span
+          aria-hidden="true"
+          className="ms-auto tabular-nums text-[11px] font-medium text-muted-foreground"
+        >
+          {item.count}
+        </span>
+      ) : null}
     </Link>
   );
 
@@ -130,7 +142,66 @@ function NavLink({
   );
 }
 
-export const DesktopSidebar = () => {
+function SidebarDomainSection({
+  pathname,
+  counts,
+}: {
+  pathname: string;
+  counts?: PublicShellCounts;
+}) {
+  const searchParams = useSearchParams();
+  const activeDomain = pathname === "/" ? (searchParams.get("domain") ?? "") : "";
+
+  return (
+    <div className="mt-6">
+      <p className="px-3 pb-2 text-[11px] font-medium tracking-[0.04em] text-muted-foreground">
+        업무별 탐색
+      </p>
+      <div className="flex flex-col gap-0.5">
+        {WORK_DOMAINS.map((domain) => {
+          const isActive = activeDomain === domain.slug;
+          const domainCount = counts?.domains[domain.slug];
+          return (
+            <Link
+              key={domain.slug}
+              href={`/?domain=${domain.slug}`}
+              aria-current={isActive ? "page" : undefined}
+              className={cn(
+                "flex h-8 items-center gap-3 rounded-lg px-3 text-xs [-webkit-tap-highlight-color:transparent] transition-[color,background-color] duration-150 ease-out focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
+                isActive
+                  ? "bg-sidebar-accent font-semibold text-sidebar-accent-foreground"
+                  : "font-medium text-muted-foreground hover:bg-secondary hover:text-foreground",
+              )}
+            >
+              <span
+                aria-hidden="true"
+                className={cn(
+                  "h-3.5 w-1 shrink-0 rounded-full",
+                  isActive ? "bg-primary" : "bg-transparent",
+                )}
+              />
+              <span className="truncate">{domain.name}</span>
+              {typeof domainCount === "number" ? (
+                <span
+                  aria-hidden="true"
+                  className="ms-auto tabular-nums text-[11px] font-medium text-muted-foreground"
+                >
+                  {domainCount}
+                </span>
+              ) : null}
+            </Link>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+const emptySubscribe = () => () => {};
+const getClientSnapshot = () => true;
+const getServerSnapshot = () => false;
+
+export const DesktopSidebar = ({ counts }: { counts?: PublicShellCounts }) => {
   const pathname = usePathname() || "/";
   const user = useAuthStore((s) => s.user);
   const isAuthenticated = useAuthStore(selectIsAuthenticated);
@@ -138,10 +209,31 @@ export const DesktopSidebar = () => {
   const collapsed = useSidebarStore((s) => s.collapsed);
   const toggleCollapsed = useSidebarStore((s) => s.toggleCollapsed);
   const openSearch = useQuickSearchStore((s) => s.openModal);
+  const localVaultItems = useLocalVaultStore((s) => s.items);
+  const vaultQuery = useVaultItemsQuery({ limit: 1 }, isAuthenticated);
+  const mounted = useSyncExternalStore(
+    emptySubscribe,
+    getClientSnapshot,
+    getServerSnapshot,
+  );
 
   useEffect(() => {
     void useSidebarStore.persist.rehydrate();
+    void useLocalVaultStore.persist.rehydrate();
   }, []);
+
+  const savedCount = mounted
+    ? isAuthenticated
+      ? (vaultQuery.data?.meta?.total ?? 0)
+      : localVaultItems.length
+    : 0;
+
+  const exploreItems: NavItem[] = EXPLORE_NAV.map((item) => {
+    if (item.href === "/guides" && counts) return { ...item, count: counts.guides };
+    if (item.href === "/tools" && counts) return { ...item, count: counts.tools };
+    if (item.href === "/news" && counts) return { ...item, count: counts.news };
+    return item;
+  });
 
   const workspaceItems: NavItem[] = [
     {
@@ -149,6 +241,7 @@ export const DesktopSidebar = () => {
       label: "내 보관함",
       icon: Bookmark,
       match: (p) => p.startsWith("/vault"),
+      count: savedCount > 0 ? savedCount : undefined,
     },
     ...(isAuthenticated
       ? [
@@ -265,7 +358,7 @@ export const DesktopSidebar = () => {
           </p>
         ) : null}
         <div className="flex flex-col gap-1">
-          {EXPLORE_NAV.map((item) => (
+          {exploreItems.map((item) => (
             <NavLink
               key={item.href}
               item={item}
@@ -274,6 +367,12 @@ export const DesktopSidebar = () => {
             />
           ))}
         </div>
+
+        {!collapsed ? (
+          <Suspense fallback={null}>
+            <SidebarDomainSection pathname={pathname} counts={counts} />
+          </Suspense>
+        ) : null}
 
         <div className="mt-6">
           {!collapsed ? (

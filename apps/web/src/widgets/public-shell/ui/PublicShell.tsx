@@ -2,15 +2,17 @@
 
 import type { ReactNode } from "react";
 import { QuickSearchModal } from "@/features/quick-search";
+import type { PublicShellCounts } from "../model/shell-counts.types";
 import { DesktopSidebar } from "./DesktopSidebar";
 import { MobileBottomTabs } from "./MobileBottomTabs";
 import { MobileHeader } from "./MobileHeader";
 
 export interface PublicShellProps {
   children: ReactNode;
+  counts?: PublicShellCounts;
 }
 
-export const PublicShell = ({ children }: PublicShellProps) => {
+export const PublicShell = ({ children, counts }: PublicShellProps) => {
   return (
     <div className="flex min-h-dvh flex-col bg-background text-foreground md:flex-row">
       <a
@@ -20,8 +22,8 @@ export const PublicShell = ({ children }: PublicShellProps) => {
         본문으로 건너뛰기
       </a>
 
-      <DesktopSidebar />
-      <MobileHeader />
+      <DesktopSidebar counts={counts} />
+      <MobileHeader counts={counts} />
 
       <div className="flex min-w-0 flex-1 flex-col">
         <main

@@ -27,7 +27,7 @@
 ## 2. Liveliness & Identity Motif
 
 - **One Focal Point Per Screen**:
-  - `/` (홈): 통합 검색 히어로 + 인기 업무 칩
+  - `/` (홈): 컴팩트 헤더 + 실시간 카탈로그 검색(`/`) + 단일 탭 디렉터리(`업무 가이드` · `AI 도구` · `AI 소식`)
   - `/guides/[slug]`: 상단 알맹이 요약 카드 + 현재 실행 단계
   - `/tools/compare`: 7축 비교표 + `차이점만 보기` 토글
   - `/vault`: 저장된 자료 리스트 + `+ 외부 URL 저장` 액션
@@ -46,9 +46,9 @@
 
 ## 3. Surface, Elevation & Radius Strategy (Dual-Surface Rule)
 
-### 3.1 Public `(public)` & Vault `(vault)` : Toss-Style Surface Tint (`Comfortable` 밀도)
-- **Borderless Tonal Layering**: 모든 카드와 목록 항목에 사각 테두리를 두르지 않는다. `--background`, `--card`, `--surface-sunken`의 미세한 명도 차이와 목록 행 사이의 `1px` 헤어라인(`--separator`)으로 계층을 나눈다.
-- **Tinted Callouts**: 알맹이 요약, 빈 상태 안내, 인기 비교 프리셋, 보관함 스트립은 그림자 없이 `--surface-sunken` 또는 `--card` 위에 배치하며, 호버 시 배경 톤만 부드럽게 전환한다.
+### 3.1 Public `(public)` & Vault `(vault)` : Toss-Style Surface Tint + Catalog Outline (`Comfortable` 밀도)
+- **Tonal Layering & Catalog Cards**: 기본 목록·요약 블록은 `--background`, `--card`, `--surface-sunken`의 명도 차이와 `1px` 헤어라인(`--separator`)으로 계층을 나누며, `/` 카탈로그와 디렉터리 그리드 카드(`ContentCard`, `ToolSpecCard`)는 `variant="outline"`(`1px solid var(--border)`)로 카드 경계를 명료하게 유지해 스캔 속도를 높인다.
+- **Tinted Callouts**: 알맹이 요약, 빈 상태 안내, 핵심 강점/실무 영향 블록은 그림자 없이 `--surface-sunken` 또는 `--card` 위에 배치하며, 호버 시 배경 톤 또는 보더 톤만 부드럽게 전환한다.
 - **Dark Mode Parity**: 다크 모드(`.dark`)에서는 `--background` (`--alkok-slate-950`), `--card` (`--alkok-slate-900`), `--surface-sunken`의 명도 대비와 함께, 면 구분이 약해지는 카드·패널에만 반투명 `1px` 보더(`--border`: `oklch(1 0 0 / 12%)`)를 보조 적용한다.
 
 ### 3.2 Precision & High-Density Surfaces : Stripe/shadcn `1px` Border (`Compact` 밀도)
@@ -105,13 +105,12 @@
 
 ## 6. Layout Rhythm, Navigation Shell & Responsive Rules
 
-### 6.1 Home (`/`) Section Rhythm (`RHYTHM 2`)
-동일한 3열 카드 그리드를 반복하지 않고 섹션 구성을 의도적으로 변주한다.
-1. **검색 히어로**: 슬로건(`AI 정보, 알맹이만 콕.`) + 통합 검색창 + 인기 업무 칩
-2. **업무 활용 가이드**: 구조화된 에디토리얼 가이드 카드/그리드 (4~6건)
-3. **AI 도구·모델 & 인기 비교 프리셋**: 원클릭 비교 프리셋 칩 + 대표 도구 스트립
-4. **최신 AI 소식**: `toss.tech` 스타일의 보더리스 세로 아티클 리스트 (`--separator` 구분선, 1줄 실무 요약, 출처 및 `VerificationBadge`)
-5. **개인 지식 보관함 스트립**: `--surface-sunken` 톤 밴드 (회원은 최근 저장 3건, 비회원은 보관함 안내 및 가입 유도)
+### 6.1 Home (`/`) Single Tabbed Catalog (`RHYTHM 2`)
+홈 첫 화면은 마케팅 히어로·라이브 비교 프리뷰·중복 보관함 스트립을 제거하고 스크롤 없이 바로 탐색 가능한 단일 카탈로그로 구성한다. (도구 비교는 `/tools/compare` 전용으로 분리)
+1. **컴팩트 헤더**: 브랜드 마크(`알콕.`) 또는 선택된 업무 도메인 제목 + `검색 결과 / 전체 건수` 카운터
+2. **풀폭 실시간 검색바**: `/` 단축키 지원, 입력 즉시 현재 탭 목록 필터링 + URL `?q=` 동기화
+3. **1줄 탭·필터 컨트롤 바**: `업무 가이드` (기본) · `AI 도구` · `AI 소식` 탭 + `업무 분야` / `세부 조건` 드롭다운 + `저장한 항목` 토글 (`?tab`, `?domain`, `?use`, `?saved=1` 동기화)
+4. **3열 카탈로그 그리드**: 1px `outline` 카드(`ContentCard` / `ToolSpecCard`) + 핵심 한 줄 강조 + 상세 이동 CTA + 하단 플로팅 `CompareTray`
 
 ### 6.2 Container Widths
 - 가이드 상세 본문: `max-w-3xl` (`768px`)
@@ -119,7 +118,7 @@
 - `/admin` CMS: `max-w-7xl` 또는 전체 폭
 
 ### 6.3 Navigation Shells & `390×844` Mobile-First
-- **Desktop `(public)` / `(vault)`**: 상단 고정 헤더(`h-14`), 로고 + `홈 · 가이드 · 도구 · 소식 · 보관함` + `Cmd/Ctrl+K` 검색 트리거 + 테마 토글 + 로그인/계정 메뉴.
+- **Desktop `(public)` / `(vault)`**: 좌측 고정 사이드바(`w-60`, `w-16` 접기 지원), 로고 + `⌘K` 빠른 검색 트리거 + `탐색`(`홈 · 업무 가이드 · AI 도구·모델 · 도구 비교 · AI 소식` + 건수 배지) + `업무별 탐색`(6개 도메인 `/?domain=<slug>` + 건수 배지) + `워크스페이스`(`내 보관함` 건수 배지) + 테마 토글 + 로그인/계정 메뉴.
 - **Mobile (`390×844`)**:
   - 상단 간결 헤더(`h-14`): 로고 + 검색 아이콘(풀스크린 검색 시트) + 메뉴 `Sheet`
   - 하단 고정 4탭 바(`홈 · 가이드 · 도구 · 보관함`): 데스크톱 사이드바와 완전 격리 (`fixed inset-x-0 bottom-0 top-auto h-16 pb-[env(safe-area-inset-bottom)]`), `top: 0` 상속 금지.

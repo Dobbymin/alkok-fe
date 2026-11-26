@@ -1,47 +1,23 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { HomeDataPayload } from "@/entities/content";
 import { TooltipProvider } from "@alkok/ui";
+import { resetLocalVaultStore, useLocalVaultStore } from "@/entities/vault";
 import { resetCompareStore } from "@/features/tool-compare";
-import HomePage from "./HomePage";
+import HomePage, { type HomeCatalogPayload } from "./HomePage";
 
-const pushMock = vi.fn();
-const guidesListMock = vi.fn();
-const compareMock = vi.fn();
-
-vi.mock("next/navigation", () => ({
-  useRouter: () => ({ push: pushMock }),
-}));
-
-vi.mock("@/entities/guide", () => ({
-  useGuidesList: (
-    params: { workDomain?: string },
-    options?: { enabled?: boolean },
-  ) => {
-    if (options?.enabled) {
-      return guidesListMock(params);
-    }
-    return {
-      data: undefined,
-      isLoading: false,
-      isError: false,
-      isSuccess: false,
-    };
-  },
-}));
-
-vi.mock("@/entities/tool", async () => {
-  const actual = await vi.importActual<typeof import("@/entities/tool")>(
-    "@/entities/tool",
-  );
-  return {
-    ...actual,
-    useToolCompare: (slugs: string[]) => compareMock(slugs),
-  };
+let mockSearchParams = new URLSearchParams();
+const replaceMock = vi.fn((url: string) => {
+  const query = url.includes("?") ? url.split("?")[1] ?? "" : "";
+  mockSearchParams = new URLSearchParams(query);
 });
 
-const mockInitialData: HomeDataPayload = {
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ push: vi.fn(), replace: replaceMock }),
+  useSearchParams: () => mockSearchParams,
+}));
+
+const mockCatalog: HomeCatalogPayload = {
   guides: [
     {
       id: "g1",
@@ -62,6 +38,35 @@ const mockInitialData: HomeDataPayload = {
           slug: "docs-reports",
           name: "문서·보고서",
           sortOrder: 1,
+        },
+        {
+          id: "c2",
+          group: "AI_USE",
+          slug: "writing-summary",
+          name: "글쓰기·요약",
+          sortOrder: 1,
+        },
+      ],
+    },
+    {
+      id: "g2",
+      type: "GUIDE",
+      slug: "meeting-notes",
+      title: "회의록 자동 정리 가이드",
+      summary: "녹취록에서 결정사항과 할 일을 뽑는 방법",
+      publishStatus: "PUBLISHED",
+      verificationStatus: "VALID",
+      verifiedAt: "2026-11-25T00:00:00.000Z",
+      sourceType: "OFFICIAL",
+      sourceUrl: "https://alkok.dobbymin.cloud",
+      helpfulCount: 4,
+      categories: [
+        {
+          id: "c3",
+          group: "WORK_DOMAIN",
+          slug: "meetings-comms",
+          name: "회의·커뮤니케이션",
+          sortOrder: 2,
         },
       ],
     },
@@ -105,10 +110,10 @@ const mockInitialData: HomeDataPayload = {
       toolKind: "TOOL",
       providerName: "Anthropic",
       officialUrl: "https://claude.ai",
-      pricingModel: "FREEMIUM",
-      hasFreePlan: true,
-      pricingSummary: "무료 / Pro $20",
-      koreanSupport: "FULL",
+      pricingModel: "PAID",
+      hasFreePlan: false,
+      pricingSummary: "Pro $20",
+      koreanSupport: "PARTIAL",
       platforms: ["Web"],
       strengths: ["자연스러운 한국어 문장력"],
       limitations: ["무료 사용량 제한"],
@@ -131,18 +136,9 @@ const mockInitialData: HomeDataPayload = {
       workImpact: "주간 보고서 작성 시간을 단축할 수 있습니다.",
     },
   ],
-  comparisonPresets: [
-    {
-      id: "free-chatbots",
-      label: "ChatGPT vs Claude 비교",
-      slugs: ["chatgpt", "claude"],
-    },
-    {
-      id: "research-tools",
-      label: "Perplexity 비교",
-      slugs: ["perplexity"],
-    },
-  ],
+  guidesTotal: 2,
+  toolsTotal: 2,
+  newsTotal: 1,
 };
 
 function renderHome() {
@@ -150,7 +146,7 @@ function renderHome() {
   return render(
     <QueryClientProvider client={qc}>
       <TooltipProvider>
-        <HomePage initialData={mockInitialData} />
+        <HomePage initialCatalog={mockCatalog} />
       </TooltipProvider>
     </QueryClientProvider>,
   );
@@ -158,64 +154,110 @@ function renderHome() {
 
 describe("HomePage", () => {
   beforeEach(() => {
+    mockSearchParams = new URLSearchParams();
+    replaceMock.mockClear();
     resetCompareStore();
-    guidesListMock.mockReset();
-    compareMock.mockReset();
-    compareMock.mockReturnValue({
-      data: { data: [] },
-      isLoading: false,
-      isError: false,
+    resetLocalVaultStore();
+  });
+
+  it("renders getskillbook-style catalog without compare preview or bottom vault strip", () => {
+    renderHome();
+
+    expect(screen.queryByText("라이브 도구 비교 프리뷰")).not.toBeInTheDocument();
+    expect(screen.queryByText("개인 지식 보관함")).not.toBeInTheDocument();
+    expect(screen.getByText("주간 보고서 10분 완성 가이드")).toBeInTheDocument();
+    expect(screen.getByText("회의록 자동 정리 가이드")).toBeInTheDocument();
+    expect(screen.queryByText("도움됨 0")).not.toBeInTheDocument();
+    expect(screen.getByText("2 / 2개")).toBeInTheDocument();
+  });
+
+  it("filters guides in real time via search input and focuses search on '/' key", () => {
+    renderHome();
+
+    const searchInput = screen.getByRole("textbox", { name: "카탈로그 실시간 검색" });
+    fireEvent.keyDown(window, { key: "/" });
+    expect(document.activeElement).toBe(searchInput);
+
+    fireEvent.change(searchInput, { target: { value: "회의록" } });
+
+    expect(screen.getByText("회의록 자동 정리 가이드")).toBeInTheDocument();
+    expect(
+      screen.queryByText("주간 보고서 10분 완성 가이드"),
+    ).not.toBeInTheDocument();
+    expect(replaceMock).toHaveBeenCalledWith("/?q=%ED%9A%8C%EC%9D%98%EB%A1%9D", {
+      scroll: false,
     });
   });
 
-  it("renders 2-col hero compare preview, hides helpfulCount 0, shows workImpact, and links CompareTray", async () => {
-    renderHome();
+  it("switches tabs, filters tools + links CompareTray, and shows workImpact on news tab", async () => {
+    const view = renderHome();
 
-    expect(
-      screen.getByText("라이브 도구 비교 프리뷰"),
-    ).toBeInTheDocument();
-    expect(screen.getByText(/최근 검증일 2026-11-25/)).toBeInTheDocument();
-    expect(screen.queryByText("도움됨 0")).not.toBeInTheDocument();
-    expect(
-      screen.getByText("주간 보고서 작성 시간을 단축할 수 있습니다."),
-    ).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("tab", { name: /AI 도구/ }));
+    expect(replaceMock).toHaveBeenCalledWith("/?tab=tools", { scroll: false });
+    view.rerender(
+      <QueryClientProvider client={new QueryClient()}>
+        <TooltipProvider>
+          <HomePage initialCatalog={mockCatalog} />
+        </TooltipProvider>
+      </QueryClientProvider>,
+    );
+
+    expect(screen.getByText("ChatGPT")).toBeInTheDocument();
+    expect(screen.getByText("Claude")).toBeInTheDocument();
+
+    fireEvent.change(screen.getByRole("combobox", { name: "세부 조건 필터" }), {
+      target: { value: "free" },
+    });
+    view.rerender(
+      <QueryClientProvider client={new QueryClient()}>
+        <TooltipProvider>
+          <HomePage initialCatalog={mockCatalog} />
+        </TooltipProvider>
+      </QueryClientProvider>,
+    );
+    expect(screen.getByText("ChatGPT")).toBeInTheDocument();
+    expect(screen.queryByText("Claude")).not.toBeInTheDocument();
 
     const compareButtons = screen.getAllByRole("button", { name: "비교 담기" });
     fireEvent.click(compareButtons[0]!);
-
     expect(
       await screen.findByRole("region", { name: "선택된 도구 비교 트레이" }),
     ).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("tab", { name: "Perplexity 비교" }));
-    await waitFor(() => {
-      expect(compareMock).toHaveBeenCalledWith(["perplexity"]);
-    });
+    fireEvent.click(screen.getByRole("tab", { name: /AI 소식/ }));
+    view.rerender(
+      <QueryClientProvider client={new QueryClient()}>
+        <TooltipProvider>
+          <HomePage initialCatalog={mockCatalog} />
+        </TooltipProvider>
+      </QueryClientProvider>,
+    );
+    expect(
+      screen.getByText("주간 보고서 작성 시간을 단축할 수 있습니다."),
+    ).toBeInTheDocument();
   });
 
-  it("queries domain guides when a work domain tab is clicked", () => {
-    guidesListMock.mockReturnValue({
-      data: {
-        data: [
-          {
-            ...mockInitialData.guides[0]!,
-            title: "회의록 자동 정리 가이드",
-          },
-        ],
-      },
-      isLoading: false,
-      isError: false,
-      isSuccess: true,
+  it("filters saved items using local vault store", () => {
+    useLocalVaultStore.getState().saveItem({
+      contentId: "g2",
+      title: "회의록 자동 정리 가이드",
+      contentType: "GUIDE",
+      slug: "meeting-notes",
     });
 
-    renderHome();
+    const view = renderHome();
+    fireEvent.click(screen.getByRole("button", { name: /저장한 항목/ }));
+    view.rerender(
+      <QueryClientProvider client={new QueryClient()}>
+        <TooltipProvider>
+          <HomePage initialCatalog={mockCatalog} />
+        </TooltipProvider>
+      </QueryClientProvider>,
+    );
 
-    fireEvent.click(screen.getByRole("tab", { name: "회의·커뮤니케이션" }));
-
-    expect(guidesListMock).toHaveBeenCalledWith({
-      workDomain: "meetings-comms",
-      limit: 6,
-    });
     expect(screen.getByText("회의록 자동 정리 가이드")).toBeInTheDocument();
+    expect(
+      screen.queryByText("주간 보고서 10분 완성 가이드"),
+    ).not.toBeInTheDocument();
   });
 });

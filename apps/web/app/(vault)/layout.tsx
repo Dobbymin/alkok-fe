@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { PublicShell } from "@/widgets/public-shell";
+import { fetchPublicShellCounts } from "../_lib/public-catalog";
 
 export const metadata: Metadata = {
   robots: {
@@ -9,6 +10,11 @@ export const metadata: Metadata = {
   },
 };
 
-export default function VaultLayout({ children }: { children: ReactNode }) {
-  return <PublicShell>{children}</PublicShell>;
+export default async function VaultLayout({
+  children,
+}: {
+  children: ReactNode;
+}) {
+  const counts = await fetchPublicShellCounts();
+  return <PublicShell counts={counts}>{children}</PublicShell>;
 }

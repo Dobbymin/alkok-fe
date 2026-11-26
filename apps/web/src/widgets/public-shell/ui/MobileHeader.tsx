@@ -16,6 +16,7 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { WORK_DOMAINS } from "@/entities/taxonomy";
 import { useQuickSearchStore } from "@/features/quick-search";
 import { cn, selectIsAuthenticated, useAuthStore } from "@alkok/core";
 import {
@@ -26,6 +27,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@alkok/ui";
+import type { PublicShellCounts } from "../model/shell-counts.types";
 import { BrandLogo } from "./BrandLogo";
 import { ThemeToggle } from "./ThemeToggle";
 
@@ -36,12 +38,14 @@ const MOBILE_NAV = [
     label: "업무 가이드",
     icon: BookOpen,
     match: (p: string) => p.startsWith("/guides"),
+    countKey: "guides" as const,
   },
   {
     href: "/tools",
     label: "AI 도구·모델",
     icon: Wrench,
     match: (p: string) => p.startsWith("/tools") && !p.startsWith("/tools/compare"),
+    countKey: "tools" as const,
   },
   {
     href: "/tools/compare",
@@ -54,10 +58,11 @@ const MOBILE_NAV = [
     label: "AI 소식",
     icon: Newspaper,
     match: (p: string) => p.startsWith("/news"),
+    countKey: "news" as const,
   },
 ] as const;
 
-export const MobileHeader = () => {
+export const MobileHeader = ({ counts }: { counts?: PublicShellCounts }) => {
   const [open, setOpen] = useState(false);
   const pathname = usePathname() || "/";
   const openSearch = useQuickSearchStore((s) => s.openModal);
@@ -112,6 +117,8 @@ export const MobileHeader = () => {
               {MOBILE_NAV.map((item) => {
                 const Icon = item.icon;
                 const isActive = item.match(pathname);
+                const itemCount =
+                  "countKey" in item && counts ? counts[item.countKey] : undefined;
                 return (
                   <Link
                     key={item.href}
@@ -131,10 +138,45 @@ export const MobileHeader = () => {
                       absoluteStrokeWidth
                       aria-hidden="true"
                     />
-                    {item.label}
+                    <span>{item.label}</span>
+                    {typeof itemCount === "number" ? (
+                      <span
+                        aria-hidden="true"
+                        className="ms-auto tabular-nums text-xs text-muted-foreground"
+                      >
+                        {itemCount}
+                      </span>
+                    ) : null}
                   </Link>
                 );
               })}
+
+              <div className="mt-4 flex flex-col gap-1">
+                <p className="px-3 pb-1 text-[11px] font-medium tracking-[0.04em] text-muted-foreground">
+                  업무별 탐색
+                </p>
+                {WORK_DOMAINS.map((domain) => {
+                  const domainCount = counts?.domains[domain.slug];
+                  return (
+                    <Link
+                      key={domain.slug}
+                      href={`/?domain=${domain.slug}`}
+                      onClick={() => setOpen(false)}
+                      className="flex h-10 items-center justify-between rounded-lg px-3 text-xs font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+                    >
+                      <span>{domain.name}</span>
+                      {typeof domainCount === "number" ? (
+                        <span
+                          aria-hidden="true"
+                          className="tabular-nums text-[11px] text-muted-foreground"
+                        >
+                          {domainCount}
+                        </span>
+                      ) : null}
+                    </Link>
+                  );
+                })}
+              </div>
 
               <div className="mt-4 flex flex-col gap-1">
                 <Link
