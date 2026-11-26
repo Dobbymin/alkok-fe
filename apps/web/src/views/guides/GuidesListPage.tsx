@@ -4,6 +4,7 @@ import { useState } from "react";
 import { ContentCard, ContentCardSkeleton } from "@/entities/content";
 import { useGuidesList } from "@/entities/guide";
 import { AI_USES, WORK_DOMAINS } from "@/entities/taxonomy";
+import { BookmarkAction } from "@/features/vault-save";
 import type { DifficultyLevel, PricingModel } from "@alkok/core";
 import {
   Button,
@@ -150,7 +151,22 @@ export default function GuidesListPage() {
       ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {guides.map((guide) => (
-            <ContentCard key={guide.id} item={guide} />
+            <ContentCard
+              key={guide.id}
+              item={guide}
+              hideTypeBadge
+              ctaLabel="가이드 열기"
+              bookmarkSlot={
+                <BookmarkAction
+                  iconOnly
+                  contentId={guide.id}
+                  title={guide.title}
+                  contentType={guide.type}
+                  slug={guide.slug}
+                  summary={guide.summary}
+                />
+              }
+            />
           ))}
         </div>
       )}

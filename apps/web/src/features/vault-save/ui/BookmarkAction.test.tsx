@@ -75,6 +75,29 @@ describe("BookmarkAction", () => {
     expect(useLocalVaultStore.getState().items).toHaveLength(0);
   });
 
+  it("renders compact icon-only trigger when iconOnly is true", () => {
+    const qc = new QueryClient();
+    render(
+      <QueryClientProvider client={qc}>
+        <BookmarkAction
+          iconOnly
+          contentId="c-icon"
+          title="아이콘 테스트"
+          contentType="GUIDE"
+          slug="icon-guide"
+        />
+      </QueryClientProvider>,
+    );
+
+    expect(screen.queryByText("보관함에 콕 담기")).not.toBeInTheDocument();
+    const btn = screen.getByRole("button", { name: "보관함에 콕 담기" });
+    fireEvent.click(btn);
+    expect(useLocalVaultStore.getState().items).toHaveLength(1);
+    expect(
+      screen.getByRole("button", { name: "보관함에 저장됨 (해제)" }),
+    ).toBeInTheDocument();
+  });
+
   it("saves server bookmark and opens quick edit popover for authenticated users", async () => {
     useAuthStore.setState({
       user: {

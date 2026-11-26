@@ -63,6 +63,39 @@ function hasCategorySlug(item: ContentSummary, slug: string): boolean {
   return item.categories?.some((cat) => cat.slug === slug) ?? false;
 }
 
+function getLatestVerifiedDate(
+  guides: ContentSummary[],
+  tools: ToolDetailData[],
+  news: NewsDetailData[],
+): string | null {
+  const dates = [...guides, ...tools, ...news]
+    .map((item) => item.verifiedAt?.slice(0, 10))
+    .filter((d): d is string => Boolean(d))
+    .sort();
+  return dates.length > 0 ? (dates[dates.length - 1] ?? null) : null;
+}
+
+const USAGE_STEPS = [
+  {
+    step: "01",
+    title: "막힌 업무 찾기",
+    description:
+      "회의록·보고서·엑셀 등 지금 해결할 업무를 검색하거나 좌측 업무별 탐색에서 고릅니다.",
+  },
+  {
+    step: "02",
+    title: "프롬프트·도구 바로 적용",
+    description:
+      "가이드의 변수 프롬프트를 복사해 쓰거나, 도구 7축 비교표에서 무료 한도·한국어 지원을 비교합니다.",
+  },
+  {
+    step: "03",
+    title: "보관함에 콕 저장",
+    description:
+      "자주 쓰는 가이드와 외부 AI 링크를 로그인 없이도 브라우저 보관함에 저장해 두고 다시 꺼내 씁니다.",
+  },
+] as const;
+
 const emptySubscribe = () => () => {};
 const getClientSnapshot = () => true;
 const getServerSnapshot = () => false;
@@ -139,6 +172,10 @@ export default function HomePage({ initialCatalog }: HomePageProps) {
   const guides = useMemo(() => initialCatalog?.guides ?? [], [initialCatalog]);
   const tools = useMemo(() => initialCatalog?.tools ?? [], [initialCatalog]);
   const news = useMemo(() => initialCatalog?.news ?? [], [initialCatalog]);
+  const latestVerifiedDate = useMemo(
+    () => getLatestVerifiedDate(guides, tools, news),
+    [guides, tools, news],
+  );
 
   const savedContentIds = useMemo(() => {
     if (!mounted) return new Set<string>();
@@ -211,12 +248,16 @@ export default function HomePage({ initialCatalog }: HomePageProps) {
     ? WORK_DOMAINS.find((d) => d.slug === activeDomainSlug)
     : undefined;
 
+  const guidesTotal = initialCatalog?.guidesTotal ?? guides.length;
+  const toolsTotal = initialCatalog?.toolsTotal ?? tools.length;
+  const newsTotal = initialCatalog?.newsTotal ?? news.length;
+
   const activeTabTotal =
     activeTab === "guides"
-      ? (initialCatalog?.guidesTotal ?? guides.length)
+      ? guidesTotal
       : activeTab === "tools"
-        ? (initialCatalog?.toolsTotal ?? tools.length)
-        : (initialCatalog?.newsTotal ?? news.length);
+        ? toolsTotal
+        : newsTotal;
 
   const activeFilteredCount =
     activeTab === "guides"
@@ -250,11 +291,11 @@ export default function HomePage({ initialCatalog }: HomePageProps) {
   ];
 
   return (
-    <div className="flex flex-col gap-5">
-      {/* 1. Compact Header */}
-      <header className="flex flex-wrap items-end justify-between gap-3">
-        <div className="flex flex-col gap-1">
-          {activeDomain ? (
+    <div className="flex flex-col gap-6">
+      {/* 1. Service Introduction or Focused Domain Header */}
+      {activeDomain ? (
+        <header className="flex flex-wrap items-end justify-between gap-3">
+          <div className="flex flex-col gap-1">
             <button
               type="button"
               onClick={() => updateParams({ domain: null })}
@@ -263,27 +304,90 @@ export default function HomePage({ initialCatalog }: HomePageProps) {
               <ArrowLeft className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden="true" />
               전체 탐색으로
             </button>
-          ) : null}
-          <h1 className="text-2xl font-bold leading-[1.25] tracking-[-0.025em] text-foreground">
-            {activeDomain ? (
-              activeDomain.name
-            ) : (
-              <>
-                알콕<span className="text-primary">.</span>
-              </>
-            )}
-          </h1>
-          <p className="text-sm text-muted-foreground">
-            {activeDomain
-              ? `${activeDomain.name} 업무에 바로 쓰는 검증된 AI 가이드·도구·소식`
-              : "실무에 바로 쓰는 AI 가이드·도구·소식을 한곳에서 찾아보세요."}
+            <h1 className="break-keep text-2xl font-bold leading-[1.25] tracking-[-0.025em] text-foreground">
+              {activeDomain.name}
+            </h1>
+            <p className="break-keep text-sm text-muted-foreground">
+              {activeDomain.name} 업무에 바로 쓰는 검증된 AI 가이드·도구·소식
+            </p>
+          </div>
+
+          <p className="tabular-nums text-xs font-medium text-muted-foreground">
+            {activeFilteredCount} / {activeTabTotal}개
+          </p>
+        </header>
+      ) : (
+        <section
+          aria-label="알콕 서비스 소개"
+          className="rounded-2xl border border-border bg-surface-sunken/70 p-6 sm:p-8"
+        >
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-2">
+              <p className="text-xs font-semibold text-primary">
+                실무자를 위한 검증된 AI 지식 허브
+              </p>
+              <h1 className="break-keep text-2xl font-bold leading-[1.28] tracking-[-0.025em] text-foreground sm:text-3xl">
+                흩어진 AI 정보, 실무에 바로 쓰는 알맹이만 콕
+                <span className="text-primary">.</span>
+              </h1>
+              <p className="break-keep max-w-2xl text-sm leading-[1.6] text-muted-foreground sm:text-base">
+                알콕은 공식 출처와 최신성을 확인한 업무 프롬프트 가이드, 무료 한도·한국어 지원 기준 도구 비교, 실무 영향 중심 AI 소식을 한곳에서 찾아 바로 적용하고 보관하는 실무 카탈로그입니다.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2">
+              <Button asChild size="sm" className="min-h-11 sm:min-h-9">
+                <Link href="/tools/compare">AI 도구 7축 비교표 보기</Link>
+              </Button>
+              <Button asChild variant="outline" size="sm" className="min-h-11 sm:min-h-9">
+                <Link href="/vault">내 보관함 열기</Link>
+              </Button>
+            </div>
+
+            <dl className="grid grid-cols-2 gap-3 border-t border-separator pt-5 sm:grid-cols-4">
+              <div>
+                <dt className="text-xs text-muted-foreground">업무 가이드</dt>
+                <dd className="tabular-nums text-lg font-bold text-foreground">
+                  {guidesTotal}건
+                </dd>
+                <dd className="text-[11px] text-muted-foreground">복사 프롬프트·사례</dd>
+              </div>
+              <div>
+                <dt className="text-xs text-muted-foreground">AI 도구·모델</dt>
+                <dd className="tabular-nums text-lg font-bold text-foreground">
+                  {toolsTotal}종
+                </dd>
+                <dd className="text-[11px] text-muted-foreground">무료·한국어 7축 비교</dd>
+              </div>
+              <div>
+                <dt className="text-xs text-muted-foreground">최신 AI 소식</dt>
+                <dd className="tabular-nums text-lg font-bold text-foreground">
+                  {newsTotal}건
+                </dd>
+                <dd className="text-[11px] text-muted-foreground">실무 영향 핵심 요약</dd>
+              </div>
+              <div>
+                <dt className="text-xs text-muted-foreground">최근 검증일</dt>
+                <dd className="tabular-nums text-lg font-bold text-foreground">
+                  {latestVerifiedDate ?? "-"}
+                </dd>
+                <dd className="text-[11px] text-muted-foreground">공식 출처 기준 검증</dd>
+              </div>
+            </dl>
+          </div>
+        </section>
+      )}
+
+      {!activeDomain ? (
+        <div className="flex items-baseline justify-between gap-3">
+          <h2 className="text-lg font-bold tracking-[-0.02em] text-foreground">
+            실무 카탈로그
+          </h2>
+          <p className="tabular-nums text-xs font-medium text-muted-foreground">
+            {activeFilteredCount} / {activeTabTotal}개
           </p>
         </div>
-
-        <p className="tabular-nums text-xs font-medium text-muted-foreground">
-          {activeFilteredCount} / {activeTabTotal}개
-        </p>
-      </header>
+      ) : null}
 
       {/* 2. Full-Width Instant Search */}
       <div className="relative">
@@ -464,9 +568,11 @@ export default function HomePage({ initialCatalog }: HomePageProps) {
               <ContentCard
                 key={guide.id}
                 item={guide}
+                hideTypeBadge
                 ctaLabel="가이드 열기"
                 bookmarkSlot={
                   <BookmarkAction
+                    iconOnly
                     contentId={guide.id}
                     title={guide.title}
                     contentType={guide.type}
@@ -514,6 +620,7 @@ export default function HomePage({ initialCatalog }: HomePageProps) {
                 }
                 bookmarkSlot={
                   <BookmarkAction
+                    iconOnly
                     contentId={tool.id}
                     title={tool.title}
                     contentType={tool.type}
@@ -549,6 +656,7 @@ export default function HomePage({ initialCatalog }: HomePageProps) {
             <ContentCard
               key={item.id}
               item={item}
+              hideTypeBadge
               ctaLabel="소식 열기"
               highlightLine={
                 item.workImpact
@@ -557,6 +665,7 @@ export default function HomePage({ initialCatalog }: HomePageProps) {
               }
               bookmarkSlot={
                 <BookmarkAction
+                  iconOnly
                   contentId={item.id}
                   title={item.title}
                   contentType={item.type}
@@ -578,6 +687,38 @@ export default function HomePage({ initialCatalog }: HomePageProps) {
           }
         />
       )}
+
+      {/* 5. 3-Step Usage Band */}
+      {!activeDomain && !hasAnyFilter ? (
+        <section aria-label="알콕 활용 방법" className="flex flex-col gap-4 pt-4">
+          <div className="flex flex-col gap-1">
+            <h2 className="text-lg font-bold tracking-[-0.02em] text-foreground">
+              알콕, 3단계로 바로 쓰세요
+            </h2>
+            <p className="break-keep text-sm text-muted-foreground">
+              가입이나 설치 없이 지금 막힌 업무부터 바로 해결할 수 있습니다.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+            {USAGE_STEPS.map((item) => (
+              <div
+                key={item.step}
+                className="flex flex-col gap-2 rounded-xl border border-border bg-card p-5"
+              >
+                <span className="tabular-nums font-mono text-xs font-semibold text-primary">
+                  {item.step}
+                </span>
+                <h3 className="break-keep text-base font-semibold text-foreground">
+                  {item.title}
+                </h3>
+                <p className="break-keep text-sm leading-[1.55] text-muted-foreground">
+                  {item.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </section>
+      ) : null}
 
       <CompareTray />
     </div>
