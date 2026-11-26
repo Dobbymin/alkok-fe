@@ -57,4 +57,26 @@ describe("AdminSourcesManager", () => {
     await user.click(screen.getByRole("button", { name: "지금 수집" }));
     expect(adminSourcesApi.triggerFetch).toHaveBeenCalledWith("s1");
   });
+
+  it("renders loading skeletons for both sources and JobRun while fetching", () => {
+    vi.mocked(adminSourcesApi.list).mockReturnValueOnce(new Promise(() => {}));
+    vi.mocked(adminSourcesApi.listJobs).mockReturnValueOnce(new Promise(() => {}));
+    const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+
+    render(
+      <QueryClientProvider client={qc}>
+        <AdminSourcesManager />
+      </QueryClientProvider>,
+    );
+
+    expect(
+      screen.getByRole("status", { name: "수집 출처 불러오는 중" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("status", { name: "수집 작업 이력 불러오는 중" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByText("최근 실행된 작업이 없습니다."),
+    ).not.toBeInTheDocument();
+  });
 });

@@ -1,7 +1,12 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { normalizeCompareSlugs } from "@/entities/taxonomy";
-import { getSiteUrl } from "@alkok/core";
+import {
+  getSiteUrl,
+  type ApiEnvelope,
+  type ToolDetailData,
+} from "@alkok/core";
+import { serverApiGet } from "@alkok/core/server";
 import { ToolComparePage } from "@/views/tools";
 import ToolCompareLoading from "./loading";
 
@@ -60,10 +65,34 @@ export async function generateMetadata({
   };
 }
 
-export default function Page() {
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: Promise<{ slugs?: string }>;
+}) {
+  const { slugs: slugsRaw = "" } = await searchParams;
+  const slugs = normalizeCompareSlugs(slugsRaw);
+
+  const [allToolsRes, compareRes] = await Promise.all([
+    serverApiGet<ApiEnvelope<ToolDetailData[]>>(
+      "/api/v1/tools?limit=50&sort=recommended",
+      { revalidate: 60 },
+    ),
+    slugs.length > 0
+      ? serverApiGet<ApiEnvelope<ToolDetailData[]>>("/api/v1/tools/compare", {
+          params: { slugs: slugs.join(",") },
+          revalidate: 60,
+        })
+      : Promise.resolve(null),
+  ]);
+
   return (
     <Suspense fallback={<ToolCompareLoading />}>
-      <ToolComparePage />
+      <ToolComparePage
+        initialAllTools={allToolsRes?.data ?? []}
+        initialCompareTools={compareRes?.data ?? []}
+        initialSlugs={slugs}
+      />
     </Suspense>
   );
 }

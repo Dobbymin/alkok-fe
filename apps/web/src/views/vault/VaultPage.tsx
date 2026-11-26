@@ -49,7 +49,13 @@ function getLocalItemHref(item: LocalVaultItem): string {
   return `/guides/${item.slug}`;
 }
 
-export default function VaultPage() {
+export interface VaultPageProps {
+  initialHasSessionHint?: boolean;
+}
+
+export default function VaultPage({
+  initialHasSessionHint,
+}: VaultPageProps = {}) {
   const queryClient = useQueryClient();
   const isAuthenticated = useAuthStore(selectIsAuthenticated);
   const isLoading = useAuthStore((s) => s.isLoading);
@@ -110,7 +116,9 @@ export default function VaultPage() {
     });
   }, [localItems, guestContentType, searchText]);
 
-  if (isLoading) {
+  const showAuthLoading = isLoading && (initialHasSessionHint ?? true);
+
+  if (showAuthLoading) {
     return (
       <div
         role="status"
@@ -118,17 +126,19 @@ export default function VaultPage() {
         className="flex w-full flex-col gap-6"
       >
         <header className="flex flex-wrap items-center justify-between gap-3">
-          <div>
+          <div className="space-y-1">
             <h1 className="text-2xl font-bold tracking-tight">내 보관함</h1>
             <p className="text-sm text-muted-foreground">
               저장한 가이드·도구·소식과 외부 AI 링크를 한곳에서 관리합니다.
             </p>
           </div>
-          <Skeleton className="h-9 w-32 rounded-md" />
+          <Skeleton className="h-11 w-36 rounded-md sm:h-9" />
         </header>
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-[220px_1fr]">
-          <Skeleton className="h-40 w-full rounded-xl" />
-          <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-6 md:flex-row md:items-start">
+          <div className="flex w-full shrink-0 flex-col gap-4 md:w-60">
+            <Skeleton className="h-44 w-full rounded-xl" />
+          </div>
+          <div className="flex min-w-0 flex-1 flex-col gap-4">
             <Skeleton className="h-12 w-full rounded-xl" />
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               {[0, 1].map((i) => (
@@ -300,13 +310,19 @@ export default function VaultPage() {
             folders={folders}
             selectedFolderId={selectedFolderId}
             onSelectFolder={setSelectedFolderId}
+            isLoading={foldersQuery.isLoading}
           />
 
-          {tags.length > 0 ? (
-            <div className="flex flex-col gap-2 rounded-xl border border-transparent bg-surface-sunken p-3 dark:border-border">
-              <h2 className="text-xs font-semibold text-muted-foreground">
-                태그
-              </h2>
+          <div className="flex min-h-[76px] flex-col gap-2 rounded-xl border border-transparent bg-surface-sunken p-3 dark:border-border">
+            <h2 className="text-xs font-semibold text-muted-foreground">
+              태그
+            </h2>
+            {tagsQuery.isLoading ? (
+              <div className="flex flex-wrap gap-2" aria-hidden="true">
+                <Skeleton className="h-6 w-16 rounded-full" />
+                <Skeleton className="h-6 w-20 rounded-full" />
+              </div>
+            ) : tags.length > 0 ? (
               <div className="flex flex-wrap gap-2">
                 {tags.map((tag) => (
                   <Badge
@@ -338,8 +354,12 @@ export default function VaultPage() {
                   </Badge>
                 ))}
               </div>
-            </div>
-          ) : null}
+            ) : (
+              <p className="text-xs text-muted-foreground">
+                등록된 태그가 없습니다.
+              </p>
+            )}
+          </div>
         </div>
 
         <section className="flex min-w-0 flex-1 flex-col gap-4">

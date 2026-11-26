@@ -16,7 +16,7 @@ export default function ToolCompareLoading() {
           <Skeleton key={i} className="h-8 w-28 rounded-md" />
         ))}
       </div>
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-border bg-surface-sunken p-3">
+      <div className="flex min-h-[58px] flex-wrap items-center justify-between gap-3 rounded-xl border border-border bg-surface-sunken p-3">
         <div className="flex flex-wrap items-center gap-2">
           <Skeleton className="h-4 w-24" />
           <Skeleton className="h-6 w-20 rounded-full" />
@@ -36,7 +36,7 @@ export default function ToolCompareLoading() {
         <Skeleton className="mt-2 h-4 w-full max-w-2xl" />
         <div className="mt-4 grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-4">
           {[0, 1, 2].map((i) => (
-            <Skeleton key={i} className="h-20 w-full rounded-lg" />
+            <Skeleton key={i} className="min-h-[76px] w-full rounded-lg" />
           ))}
         </div>
       </div>

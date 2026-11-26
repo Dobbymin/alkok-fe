@@ -22,20 +22,23 @@ export const ToolCompareSummary = ({
         role="status"
         aria-label="비교 요약 불러오는 중"
       >
-        <CardHeader className="gap-2 pb-3">
+        <CardHeader className="gap-1.5 pb-3">
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <Skeleton className="h-5 w-52" />
-            <Skeleton className="h-5 w-32 rounded-full" />
+            <Skeleton className="h-6 w-52" />
+            {matchedPreset ? (
+              <Skeleton className="h-5 w-32 rounded-full" />
+            ) : null}
           </div>
-          <Skeleton className="h-4 w-full max-w-2xl" />
-          <Skeleton className="h-4 w-3/4 max-w-xl" />
+          {matchedPreset?.recommendedSummary ? (
+            <Skeleton className="h-5 w-full max-w-2xl" />
+          ) : null}
         </CardHeader>
         <CardContent className="pt-0">
           <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-4">
             {Array.from({ length: Math.min(toolCount, 4) }).map((_, i) => (
               <div
                 key={i}
-                className="flex flex-col gap-2 rounded-lg border border-border bg-card p-3"
+                className="flex min-h-[76px] flex-col gap-2 rounded-lg border border-border bg-card p-3"
               >
                 <div className="flex items-center justify-between gap-2">
                   <Skeleton className="h-4 w-20" />
@@ -75,7 +78,7 @@ export const ToolCompareSummary = ({
           {tools.map((tool) => (
             <li
               key={tool.id}
-              className="flex flex-col gap-1.5 rounded-lg border border-border bg-card p-3"
+              className="flex min-h-[76px] flex-col gap-1.5 rounded-lg border border-border bg-card p-3"
             >
               <div className="flex items-center justify-between gap-2">
                 <span className="text-sm font-semibold text-foreground">

@@ -8,15 +8,17 @@ export default function VaultLoading() {
       className="flex flex-col gap-6"
     >
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="space-y-2">
+        <div className="space-y-1">
           <Skeleton className="h-8 w-36" />
           <Skeleton className="h-4 w-72 max-w-full" />
         </div>
-        <Skeleton className="h-9 w-32 rounded-md" />
+        <Skeleton className="h-11 w-36 rounded-md sm:h-9" />
       </div>
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-[220px_1fr]">
-        <Skeleton className="h-40 w-full rounded-xl" />
-        <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-6 md:flex-row md:items-start">
+        <div className="flex w-full shrink-0 flex-col gap-4 md:w-60">
+          <Skeleton className="h-44 w-full rounded-xl" />
+        </div>
+        <div className="flex min-w-0 flex-1 flex-col gap-4">
           <Skeleton className="h-12 w-full rounded-xl" />
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             {[0, 1].map((i) => (

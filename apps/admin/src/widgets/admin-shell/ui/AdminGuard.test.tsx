@@ -77,4 +77,20 @@ describe("AdminGuard & AdminShell", () => {
       expect(screen.getAllByText(item.label).length).toBeGreaterThan(0);
     }
   });
+
+  it("renders shell-aligned w-60 skeleton while auth is loading", () => {
+    useAuthStore.setState({ user: null, isLoading: true });
+
+    const { container } = render(
+      <AdminGuard>
+        <div>관리자 콘텐츠</div>
+      </AdminGuard>,
+    );
+
+    expect(
+      screen.getByRole("status", { name: "관리자 인증 확인 중" }),
+    ).toBeInTheDocument();
+    expect(container.innerHTML).toContain("w-60");
+    expect(screen.queryByText("관리자 콘텐츠")).not.toBeInTheDocument();
+  });
 });

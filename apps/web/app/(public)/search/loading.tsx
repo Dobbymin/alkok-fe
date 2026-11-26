@@ -19,6 +19,7 @@ export default function SearchLoading() {
         <Skeleton className="h-9 w-24" />
         <Skeleton className="h-9 w-20" />
       </div>
+      <Skeleton className="h-[60px] w-full rounded-xl" />
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {[0, 1, 2, 3, 4, 5].map((i) => (
           <ContentCardSkeleton key={i} />

@@ -57,15 +57,15 @@ export default function PublicHomeLoading() {
       <Skeleton className="h-11 w-full rounded-md" />
 
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex gap-1.5">
-          <Skeleton className="h-9 w-24 rounded-md" />
-          <Skeleton className="h-9 w-20 rounded-md" />
-          <Skeleton className="h-9 w-20 rounded-md" />
+        <div className="flex flex-wrap gap-1.5">
+          <Skeleton className="min-h-11 w-24 rounded-md sm:min-h-9" />
+          <Skeleton className="min-h-11 w-20 rounded-md sm:min-h-9" />
+          <Skeleton className="min-h-11 w-20 rounded-md sm:min-h-9" />
         </div>
-        <div className="flex gap-2">
-          <Skeleton className="h-9 w-32 rounded-md" />
-          <Skeleton className="h-9 w-32 rounded-md" />
-          <Skeleton className="h-9 w-24 rounded-md" />
+        <div className="flex flex-wrap gap-2">
+          <Skeleton className="min-h-11 w-40 rounded-md sm:min-h-9" />
+          <Skeleton className="min-h-11 w-36 rounded-md sm:min-h-9" />
+          <Skeleton className="min-h-11 w-[124px] rounded-md sm:min-h-9" />
         </div>
       </div>
 

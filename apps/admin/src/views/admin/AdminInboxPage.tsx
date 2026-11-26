@@ -92,24 +92,35 @@ export default function AdminInboxPage() {
         </Button>
       </div>
 
-      {listQuery.isLoading ? (
-        <Skeleton className="h-32 w-full" />
-      ) : listQuery.isError ? (
-        <ErrorState onRetry={() => listQuery.refetch()} />
-      ) : (
-        <DataTable
-          compact
-          columns={columns}
-          rows={items}
-          getRowKey={(r) => r.id}
-          emptyState={
-            <EmptyState
-              title="검수 대기 중인 초안이 없습니다."
-              description="URL 수동 투입으로 새 문서를 수집하거나 RSS 스케줄 수집을 기다려 주세요."
-            />
-          }
-        />
-      )}
+      <div className="min-h-[180px]">
+        {listQuery.isLoading ? (
+          <div
+            role="status"
+            aria-label="수집 대기열 불러오는 중"
+            className="space-y-2 rounded-lg border border-border bg-card p-3"
+          >
+            <Skeleton className="h-9 w-full" />
+            <Skeleton className="h-10 w-full" />
+            <Skeleton className="h-10 w-full" />
+            <span className="sr-only">수집 대기열을 불러오고 있습니다.</span>
+          </div>
+        ) : listQuery.isError ? (
+          <ErrorState onRetry={() => listQuery.refetch()} />
+        ) : (
+          <DataTable
+            compact
+            columns={columns}
+            rows={items}
+            getRowKey={(r) => r.id}
+            emptyState={
+              <EmptyState
+                title="검수 대기 중인 초안이 없습니다."
+                description="URL 수동 투입으로 새 문서를 수집하거나 RSS 스케줄 수집을 기다려 주세요."
+              />
+            }
+          />
+        )}
+      </div>
 
       <AdminReviewSplitView
         item={detailQuery.data?.data ?? null}

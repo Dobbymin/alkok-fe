@@ -7,11 +7,16 @@ function AuthCardSkeleton() {
     <div
       role="status"
       aria-label="비밀번호 재설정 화면 불러오는 중"
-      className="w-full max-w-md space-y-4 rounded-xl border border-border bg-card p-6"
+      className="w-full max-w-md space-y-4 rounded-xl border border-transparent bg-surface-sunken p-6 dark:border-border"
     >
-      <Skeleton className="h-7 w-40" />
-      <Skeleton className="h-4 w-56" />
-      <Skeleton className="h-10 w-full" />
+      <div className="space-y-1.5">
+        <Skeleton className="h-7 w-36" />
+        <Skeleton className="h-4 w-60" />
+      </div>
+      <div className="space-y-1.5">
+        <Skeleton className="h-4 w-14" />
+        <Skeleton className="h-10 w-full" />
+      </div>
       <Skeleton className="h-10 w-full" />
     </div>
   );

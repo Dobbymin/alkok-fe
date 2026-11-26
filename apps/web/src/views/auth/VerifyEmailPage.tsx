@@ -7,10 +7,12 @@ function VerifyCardSkeleton() {
     <div
       role="status"
       aria-label="이메일 인증 화면 불러오는 중"
-      className="w-full max-w-md space-y-4 rounded-xl border border-border bg-card p-6"
+      className="w-full max-w-md space-y-4 rounded-xl border border-transparent bg-surface-sunken p-6 dark:border-border"
     >
-      <Skeleton className="h-7 w-36" />
-      <Skeleton className="h-4 w-64" />
+      <div className="space-y-1.5">
+        <Skeleton className="h-7 w-28" />
+        <Skeleton className="h-4 w-64" />
+      </div>
       <Skeleton className="h-10 w-full" />
     </div>
   );

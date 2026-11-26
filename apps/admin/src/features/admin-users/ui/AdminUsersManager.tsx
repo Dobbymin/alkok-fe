@@ -129,22 +129,30 @@ export const AdminUsersManager = () => {
         />
       </FilterBar>
 
-      {isLoading ? (
-        <div className="flex flex-col gap-2">
-          <Skeleton className="h-10 w-full" />
-          <Skeleton className="h-10 w-full" />
-        </div>
-      ) : isError ? (
-        <ErrorState onRetry={() => refetch()} />
-      ) : (
-        <DataTable
-          compact
-          columns={columns}
-          rows={rows}
-          getRowKey={(r) => r.id}
-          emptyState={<EmptyState title="일치하는 회원이 없습니다." />}
-        />
-      )}
+      <div className="min-h-[160px]">
+        {isLoading ? (
+          <div
+            role="status"
+            aria-label="회원 목록 불러오는 중"
+            className="space-y-2 rounded-lg border border-border bg-card p-3"
+          >
+            <Skeleton className="h-9 w-full" />
+            <Skeleton className="h-10 w-full" />
+            <Skeleton className="h-10 w-full" />
+            <span className="sr-only">회원 목록을 불러오고 있습니다.</span>
+          </div>
+        ) : isError ? (
+          <ErrorState onRetry={() => refetch()} />
+        ) : (
+          <DataTable
+            compact
+            columns={columns}
+            rows={rows}
+            getRowKey={(r) => r.id}
+            emptyState={<EmptyState title="일치하는 회원이 없습니다." />}
+          />
+        )}
+      </div>
     </div>
   );
 };
