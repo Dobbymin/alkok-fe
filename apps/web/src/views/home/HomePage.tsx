@@ -58,13 +58,6 @@ export interface HomePageProps {
 const VALID_TABS = new Set<HomeCatalogTab>(["guides", "tools", "skills", "news"]);
 const DOMAIN_SLUG_SET = new Set<string>(WORK_DOMAINS.map((d) => d.slug));
 
-function parseTab(raw: string | null): HomeCatalogTab {
-  if (raw && VALID_TABS.has(raw as HomeCatalogTab)) {
-    return raw as HomeCatalogTab;
-  }
-  return "guides";
-}
-
 function matchesSearchText(
   q: string,
   parts: Array<string | null | undefined>,
@@ -132,7 +125,7 @@ export default function HomePage({ initialCatalog }: HomePageProps) {
     getServerSnapshot,
   );
 
-  const activeTab = parseTab(searchParams.get("tab"));
+  const rawTab = searchParams.get("tab");
   const activeDomainSlug = searchParams.get("domain") ?? "";
   const activeUseFilter = searchParams.get("use") ?? "";
   const urlQuery = searchParams.get("q") ?? "";
@@ -174,7 +167,7 @@ export default function HomePage({ initialCatalog }: HomePageProps) {
     (patch: Record<string, string | null>) => {
       const next = new URLSearchParams(searchParams.toString());
       for (const [key, value] of Object.entries(patch)) {
-        if (!value || (key === "tab" && value === "guides")) {
+        if (!value || (key === "tab" && value === "guides" && !next.get("domain"))) {
           next.delete(key);
         } else {
           next.set(key, value);
@@ -276,6 +269,25 @@ export default function HomePage({ initialCatalog }: HomePageProps) {
       ]);
     });
   }, [news, activeDomainSlug, activeUseFilter, savedOnly, savedContentIds, trimmedSearch]);
+
+  const activeTab: HomeCatalogTab = useMemo(() => {
+    if (rawTab && VALID_TABS.has(rawTab as HomeCatalogTab)) {
+      return rawTab as HomeCatalogTab;
+    }
+    if (activeDomainSlug && filteredGuides.length === 0) {
+      if (filteredSkills.length > 0) return "skills";
+      if (filteredTools.length > 0) return "tools";
+      if (filteredNews.length > 0) return "news";
+    }
+    return "guides";
+  }, [
+    rawTab,
+    activeDomainSlug,
+    filteredGuides.length,
+    filteredSkills.length,
+    filteredTools.length,
+    filteredNews.length,
+  ]);
 
   const activeDomain = DOMAIN_SLUG_SET.has(activeDomainSlug)
     ? WORK_DOMAINS.find((d) => d.slug === activeDomainSlug)

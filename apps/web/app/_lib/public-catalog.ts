@@ -90,14 +90,24 @@ export const fetchPublicShellCounts = cache(
     const catalog = await fetchHomeCatalog();
     const domains: Record<string, number> = {};
 
+    const seenByDomain: Record<string, Set<string>> = {};
     for (const domain of WORK_DOMAINS) {
       domains[domain.slug] = 0;
+      seenByDomain[domain.slug] = new Set<string>();
     }
 
-    for (const guide of catalog.guides) {
-      for (const cat of guide.categories ?? []) {
-        if (cat.slug in domains) {
-          domains[cat.slug] = (domains[cat.slug] ?? 0) + 1;
+    const allItems = [
+      ...catalog.guides,
+      ...catalog.tools,
+      ...(catalog.skills ?? []),
+      ...catalog.news,
+    ];
+    for (const item of allItems) {
+      for (const cat of item.categories ?? []) {
+        const seen = seenByDomain[cat.slug];
+        if (seen && !seen.has(item.id)) {
+          seen.add(item.id);
+          domains[cat.slug] = seen.size;
         }
       }
     }
