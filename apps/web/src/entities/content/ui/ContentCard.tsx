@@ -1,6 +1,7 @@
 import {
   ArrowRight,
   BookOpen,
+  Briefcase,
   FileText,
   MessageSquare,
   Newspaper,
@@ -35,6 +36,7 @@ const DOMAIN_ICON_MAP: Record<string, typeof FileText> = {
   "data-sheets": Table2,
   "planning-slides": Presentation,
   "content-design": Palette,
+  career: Briefcase,
 };
 
 function renderHeaderIcon(domainSlug: string | undefined, type: ContentType) {
