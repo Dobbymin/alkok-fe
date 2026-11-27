@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { NewsListPage } from "@/views/news";
-import { fetchHomeCatalog } from "../../_lib/public-catalog";
+import { fetchNewsCatalog } from "../../_lib/public-catalog";
 
 export const metadata: Metadata = {
   title: "AI 소식",
@@ -8,6 +8,6 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-  const catalog = await fetchHomeCatalog();
-  return <NewsListPage initialNews={catalog.news} />;
+  const res = await fetchNewsCatalog();
+  return <NewsListPage initialNews={res?.data ?? []} />;
 }

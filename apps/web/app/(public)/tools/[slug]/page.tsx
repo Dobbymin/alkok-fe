@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
-import { serverApiGet } from "@alkok/core/server";
 import { buildPageMetadata, buildToolJsonLd } from "@alkok/core";
-import type { ApiEnvelope, ToolDetailData } from "@alkok/core";
 import { JsonLdScript } from "@alkok/ui";
 import { ToolDetailPage } from "@/views/tools";
+import { fetchToolBySlug } from "../../../_lib/public-catalog";
 
 export async function generateMetadata({
   params,
@@ -11,10 +10,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const res = await serverApiGet<ApiEnvelope<ToolDetailData>>(
-    `/api/v1/tools/${slug}`,
-    { revalidate: 60 },
-  );
+  const res = await fetchToolBySlug(slug);
   if (!res?.data) {
     return { title: "AI 도구·모델 상세" };
   }
@@ -31,10 +27,7 @@ export default async function Page({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const res = await serverApiGet<ApiEnvelope<ToolDetailData>>(
-    `/api/v1/tools/${slug}`,
-    { revalidate: 60 },
-  );
+  const res = await fetchToolBySlug(slug);
   return (
     <>
       {res?.data ? <JsonLdScript data={buildToolJsonLd(res.data)} /> : null}

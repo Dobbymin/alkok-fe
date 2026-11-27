@@ -1,7 +1,6 @@
-"use client";
-
 import { WifiOff } from "lucide-react";
-import { Button, Card, CardContent, CardHeader, CardTitle } from "@alkok/ui";
+import { Card, CardContent, CardHeader, CardTitle } from "@alkok/ui";
+import { OfflineRetryButton } from "./OfflineRetryButton";
 
 export default function OfflinePage() {
   return (
@@ -16,7 +15,7 @@ export default function OfflinePage() {
             인터넷 연결이 끊겨 페이지를 불러올 수 없습니다. 연결을 확인한 뒤 다시 시도해 주세요.
           </p>
           <div>
-            <Button onClick={() => window.location.reload()}>다시 시도</Button>
+            <OfflineRetryButton />
           </div>
         </CardContent>
       </Card>

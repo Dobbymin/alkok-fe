@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { GuidesListPage } from "@/views/guides";
-import { fetchHomeCatalog } from "../../_lib/public-catalog";
+import { fetchGuidesCatalog } from "../../_lib/public-catalog";
 
 export const metadata: Metadata = {
   title: "업무 활용 가이드",
@@ -8,6 +8,6 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-  const catalog = await fetchHomeCatalog();
-  return <GuidesListPage initialGuides={catalog.guides} />;
+  const res = await fetchGuidesCatalog();
+  return <GuidesListPage initialGuides={res?.data ?? []} />;
 }

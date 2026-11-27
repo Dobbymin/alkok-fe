@@ -1,5 +1,3 @@
-"use client";
-
 import { AlertTriangle, CheckCircle2, XCircle } from "lucide-react";
 import type { SourceType, VerificationStatus } from "@alkok/core";
 import {

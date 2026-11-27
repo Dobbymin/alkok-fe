@@ -19,29 +19,35 @@ export async function syncLocalVaultToServer(
     return { syncedCount: 0, skippedCount: 0, failedCount: 0 };
   }
 
+  const outcomes = await Promise.all(
+    [...items].map(async (item): Promise<"synced" | "skipped" | "failed"> => {
+      try {
+        await vaultApi.createBookmark({
+          contentId: item.contentId,
+          ...(item.memo ? { memo: item.memo } : {}),
+        });
+        removeItem(item.contentId);
+        return "synced";
+      } catch (err) {
+        if (
+          err instanceof ApiError &&
+          (err.statusCode === 409 || err.statusCode === 404)
+        ) {
+          removeItem(item.contentId);
+          return "skipped";
+        }
+        return "failed";
+      }
+    }),
+  );
+
   let syncedCount = 0;
   let skippedCount = 0;
   let failedCount = 0;
-
-  for (const item of [...items]) {
-    try {
-      await vaultApi.createBookmark({
-        contentId: item.contentId,
-        ...(item.memo ? { memo: item.memo } : {}),
-      });
-      removeItem(item.contentId);
-      syncedCount += 1;
-    } catch (err) {
-      if (
-        err instanceof ApiError &&
-        (err.statusCode === 409 || err.statusCode === 404)
-      ) {
-        removeItem(item.contentId);
-        skippedCount += 1;
-      } else {
-        failedCount += 1;
-      }
-    }
+  for (const outcome of outcomes) {
+    if (outcome === "synced") syncedCount += 1;
+    else if (outcome === "skipped") skippedCount += 1;
+    else failedCount += 1;
   }
 
   if (syncedCount > 0 && queryClient) {
