@@ -143,4 +143,16 @@ describe("PublicShell, DesktopSidebar & MobileBottomTabs", () => {
     ).toBeInTheDocument();
     expect(screen.queryByRole("link", { name: "로그인" })).not.toBeInTheDocument();
   });
+
+  it("opens mobile menu sheet from the right side matching the right hamburger trigger", async () => {
+    const user = userEvent.setup();
+    renderShell("/");
+
+    await user.click(screen.getByRole("button", { name: "모바일 메뉴 열기" }));
+
+    const dialog = await screen.findByRole("dialog", { name: "메뉴" });
+    expect(dialog.className).toContain("end-0");
+    expect(dialog.className).toContain("border-s");
+    expect(dialog.className).not.toContain("start-0");
+  });
 });
