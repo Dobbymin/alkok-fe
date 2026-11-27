@@ -109,7 +109,7 @@ export const MobileHeader = ({ counts }: { counts?: PublicShellCounts }) => {
               />
             </Button>
           </SheetTrigger>
-          <SheetContent side="left" className="w-72">
+          <SheetContent side="right" className="w-72">
             <SheetHeader>
               <SheetTitle>메뉴</SheetTitle>
             </SheetHeader>
