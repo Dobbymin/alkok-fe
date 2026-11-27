@@ -1,9 +1,9 @@
 "use client";
 
 import { ShieldAlert } from "lucide-react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, type ReactNode } from "react";
-import { selectIsAuthenticated, useAuthStore } from "@alkok/core";
+import { getWebUrl, selectIsAuthenticated, useAuthStore } from "@alkok/core";
 import { Button, Card, CardContent, CardHeader, CardTitle, Skeleton } from "@alkok/ui";
 
 export interface AdminGuardProps {
@@ -15,29 +15,24 @@ export const AdminGuard = ({
   children,
   onRedirectToLogin,
 }: AdminGuardProps) => {
+  const router = useRouter();
   const user = useAuthStore((s) => s.user);
+  const logout = useAuthStore((s) => s.logout);
   const isAuthenticated = useAuthStore(selectIsAuthenticated);
   const isLoading = useAuthStore((s) => s.isLoading);
   const pathname = usePathname();
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
-      const normalized =
-        !pathname || pathname === "/"
-          ? "/admin"
-          : pathname.startsWith("/admin")
-            ? pathname
-            : `/admin${pathname}`;
+      const normalized = !pathname || pathname === "/" ? "/" : pathname;
       const loginUrl = `/login?next=${encodeURIComponent(normalized)}`;
       if (onRedirectToLogin) {
         onRedirectToLogin(loginUrl);
       } else {
-        // Cross-app redirect to apps/web (/login) outside basePath "/admin"
-        // eslint-disable-next-line @next/next/no-location-assign-relative-destination
-        window.location.assign(loginUrl);
+        router.replace(loginUrl);
       }
     }
-  }, [isAuthenticated, isLoading, onRedirectToLogin, pathname]);
+  }, [isAuthenticated, isLoading, onRedirectToLogin, pathname, router]);
 
   if (isLoading) {
     return (
@@ -117,10 +112,19 @@ export const AdminGuard = ({
             <p className="text-sm text-muted-foreground">
               관리자(ADMIN) 계정으로만 접근할 수 있는 화면입니다.
             </p>
-            <div>
-              <Button asChild size="sm">
-                {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
-                <a href="/">홈으로 돌아가기</a>
+            <div className="flex flex-wrap items-center gap-2">
+              <Button
+                type="button"
+                size="sm"
+                onClick={async () => {
+                  await logout();
+                  router.replace("/login");
+                }}
+              >
+                다른 계정으로 로그인
+              </Button>
+              <Button asChild variant="outline" size="sm">
+                <a href={getWebUrl()}>공개 웹으로 이동</a>
               </Button>
             </div>
           </CardContent>

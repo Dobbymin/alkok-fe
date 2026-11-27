@@ -62,8 +62,9 @@ jobs:
           push: true
           build-args: |
             APP_NAME=admin
-            NEXT_PUBLIC_API_BASE_URL=${{ secrets.NEXT_PUBLIC_API_BASE_URL || 'https://alkok.dobbymin.cloud' }}
-            NEXT_PUBLIC_SITE_URL=${{ secrets.NEXT_PUBLIC_SITE_URL || 'https://alkok.dobbymin.cloud' }}
+            NEXT_PUBLIC_API_BASE_URL=${{ secrets.NEXT_PUBLIC_ADMIN_API_BASE_URL || 'https://admin.dobbymin.cloud' }}
+            NEXT_PUBLIC_SITE_URL=${{ secrets.NEXT_PUBLIC_ADMIN_SITE_URL || 'https://admin.dobbymin.cloud' }}
+            NEXT_PUBLIC_WEB_URL=${{ secrets.NEXT_PUBLIC_SITE_URL || 'https://alkok.dobbymin.cloud' }}
           tags: |
             ${{ env.REGISTRY }}/${{ steps.meta.outputs.repo_lower }}-admin:${{ steps.meta.outputs.sha_tag }}
             ${{ env.REGISTRY }}/${{ steps.meta.outputs.repo_lower }}-admin:latest
@@ -136,7 +137,7 @@ jobs:
           }
 
           deploy_service "alkok-fe-web" "FE_WEB_IMAGE_TAG" "http://127.0.0.1:18101/"
-          deploy_service "alkok-fe-admin" "FE_ADMIN_IMAGE_TAG" "http://127.0.0.1:18103/admin"
+          deploy_service "alkok-fe-admin" "FE_ADMIN_IMAGE_TAG" "http://127.0.0.1:18103/login"
 
           if [ -n "${DISCORD_WEBHOOK_URL}" ]; then
             curl -fsS -H "Content-Type: application/json" \

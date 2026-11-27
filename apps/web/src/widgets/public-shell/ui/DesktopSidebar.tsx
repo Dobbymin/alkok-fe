@@ -4,7 +4,6 @@ import {
   CloudArrowUp,
   GearSix,
   MagnifyingGlass,
-  ShieldCheck,
   SidebarSimple,
   SignOut,
 } from "@phosphor-icons/react";
@@ -52,14 +51,6 @@ interface NavItem {
 
 const SettingsNavIcon = ({ active = false, className }: NavIconProps) => (
   <GearSix
-    className={cn("shrink-0", className)}
-    weight={active ? "duotone" : "regular"}
-    aria-hidden="true"
-  />
-);
-
-const AdminNavIcon = ({ active = false, className }: NavIconProps) => (
-  <ShieldCheck
     className={cn("shrink-0", className)}
     weight={active ? "duotone" : "regular"}
     aria-hidden="true"
@@ -307,16 +298,6 @@ export const DesktopSidebar = ({ counts }: { counts?: PublicShellCounts }) => {
           },
         ]
       : []),
-    ...(isAuthenticated && user?.role === "ADMIN"
-      ? [
-          {
-            href: "/admin",
-            label: "관리자 CMS",
-            icon: AdminNavIcon,
-            match: (p: string) => p.startsWith("/admin"),
-          },
-        ]
-      : []),
   ];
 
   const userInitial = user?.nickname?.slice(0, 1).toUpperCase() ?? "A";
@@ -531,14 +512,6 @@ export const DesktopSidebar = ({ counts }: { counts?: PublicShellCounts }) => {
                   설정
                 </Link>
               </DropdownMenuItem>
-              {user.role === "ADMIN" ? (
-                <DropdownMenuItem asChild>
-                  <Link href="/admin">
-                    <ShieldCheck className="h-4 w-4" weight="regular" aria-hidden="true" />
-                    관리자 CMS
-                  </Link>
-                </DropdownMenuItem>
-              ) : null}
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => logout()}>
                 <SignOut className="h-4 w-4" weight="regular" aria-hidden="true" />
