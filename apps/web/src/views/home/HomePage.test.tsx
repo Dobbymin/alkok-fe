@@ -120,6 +120,51 @@ const mockCatalog: HomeCatalogPayload = {
       limitations: ["무료 사용량 제한"],
     },
   ],
+  skills: [
+    {
+      id: "s1",
+      type: "SKILL",
+      slug: "plugin-jobstack",
+      title: "jobstack (한국 취업·이직 통합 코칭 플러그인)",
+      summary: "기업분석, 이력서·자소서 첨삭, 모의면접까지 16개 취업 스킬을 묶은 플러그인입니다.",
+      publishStatus: "PUBLISHED",
+      verificationStatus: "VALID",
+      verifiedAt: "2026-11-27T00:00:00.000Z",
+      sourceType: "COMMUNITY",
+      sourceUrl: "https://github.com/thesun4sky/jobstack",
+      helpfulCount: 0,
+      categories: [
+        {
+          id: "c3",
+          group: "WORK_DOMAIN",
+          slug: "career",
+          name: "취업·이직",
+          sortOrder: 7,
+        },
+      ],
+      skillKind: "PLUGIN",
+      skillSlug: "jobstack",
+      authorName: "thesun4sky",
+      license: "MIT",
+      repositoryUrl: "https://github.com/thesun4sky/jobstack",
+      executionVerification: "SOURCE_CHECKED",
+      difficulty: "PRACTICAL",
+      pricingModel: "FREE",
+      compatibleAgents: ["Claude Code", "Codex"],
+      overview: "취업 준비 통합 플러그인",
+      useCases: ["취업 준비"],
+      beforeAfter: { beforeItems: [], afterItems: [] },
+      workflowSteps: [],
+      prerequisites: [],
+      installGuides: [],
+      examplePrompts: [],
+      expectedOutputs: [],
+      postRunChecklist: [],
+      tips: [],
+      faq: [],
+      fileStructure: [],
+    },
+  ],
   news: [
     {
       id: "n1",
@@ -139,6 +184,7 @@ const mockCatalog: HomeCatalogPayload = {
   ],
   guidesTotal: 2,
   toolsTotal: 2,
+  skillsTotal: 1,
   newsTotal: 1,
 };
 
@@ -310,5 +356,21 @@ describe("HomePage", () => {
     expect(
       screen.queryByText("주간 보고서 10분 완성 가이드"),
     ).not.toBeInTheDocument();
+  });
+
+  it("auto-selects skills tab when domain filter has 0 guides and matching skills", () => {
+    mockSearchParams = new URLSearchParams("domain=career");
+    renderHome();
+
+    expect(
+      screen.getByRole("heading", { name: "취업·이직" }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: /스킬·플러그인/ })).toHaveAttribute(
+      "aria-selected",
+      "true",
+    );
+    expect(
+      screen.getByText("jobstack (한국 취업·이직 통합 코칭 플러그인)"),
+    ).toBeInTheDocument();
   });
 });
