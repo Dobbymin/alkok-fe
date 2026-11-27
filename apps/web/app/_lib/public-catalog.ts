@@ -5,18 +5,23 @@ import type {
   ApiEnvelope,
   ContentSummary,
   NewsDetailData,
+  SkillDetailData,
   ToolDetailData,
 } from "@alkok/core";
 import { serverApiGet } from "@alkok/core/server";
 
 export async function fetchHomeCatalog(): Promise<HomeCatalogPayload> {
-  const [guidesRes, toolsRes, newsRes] = await Promise.all([
+  const [guidesRes, toolsRes, skillsRes, newsRes] = await Promise.all([
     serverApiGet<ApiEnvelope<ContentSummary[]>>(
       "/api/v1/guides?limit=50&sort=recommended",
       { revalidate: 60 },
     ),
     serverApiGet<ApiEnvelope<ToolDetailData[]>>(
       "/api/v1/tools?limit=50&sort=recommended",
+      { revalidate: 60 },
+    ),
+    serverApiGet<ApiEnvelope<SkillDetailData[]>>(
+      "/api/v1/skills?limit=50&sort=recommended",
       { revalidate: 60 },
     ),
     serverApiGet<ApiEnvelope<NewsDetailData[]>>("/api/v1/news?limit=50", {
@@ -27,9 +32,11 @@ export async function fetchHomeCatalog(): Promise<HomeCatalogPayload> {
   return {
     guides: guidesRes?.data ?? [],
     tools: toolsRes?.data ?? [],
+    skills: skillsRes?.data ?? [],
     news: newsRes?.data ?? [],
     guidesTotal: guidesRes?.meta?.total ?? guidesRes?.data?.length ?? 0,
     toolsTotal: toolsRes?.meta?.total ?? toolsRes?.data?.length ?? 0,
+    skillsTotal: skillsRes?.meta?.total ?? skillsRes?.data?.length ?? 0,
     newsTotal: newsRes?.meta?.total ?? newsRes?.data?.length ?? 0,
   };
 }
@@ -53,6 +60,7 @@ export async function fetchPublicShellCounts(): Promise<PublicShellCounts> {
   return {
     guides: catalog.guidesTotal ?? catalog.guides.length,
     tools: catalog.toolsTotal ?? catalog.tools.length,
+    skills: catalog.skillsTotal ?? catalog.skills?.length ?? 0,
     news: catalog.newsTotal ?? catalog.news.length,
     domains,
   };

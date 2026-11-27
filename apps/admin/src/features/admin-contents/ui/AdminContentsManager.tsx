@@ -166,6 +166,7 @@ export const AdminContentsManager = () => {
             <SelectItem value="ALL">전체 유형</SelectItem>
             <SelectItem value="GUIDE">GUIDE</SelectItem>
             <SelectItem value="TOOL">TOOL</SelectItem>
+            <SelectItem value="SKILL">SKILL</SelectItem>
             <SelectItem value="NEWS">NEWS</SelectItem>
           </SelectContent>
         </Select>

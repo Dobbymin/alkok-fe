@@ -1,180 +1,2462 @@
 {
   "openapi": "3.1.0",
-  "info": {
-    "title": "Alkok API",
-    "version": "1.0.0",
-    "description": "알콕(Alkok) 백엔드 REST API 계약 스냅샷"
-  },
-  "servers": [{ "url": "/api/v1" }],
   "paths": {
     "/api/health": {
       "get": {
-        "operationId": "getHealth",
+        "operationId": "HealthController_check",
+        "parameters": [],
         "responses": {
           "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": { "status": { "type": "string" } },
-                  "required": ["status"]
-                }
-              }
-            }
+            "description": ""
           }
-        }
+        },
+        "tags": [
+          "Health"
+        ]
       }
     },
-    "/api/v1/auth/login": {
+    "/api/v1/auth/signup": {
       "post": {
-        "operationId": "login",
+        "operationId": "AuthController_signup",
+        "parameters": [],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "email": { "type": "string" },
-                  "password": { "type": "string" }
-                },
-                "required": ["email", "password"]
+                "$ref": "#/components/schemas/SignupDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/v1/auth/verify-email": {
+      "post": {
+        "operationId": "AuthController_verifyEmail",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VerifyEmailDto"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Logged in",
-            "content": {
-              "application/json": {
-                "schema": { "$ref": "#/components/schemas/AuthResponseEnvelope" }
+            "description": ""
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/v1/auth/resend-verification": {
+      "post": {
+        "operationId": "AuthController_resendVerification",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResendVerificationDto"
               }
             }
           }
-        }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/v1/auth/login": {
+      "post": {
+        "operationId": "AuthController_login",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
       }
     },
     "/api/v1/auth/refresh": {
       "post": {
-        "operationId": "refresh",
+        "operationId": "AuthController_refresh",
+        "parameters": [],
         "responses": {
           "200": {
-            "description": "Refreshed",
-            "content": {
-              "application/json": {
-                "schema": { "$ref": "#/components/schemas/AuthResponseEnvelope" }
-              }
-            }
+            "description": ""
           }
-        }
+        },
+        "tags": [
+          "Auth"
+        ]
       }
     },
     "/api/v1/auth/logout": {
       "post": {
-        "operationId": "logout",
-        "responses": { "204": { "description": "Logged out" } }
+        "operationId": "AuthController_logout",
+        "parameters": [],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/v1/auth/password-reset/request": {
+      "post": {
+        "operationId": "AuthController_requestPasswordReset",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PasswordResetRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/v1/auth/password-reset/confirm": {
+      "post": {
+        "operationId": "AuthController_confirmPasswordReset",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PasswordResetConfirmDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
       }
     },
     "/api/v1/users/me": {
       "get": {
-        "operationId": "getMe",
+        "operationId": "UsersController_getMe",
+        "parameters": [],
         "responses": {
           "200": {
-            "description": "Current user",
-            "content": {
-              "application/json": {
-                "schema": { "$ref": "#/components/schemas/UserProfileEnvelope" }
+            "description": ""
+          }
+        },
+        "tags": [
+          "Users"
+        ]
+      },
+      "delete": {
+        "operationId": "UsersController_deleteMe",
+        "parameters": [],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/api/v1/users/me/profile": {
+      "patch": {
+        "operationId": "UsersController_updateProfile",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProfileDto"
               }
             }
           }
-        }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/api/v1/users/me/interests": {
+      "put": {
+        "operationId": "UsersController_updateInterests",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateInterestsDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/api/v1/users/me/password": {
+      "patch": {
+        "operationId": "UsersController_updatePassword",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePasswordDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/api/v1/taxonomies": {
+      "get": {
+        "operationId": "getTaxonomies",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "업무 도메인·AI 용도·인기 태그 조회",
+        "tags": [
+          "taxonomies"
+        ]
+      }
+    },
+    "/api/v1/admin/contents": {
+      "get": {
+        "operationId": "adminListContents",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "관리자 콘텐츠 목록",
+        "tags": [
+          "admin-contents"
+        ]
+      },
+      "post": {
+        "operationId": "adminCreateContent",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAdminContentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "관리자 콘텐츠 직접 등록",
+        "tags": [
+          "admin-contents"
+        ]
+      }
+    },
+    "/api/v1/admin/contents/{id}": {
+      "patch": {
+        "operationId": "adminUpdateContent",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAdminContentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "관리자 콘텐츠 수정",
+        "tags": [
+          "admin-contents"
+        ]
+      },
+      "delete": {
+        "operationId": "adminDeleteContent",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "콘텐츠 Soft Delete",
+        "tags": [
+          "admin-contents"
+        ]
+      }
+    },
+    "/api/v1/admin/contents/{id}/verify": {
+      "post": {
+        "operationId": "adminVerifyContent",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "콘텐츠 확인 완료(VALID) 갱신",
+        "tags": [
+          "admin-contents"
+        ]
+      }
+    },
+    "/api/v1/admin/contents/{id}/archive": {
+      "post": {
+        "operationId": "adminArchiveContent",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "콘텐츠 노출 중단(ARCHIVED)",
+        "tags": [
+          "admin-contents"
+        ]
+      }
+    },
+    "/api/v1/admin/users": {
+      "get": {
+        "operationId": "adminListUsers",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "관리자 회원 목록 검색",
+        "tags": [
+          "admin-users"
+        ]
+      }
+    },
+    "/api/v1/admin/users/{id}/role": {
+      "patch": {
+        "operationId": "adminUpdateUserRole",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserRoleDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "회원 역할 변경",
+        "tags": [
+          "admin-users"
+        ]
+      }
+    },
+    "/api/v1/admin/users/{id}/status": {
+      "patch": {
+        "operationId": "adminUpdateUserStatus",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserStatusDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "회원 상태 변경",
+        "tags": [
+          "admin-users"
+        ]
+      }
+    },
+    "/api/v1/admin/ai-usage": {
+      "get": {
+        "operationId": "adminListAiUsage",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "내부 AI 토큰·비용 이력 조회",
+        "tags": [
+          "admin-ai-usage"
+        ]
+      }
+    },
+    "/api/v1/admin/inbox": {
+      "get": {
+        "operationId": "adminListInbox",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "검수 대기(DRAFT/IN_REVIEW) 목록",
+        "tags": [
+          "admin-inbox"
+        ]
+      }
+    },
+    "/api/v1/admin/inbox/{id}": {
+      "get": {
+        "operationId": "adminGetInboxDetail",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "원문+초안 2단 검수 상세",
+        "tags": [
+          "admin-inbox"
+        ]
+      }
+    },
+    "/api/v1/admin/inbox/{id}/approve": {
+      "post": {
+        "operationId": "adminApproveInbox",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApproveInboxDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "초안 수정 반영 및 원클릭 공개",
+        "tags": [
+          "admin-inbox"
+        ]
+      }
+    },
+    "/api/v1/admin/inbox/{id}/reject": {
+      "post": {
+        "operationId": "adminRejectInbox",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RejectInboxDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "초안 반려 처리",
+        "tags": [
+          "admin-inbox"
+        ]
+      }
+    },
+    "/api/v1/admin/reports": {
+      "get": {
+        "operationId": "adminListReports",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "오류 제보 목록 조회",
+        "tags": [
+          "admin-reports"
+        ]
+      }
+    },
+    "/api/v1/admin/reports/{id}": {
+      "patch": {
+        "operationId": "adminUpdateReport",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateReportStatusDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "오류 제보 상태 처리",
+        "tags": [
+          "admin-reports"
+        ]
+      }
+    },
+    "/api/v1/admin/dashboard": {
+      "get": {
+        "operationId": "adminGetDashboard",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "관리자 운영 대시보드 요약",
+        "tags": [
+          "admin-dashboard"
+        ]
+      }
+    },
+    "/api/v1/admin/sources": {
+      "get": {
+        "operationId": "adminListSources",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "수집 출처 목록",
+        "tags": [
+          "admin-sources"
+        ]
+      },
+      "post": {
+        "operationId": "adminCreateSource",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSourceDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "수집 출처 등록",
+        "tags": [
+          "admin-sources"
+        ]
+      }
+    },
+    "/api/v1/admin/sources/{id}": {
+      "patch": {
+        "operationId": "adminUpdateSource",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSourceDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "수집 출처 수정",
+        "tags": [
+          "admin-sources"
+        ]
+      },
+      "delete": {
+        "operationId": "adminDeleteSource",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "수집 출처 Soft Delete",
+        "tags": [
+          "admin-sources"
+        ]
+      }
+    },
+    "/api/v1/admin/sources/{id}/fetch": {
+      "post": {
+        "operationId": "adminTriggerSourceFetch",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "출처 즉시 수집 Job 생성",
+        "tags": [
+          "admin-sources"
+        ]
+      }
+    },
+    "/api/v1/admin/inbox/manual-url": {
+      "post": {
+        "operationId": "adminManualUrl",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ManualUrlDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "관리자 URL 수동 투입 및 AI 초안 Job 생성",
+        "tags": [
+          "admin-ingestion"
+        ]
+      }
+    },
+    "/api/v1/admin/jobs": {
+      "get": {
+        "operationId": "adminListJobs",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "비동기 JobRun 이력 조회",
+        "tags": [
+          "admin-ingestion"
+        ]
+      }
+    },
+    "/api/v1/home": {
+      "get": {
+        "operationId": "getHome",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "홈 통합 데이터 조회",
+        "tags": [
+          "home"
+        ]
       }
     },
     "/api/v1/guides": {
       "get": {
         "operationId": "listGuides",
-        "responses": { "200": { "description": "Guide list" } }
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "업무 활용 가이드 목록",
+        "tags": [
+          "guides"
+        ]
+      }
+    },
+    "/api/v1/guides/{slug}": {
+      "get": {
+        "operationId": "getGuideBySlug",
+        "parameters": [
+          {
+            "name": "slug",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GuideDetailEnvelopeResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "업무 활용 가이드 상세",
+        "tags": [
+          "guides"
+        ]
       }
     },
     "/api/v1/tools": {
       "get": {
         "operationId": "listTools",
-        "responses": { "200": { "description": "Tool list" } }
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "AI 도구·모델 목록",
+        "tags": [
+          "tools"
+        ]
+      }
+    },
+    "/api/v1/tools/compare": {
+      "get": {
+        "operationId": "compareTools",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "AI 도구·모델 최대 4개 비교표",
+        "tags": [
+          "tools"
+        ]
+      }
+    },
+    "/api/v1/tools/{slug}": {
+      "get": {
+        "operationId": "getToolBySlug",
+        "parameters": [
+          {
+            "name": "slug",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "AI 도구·모델 상세",
+        "tags": [
+          "tools"
+        ]
       }
     },
     "/api/v1/news": {
       "get": {
         "operationId": "listNews",
-        "responses": { "200": { "description": "News list" } }
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "AI 소식 목록",
+        "tags": [
+          "news"
+        ]
+      }
+    },
+    "/api/v1/news/{slug}": {
+      "get": {
+        "operationId": "getNewsBySlug",
+        "parameters": [
+          {
+            "name": "slug",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "AI 소식 상세",
+        "tags": [
+          "news"
+        ]
+      }
+    },
+    "/api/v1/skills": {
+      "get": {
+        "operationId": "listSkills",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "플러그인·스킬·MCP 목록",
+        "tags": [
+          "skills"
+        ]
+      }
+    },
+    "/api/v1/skills/{slug}": {
+      "get": {
+        "operationId": "getSkillBySlug",
+        "parameters": [
+          {
+            "name": "slug",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SkillDetailEnvelopeResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "플러그인·스킬·MCP 상세",
+        "tags": [
+          "skills"
+        ]
+      }
+    },
+    "/api/v1/search": {
+      "get": {
+        "operationId": "search",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "한국어 하이브리드 통합 검색",
+        "tags": [
+          "search"
+        ]
+      }
+    },
+    "/api/v1/search/suggest": {
+      "get": {
+        "operationId": "searchSuggest",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Cmd/Ctrl+K 퀵 서치 자동완성(상위 8건)",
+        "tags": [
+          "search"
+        ]
+      }
+    },
+    "/api/v1/vault/preview-url": {
+      "post": {
+        "operationId": "previewVaultUrl",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PreviewUrlDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "외부 URL OG 메타 파싱 (SSRF 방어 + Fallback)",
+        "tags": [
+          "vault"
+        ]
       }
     },
     "/api/v1/vault/items": {
       "get": {
         "operationId": "listVaultItems",
-        "responses": { "200": { "description": "Vault items" } }
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "보관함 항목 목록",
+        "tags": [
+          "vault"
+        ]
       }
     },
-    "/api/v1/admin/dashboard": {
+    "/api/v1/vault/items/bookmark": {
+      "post": {
+        "operationId": "createVaultBookmark",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBookmarkDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "알콕 콘텐츠 북마크 저장",
+        "tags": [
+          "vault"
+        ]
+      }
+    },
+    "/api/v1/vault/items/external-url": {
+      "post": {
+        "operationId": "createVaultExternalUrl",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateExternalUrlDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "외부 URL 저장",
+        "tags": [
+          "vault"
+        ]
+      }
+    },
+    "/api/v1/vault/items/{id}": {
+      "patch": {
+        "operationId": "updateVaultItem",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateVaultItemDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "보관함 항목 수정",
+        "tags": [
+          "vault"
+        ]
+      },
+      "delete": {
+        "operationId": "deleteVaultItem",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "보관함 항목 Hard Delete",
+        "tags": [
+          "vault"
+        ]
+      }
+    },
+    "/api/v1/vault/folders": {
       "get": {
-        "operationId": "getAdminDashboard",
-        "responses": { "200": { "description": "Admin dashboard" } }
+        "operationId": "listVaultFolders",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "보관함 폴더 목록",
+        "tags": [
+          "vault"
+        ]
+      },
+      "post": {
+        "operationId": "createVaultFolder",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateVaultFolderDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "보관함 폴더 생성",
+        "tags": [
+          "vault"
+        ]
+      }
+    },
+    "/api/v1/vault/folders/{id}": {
+      "patch": {
+        "operationId": "updateVaultFolder",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateVaultFolderDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "보관함 폴더 수정",
+        "tags": [
+          "vault"
+        ]
+      },
+      "delete": {
+        "operationId": "deleteVaultFolder",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "보관함 폴더 삭제",
+        "tags": [
+          "vault"
+        ]
+      }
+    },
+    "/api/v1/vault/tags": {
+      "get": {
+        "operationId": "listVaultTags",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "보관함 태그 목록",
+        "tags": [
+          "vault"
+        ]
+      }
+    },
+    "/api/v1/vault/tags/{id}": {
+      "delete": {
+        "operationId": "deleteVaultTag",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "보관함 태그 삭제",
+        "tags": [
+          "vault"
+        ]
+      }
+    },
+    "/api/v1/contents/{id}/helpful": {
+      "post": {
+        "operationId": "markContentHelpful",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "콘텐츠 도움됨 등록",
+        "tags": [
+          "engagement"
+        ]
+      },
+      "delete": {
+        "operationId": "unmarkContentHelpful",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "콘텐츠 도움됨 취소",
+        "tags": [
+          "engagement"
+        ]
+      }
+    },
+    "/api/v1/contents/{id}/reports": {
+      "post": {
+        "operationId": "submitContentReport",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubmitReportDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "summary": "정보 오류/최신화 제보",
+        "tags": [
+          "engagement"
+        ]
       }
     }
   },
+  "info": {
+    "title": "Alkok API",
+    "description": "알콕(Alkok) 백엔드 REST API 계약 명세",
+    "version": "1.0.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
   "components": {
+    "securitySchemes": {
+      "bearer": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http"
+      },
+      "cookie": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "alkok_rt"
+      }
+    },
     "schemas": {
-      "UserRole": { "type": "string", "enum": ["USER", "ADMIN"] },
-      "UserStatus": {
-        "type": "string",
-        "enum": ["PENDING_VERIFICATION", "ACTIVE", "SUSPENDED"]
+      "SignupDto": {
+        "type": "object",
+        "properties": {}
       },
-      "ContentType": { "type": "string", "enum": ["GUIDE", "TOOL", "NEWS"] },
-      "PublishStatus": {
-        "type": "string",
-        "enum": ["DRAFT", "IN_REVIEW", "PUBLISHED", "REJECTED", "ARCHIVED"]
+      "VerifyEmailDto": {
+        "type": "object",
+        "properties": {}
       },
-      "VerificationStatus": {
-        "type": "string",
-        "enum": ["VALID", "NEEDS_REVIEW", "EXPIRED"]
+      "ResendVerificationDto": {
+        "type": "object",
+        "properties": {}
       },
-      "SourceType": {
-        "type": "string",
-        "enum": ["OFFICIAL", "MEDIA", "COMMUNITY"]
+      "LoginDto": {
+        "type": "object",
+        "properties": {}
       },
-      "UserProfile": {
+      "PasswordResetRequestDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "PasswordResetConfirmDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "UpdateProfileDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "UpdateInterestsDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "UpdatePasswordDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "CreateAdminContentDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "UpdateAdminContentDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "UpdateUserRoleDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "UpdateUserStatusDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "ApproveInboxDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "RejectInboxDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "UpdateReportStatusDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "CreateSourceDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "UpdateSourceDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "ManualUrlDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "GuidePromptDto": {
         "type": "object",
         "properties": {
-          "id": { "type": "string" },
-          "email": { "type": "string" },
-          "nickname": { "type": "string" },
-          "role": { "$ref": "#/components/schemas/UserRole" },
-          "status": { "$ref": "#/components/schemas/UserStatus" },
-          "interestCategorySlugs": { "type": "array", "items": { "type": "string" } }
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "variables": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "variableExamples": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "변수별 입력 예시 매핑"
+          },
+          "expectedOutput": {
+            "type": "string"
+          },
+          "tips": {
+            "type": "string"
+          }
         },
-        "required": ["id", "email", "nickname", "role", "status"]
+        "required": [
+          "id",
+          "title",
+          "content",
+          "variables"
+        ]
       },
-      "AuthResponseEnvelope": {
+      "GuideBeforeAfterExampleDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "beforeInput": {
+            "type": "string"
+          },
+          "afterOutput": {
+            "type": "string"
+          },
+          "improvementPoints": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "beforeInput",
+          "afterOutput",
+          "improvementPoints"
+        ]
+      },
+      "GuideCommonMistakeDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "SECURITY",
+              "HALLUCINATION",
+              "FREE_LIMIT",
+              "WORKFLOW"
+            ]
+          },
+          "title": {
+            "type": "string"
+          },
+          "mistake": {
+            "type": "string"
+          },
+          "prevention": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "category",
+          "title",
+          "mistake",
+          "prevention"
+        ]
+      },
+      "GuideTocItemDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "level": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "text",
+          "level"
+        ]
+      },
+      "GuideDetailResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "summary": {
+            "type": "string"
+          },
+          "publishStatus": {
+            "type": "string"
+          },
+          "verificationStatus": {
+            "type": "string"
+          },
+          "verifiedAt": {
+            "type": "object",
+            "nullable": true
+          },
+          "publishedAt": {
+            "type": "object",
+            "nullable": true
+          },
+          "sourceType": {
+            "type": "string"
+          },
+          "sourceUrl": {
+            "type": "string"
+          },
+          "sourceName": {
+            "type": "object",
+            "nullable": true
+          },
+          "helpfulCount": {
+            "type": "number"
+          },
+          "isFeatured": {
+            "type": "boolean"
+          },
+          "isBookmarked": {
+            "type": "boolean"
+          },
+          "isHelpful": {
+            "type": "boolean"
+          },
+          "difficulty": {
+            "type": "string",
+            "enum": [
+              "BEGINNER",
+              "PRACTICAL",
+              "ADVANCED"
+            ]
+          },
+          "estimatedMinutes": {
+            "type": "object",
+            "nullable": true
+          },
+          "pricingModel": {
+            "type": "string",
+            "enum": [
+              "FREE",
+              "FREEMIUM",
+              "PAID"
+            ]
+          },
+          "markdownBody": {
+            "type": "string"
+          },
+          "prompts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GuidePromptDto"
+            }
+          },
+          "beforeAfterExamples": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GuideBeforeAfterExampleDto"
+            }
+          },
+          "commonMistakes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GuideCommonMistakeDto"
+            }
+          },
+          "verificationChecklist": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "cautions": {
+            "type": "object",
+            "nullable": true
+          },
+          "toc": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GuideTocItemDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "type",
+          "slug",
+          "title",
+          "summary",
+          "publishStatus",
+          "verificationStatus",
+          "sourceType",
+          "sourceUrl",
+          "helpfulCount",
+          "isFeatured",
+          "isBookmarked",
+          "isHelpful",
+          "difficulty",
+          "pricingModel",
+          "markdownBody",
+          "prompts",
+          "beforeAfterExamples",
+          "commonMistakes",
+          "verificationChecklist",
+          "toc"
+        ]
+      },
+      "GuideDetailEnvelopeResponseDto": {
         "type": "object",
         "properties": {
           "data": {
-            "type": "object",
-            "properties": {
-              "accessToken": { "type": "string" },
-              "user": { "$ref": "#/components/schemas/UserProfile" }
-            },
-            "required": ["accessToken", "user"]
+            "$ref": "#/components/schemas/GuideDetailResponseDto"
           }
         },
-        "required": ["data"]
+        "required": [
+          "data"
+        ]
       },
-      "UserProfileEnvelope": {
+      "SkillBeforeAfterDto": {
         "type": "object",
         "properties": {
-          "data": { "$ref": "#/components/schemas/UserProfile" }
+          "beforeItems": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "afterItems": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
         },
-        "required": ["data"]
+        "required": [
+          "beforeItems",
+          "afterItems"
+        ]
+      },
+      "SkillWorkflowStepDto": {
+        "type": "object",
+        "properties": {
+          "step": {
+            "type": "number"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "badge": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "step",
+          "title",
+          "description"
+        ]
+      },
+      "SkillPrerequisiteDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "required": {
+            "type": "boolean"
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "required",
+          "description"
+        ]
+      },
+      "SkillInstallGuideDto": {
+        "type": "object",
+        "properties": {
+          "environment": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "steps": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "command": {
+            "type": "string"
+          },
+          "invokeExample": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "environment",
+          "label",
+          "steps"
+        ]
+      },
+      "SkillExamplePromptDto": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "prompt": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "label",
+          "prompt"
+        ]
+      },
+      "SkillExpectedOutputDto": {
+        "type": "object",
+        "properties": {
+          "order": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "order",
+          "title",
+          "description"
+        ]
+      },
+      "SkillFaqItemDto": {
+        "type": "object",
+        "properties": {
+          "question": {
+            "type": "string"
+          },
+          "answer": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "question",
+          "answer"
+        ]
+      },
+      "SkillWebAlternativeDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "recommendedTools": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "guideSlug": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "description",
+          "recommendedTools"
+        ]
+      },
+      "SkillDetailResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "summary": {
+            "type": "string"
+          },
+          "publishStatus": {
+            "type": "string"
+          },
+          "verificationStatus": {
+            "type": "string"
+          },
+          "verifiedAt": {
+            "type": "object",
+            "nullable": true
+          },
+          "publishedAt": {
+            "type": "object",
+            "nullable": true
+          },
+          "sourceType": {
+            "type": "string"
+          },
+          "sourceUrl": {
+            "type": "string"
+          },
+          "sourceName": {
+            "type": "object",
+            "nullable": true
+          },
+          "helpfulCount": {
+            "type": "number"
+          },
+          "isFeatured": {
+            "type": "boolean"
+          },
+          "isBookmarked": {
+            "type": "boolean"
+          },
+          "isHelpful": {
+            "type": "boolean"
+          },
+          "skillKind": {
+            "type": "string",
+            "enum": [
+              "SKILL",
+              "PLUGIN",
+              "MCP"
+            ]
+          },
+          "skillSlug": {
+            "type": "string"
+          },
+          "authorName": {
+            "type": "string"
+          },
+          "license": {
+            "type": "object",
+            "nullable": true
+          },
+          "repositoryUrl": {
+            "type": "string"
+          },
+          "sourceFileUrl": {
+            "type": "object",
+            "nullable": true
+          },
+          "executionVerification": {
+            "type": "string",
+            "enum": [
+              "VERIFIED",
+              "SOURCE_CHECKED",
+              "UNVERIFIED"
+            ]
+          },
+          "difficulty": {
+            "type": "string",
+            "enum": [
+              "BEGINNER",
+              "PRACTICAL",
+              "ADVANCED"
+            ]
+          },
+          "pricingModel": {
+            "type": "string",
+            "enum": [
+              "FREE",
+              "FREEMIUM",
+              "PAID"
+            ]
+          },
+          "compatibleAgents": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "overview": {
+            "type": "string"
+          },
+          "useCases": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "beforeAfter": {
+            "$ref": "#/components/schemas/SkillBeforeAfterDto"
+          },
+          "workflowSteps": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SkillWorkflowStepDto"
+            }
+          },
+          "prerequisites": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SkillPrerequisiteDto"
+            }
+          },
+          "installPrompt": {
+            "type": "object",
+            "nullable": true
+          },
+          "installGuides": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SkillInstallGuideDto"
+            }
+          },
+          "examplePrompts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SkillExamplePromptDto"
+            }
+          },
+          "expectedOutputs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SkillExpectedOutputDto"
+            }
+          },
+          "postRunChecklist": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "tips": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "cautions": {
+            "type": "object",
+            "nullable": true
+          },
+          "faq": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SkillFaqItemDto"
+            }
+          },
+          "fileStructure": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "skillMdPreview": {
+            "type": "object",
+            "nullable": true
+          },
+          "webAlternative": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SkillWebAlternativeDto"
+              }
+            ]
+          },
+          "toc": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GuideTocItemDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "type",
+          "slug",
+          "title",
+          "summary",
+          "publishStatus",
+          "verificationStatus",
+          "sourceType",
+          "sourceUrl",
+          "helpfulCount",
+          "isFeatured",
+          "isBookmarked",
+          "isHelpful",
+          "skillKind",
+          "skillSlug",
+          "authorName",
+          "repositoryUrl",
+          "executionVerification",
+          "difficulty",
+          "pricingModel",
+          "compatibleAgents",
+          "overview",
+          "useCases",
+          "beforeAfter",
+          "workflowSteps",
+          "prerequisites",
+          "installGuides",
+          "examplePrompts",
+          "expectedOutputs",
+          "postRunChecklist",
+          "tips",
+          "faq",
+          "fileStructure",
+          "toc"
+        ]
+      },
+      "SkillDetailEnvelopeResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/SkillDetailResponseDto"
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "PreviewUrlDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "CreateBookmarkDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "CreateExternalUrlDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "UpdateVaultItemDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "CreateVaultFolderDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "UpdateVaultFolderDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "SubmitReportDto": {
+        "type": "object",
+        "properties": {}
       }
     }
   }

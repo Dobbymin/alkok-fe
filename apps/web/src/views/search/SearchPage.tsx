@@ -85,6 +85,7 @@ export default function SearchPage() {
           <TabsTrigger value="ALL">전체</TabsTrigger>
           <TabsTrigger value="GUIDE">업무 가이드</TabsTrigger>
           <TabsTrigger value="TOOL">도구·모델</TabsTrigger>
+          <TabsTrigger value="SKILL">스킬·플러그인</TabsTrigger>
           <TabsTrigger value="NEWS">AI 소식</TabsTrigger>
           {isAuthenticated ? (
             <TabsTrigger value="VAULT">내 보관함</TabsTrigger>

@@ -23,12 +23,14 @@ import { useSearchSuggest } from "../model/useQuickSearch";
 const TYPE_PATH: Record<ContentType, { prefix: string; label: string }> = {
   GUIDE: { prefix: "/guides", label: "가이드" },
   TOOL: { prefix: "/tools", label: "도구" },
+  SKILL: { prefix: "/skills", label: "스킬·플러그인" },
   NEWS: { prefix: "/news", label: "소식" },
 };
 
 const QUICK_LINKS = [
   { href: "/guides", label: "업무 활용 가이드" },
   { href: "/tools", label: "AI 도구·모델 디렉터리" },
+  { href: "/skills", label: "플러그인 · 스킬 · MCP" },
   { href: "/tools/compare", label: "AI 도구 비교하기" },
   { href: "/news", label: "최신 AI 소식" },
 ] as const;

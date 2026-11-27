@@ -13,6 +13,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${siteUrl}/`, lastModified: now, changeFrequency: "daily", priority: 1.0 },
     { url: `${siteUrl}/guides`, lastModified: now, changeFrequency: "daily", priority: 0.9 },
     { url: `${siteUrl}/tools`, lastModified: now, changeFrequency: "daily", priority: 0.9 },
+    { url: `${siteUrl}/skills`, lastModified: now, changeFrequency: "daily", priority: 0.9 },
     { url: `${siteUrl}/news`, lastModified: now, changeFrequency: "daily", priority: 0.8 },
   ];
 
@@ -30,9 +31,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     return collected;
   };
 
-  const [guides, tools, news] = await Promise.all([
+  const [guides, tools, skills, news] = await Promise.all([
     fetchAllPublished("/api/v1/guides"),
     fetchAllPublished("/api/v1/tools"),
+    fetchAllPublished("/api/v1/skills"),
     fetchAllPublished("/api/v1/news"),
   ]);
 
@@ -53,6 +55,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...staticRoutes,
     ...toEntries(guides, "/guides"),
     ...toEntries(tools, "/tools"),
+    ...toEntries(skills, "/skills"),
     ...toEntries(news, "/news"),
   ];
 }

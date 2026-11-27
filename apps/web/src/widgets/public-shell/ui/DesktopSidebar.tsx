@@ -8,6 +8,7 @@ import {
   Newspaper,
   PanelLeftClose,
   PanelLeftOpen,
+  Puzzle,
   Scale,
   Search,
   Settings,
@@ -70,6 +71,12 @@ const EXPLORE_NAV: readonly NavItem[] = [
     label: "도구 비교",
     icon: Scale,
     match: (p) => p.startsWith("/tools/compare"),
+  },
+  {
+    href: "/skills",
+    label: "스킬·플러그인",
+    icon: Puzzle,
+    match: (p) => p.startsWith("/skills"),
   },
   {
     href: "/news",
@@ -255,6 +262,9 @@ export const DesktopSidebar = ({ counts }: { counts?: PublicShellCounts }) => {
   const exploreItems: NavItem[] = EXPLORE_NAV.map((item) => {
     if (item.href === "/guides" && counts) return { ...item, count: counts.guides };
     if (item.href === "/tools" && counts) return { ...item, count: counts.tools };
+    if (item.href === "/skills" && counts && typeof counts.skills === "number") {
+      return { ...item, count: counts.skills };
+    }
     if (item.href === "/news" && counts) return { ...item, count: counts.news };
     return item;
   });

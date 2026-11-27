@@ -11,9 +11,57 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get: operations["getHealth"];
+        get: operations["HealthController_check"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/signup": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AuthController_signup"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/verify-email": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AuthController_verifyEmail"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/resend-verification": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AuthController_resendVerification"];
         delete?: never;
         options?: never;
         head?: never;
@@ -29,7 +77,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        post: operations["login"];
+        post: operations["AuthController_login"];
         delete?: never;
         options?: never;
         head?: never;
@@ -45,7 +93,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        post: operations["refresh"];
+        post: operations["AuthController_refresh"];
         delete?: never;
         options?: never;
         head?: never;
@@ -61,7 +109,39 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        post: operations["logout"];
+        post: operations["AuthController_logout"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/password-reset/request": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AuthController_requestPasswordReset"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/password-reset/confirm": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AuthController_confirmPasswordReset"];
         delete?: never;
         options?: never;
         head?: never;
@@ -75,7 +155,433 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get: operations["getMe"];
+        get: operations["UsersController_getMe"];
+        put?: never;
+        post?: never;
+        delete: operations["UsersController_deleteMe"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/users/me/profile": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["UsersController_updateProfile"];
+        trace?: never;
+    };
+    "/api/v1/users/me/interests": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["UsersController_updateInterests"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/users/me/password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["UsersController_updatePassword"];
+        trace?: never;
+    };
+    "/api/v1/taxonomies": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 업무 도메인·AI 용도·인기 태그 조회 */
+        get: operations["getTaxonomies"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/contents": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 관리자 콘텐츠 목록 */
+        get: operations["adminListContents"];
+        put?: never;
+        /** 관리자 콘텐츠 직접 등록 */
+        post: operations["adminCreateContent"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/contents/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** 콘텐츠 Soft Delete */
+        delete: operations["adminDeleteContent"];
+        options?: never;
+        head?: never;
+        /** 관리자 콘텐츠 수정 */
+        patch: operations["adminUpdateContent"];
+        trace?: never;
+    };
+    "/api/v1/admin/contents/{id}/verify": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** 콘텐츠 확인 완료(VALID) 갱신 */
+        post: operations["adminVerifyContent"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/contents/{id}/archive": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** 콘텐츠 노출 중단(ARCHIVED) */
+        post: operations["adminArchiveContent"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/users": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 관리자 회원 목록 검색 */
+        get: operations["adminListUsers"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/users/{id}/role": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** 회원 역할 변경 */
+        patch: operations["adminUpdateUserRole"];
+        trace?: never;
+    };
+    "/api/v1/admin/users/{id}/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** 회원 상태 변경 */
+        patch: operations["adminUpdateUserStatus"];
+        trace?: never;
+    };
+    "/api/v1/admin/ai-usage": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 내부 AI 토큰·비용 이력 조회 */
+        get: operations["adminListAiUsage"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/inbox": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 검수 대기(DRAFT/IN_REVIEW) 목록 */
+        get: operations["adminListInbox"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/inbox/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 원문+초안 2단 검수 상세 */
+        get: operations["adminGetInboxDetail"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/inbox/{id}/approve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** 초안 수정 반영 및 원클릭 공개 */
+        post: operations["adminApproveInbox"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/inbox/{id}/reject": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** 초안 반려 처리 */
+        post: operations["adminRejectInbox"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/reports": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 오류 제보 목록 조회 */
+        get: operations["adminListReports"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/reports/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** 오류 제보 상태 처리 */
+        patch: operations["adminUpdateReport"];
+        trace?: never;
+    };
+    "/api/v1/admin/dashboard": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 관리자 운영 대시보드 요약 */
+        get: operations["adminGetDashboard"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/sources": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 수집 출처 목록 */
+        get: operations["adminListSources"];
+        put?: never;
+        /** 수집 출처 등록 */
+        post: operations["adminCreateSource"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/sources/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** 수집 출처 Soft Delete */
+        delete: operations["adminDeleteSource"];
+        options?: never;
+        head?: never;
+        /** 수집 출처 수정 */
+        patch: operations["adminUpdateSource"];
+        trace?: never;
+    };
+    "/api/v1/admin/sources/{id}/fetch": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** 출처 즉시 수집 Job 생성 */
+        post: operations["adminTriggerSourceFetch"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/inbox/manual-url": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** 관리자 URL 수동 투입 및 AI 초안 Job 생성 */
+        post: operations["adminManualUrl"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/jobs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 비동기 JobRun 이력 조회 */
+        get: operations["adminListJobs"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/home": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 홈 통합 데이터 조회 */
+        get: operations["getHome"];
         put?: never;
         post?: never;
         delete?: never;
@@ -91,7 +597,25 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /** 업무 활용 가이드 목록 */
         get: operations["listGuides"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/guides/{slug}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 업무 활용 가이드 상세 */
+        get: operations["getGuideBySlug"];
         put?: never;
         post?: never;
         delete?: never;
@@ -107,7 +631,42 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /** AI 도구·모델 목록 */
         get: operations["listTools"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/tools/compare": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** AI 도구·모델 최대 4개 비교표 */
+        get: operations["compareTools"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/tools/{slug}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** AI 도구·모델 상세 */
+        get: operations["getToolBySlug"];
         put?: never;
         post?: never;
         delete?: never;
@@ -123,9 +682,112 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /** AI 소식 목록 */
         get: operations["listNews"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/news/{slug}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** AI 소식 상세 */
+        get: operations["getNewsBySlug"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/skills": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 플러그인·스킬·MCP 목록 */
+        get: operations["listSkills"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/skills/{slug}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 플러그인·스킬·MCP 상세 */
+        get: operations["getSkillBySlug"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/search": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 한국어 하이브리드 통합 검색 */
+        get: operations["search"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/search/suggest": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Cmd/Ctrl+K 퀵 서치 자동완성(상위 8건) */
+        get: operations["searchSuggest"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/vault/preview-url": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** 외부 URL OG 메타 파싱 (SSRF 방어 + Fallback) */
+        post: operations["previewVaultUrl"];
         delete?: never;
         options?: never;
         head?: never;
@@ -139,6 +801,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /** 보관함 항목 목록 */
         get: operations["listVaultItems"];
         put?: never;
         post?: never;
@@ -148,16 +811,157 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/admin/dashboard": {
+    "/api/v1/vault/items/bookmark": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        get: operations["getAdminDashboard"];
+        get?: never;
+        put?: never;
+        /** 알콕 콘텐츠 북마크 저장 */
+        post: operations["createVaultBookmark"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/vault/items/external-url": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** 외부 URL 저장 */
+        post: operations["createVaultExternalUrl"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/vault/items/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
         put?: never;
         post?: never;
+        /** 보관함 항목 Hard Delete */
+        delete: operations["deleteVaultItem"];
+        options?: never;
+        head?: never;
+        /** 보관함 항목 수정 */
+        patch: operations["updateVaultItem"];
+        trace?: never;
+    };
+    "/api/v1/vault/folders": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 보관함 폴더 목록 */
+        get: operations["listVaultFolders"];
+        put?: never;
+        /** 보관함 폴더 생성 */
+        post: operations["createVaultFolder"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/vault/folders/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** 보관함 폴더 삭제 */
+        delete: operations["deleteVaultFolder"];
+        options?: never;
+        head?: never;
+        /** 보관함 폴더 수정 */
+        patch: operations["updateVaultFolder"];
+        trace?: never;
+    };
+    "/api/v1/vault/tags": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 보관함 태그 목록 */
+        get: operations["listVaultTags"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/vault/tags/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** 보관함 태그 삭제 */
+        delete: operations["deleteVaultTag"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/contents/{id}/helpful": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** 콘텐츠 도움됨 등록 */
+        post: operations["markContentHelpful"];
+        /** 콘텐츠 도움됨 취소 */
+        delete: operations["unmarkContentHelpful"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/contents/{id}/reports": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** 정보 오류/최신화 제보 */
+        post: operations["submitContentReport"];
         delete?: never;
         options?: never;
         head?: never;
@@ -168,35 +972,190 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
-        /** @enum {string} */
-        UserRole: "USER" | "ADMIN";
-        /** @enum {string} */
-        UserStatus: "PENDING_VERIFICATION" | "ACTIVE" | "SUSPENDED";
-        /** @enum {string} */
-        ContentType: "GUIDE" | "TOOL" | "NEWS";
-        /** @enum {string} */
-        PublishStatus: "DRAFT" | "IN_REVIEW" | "PUBLISHED" | "REJECTED" | "ARCHIVED";
-        /** @enum {string} */
-        VerificationStatus: "VALID" | "NEEDS_REVIEW" | "EXPIRED";
-        /** @enum {string} */
-        SourceType: "OFFICIAL" | "MEDIA" | "COMMUNITY";
-        UserProfile: {
+        SignupDto: Record<string, never>;
+        VerifyEmailDto: Record<string, never>;
+        ResendVerificationDto: Record<string, never>;
+        LoginDto: Record<string, never>;
+        PasswordResetRequestDto: Record<string, never>;
+        PasswordResetConfirmDto: Record<string, never>;
+        UpdateProfileDto: Record<string, never>;
+        UpdateInterestsDto: Record<string, never>;
+        UpdatePasswordDto: Record<string, never>;
+        CreateAdminContentDto: Record<string, never>;
+        UpdateAdminContentDto: Record<string, never>;
+        UpdateUserRoleDto: Record<string, never>;
+        UpdateUserStatusDto: Record<string, never>;
+        ApproveInboxDto: Record<string, never>;
+        RejectInboxDto: Record<string, never>;
+        UpdateReportStatusDto: Record<string, never>;
+        CreateSourceDto: Record<string, never>;
+        UpdateSourceDto: Record<string, never>;
+        ManualUrlDto: Record<string, never>;
+        GuidePromptDto: {
             id: string;
-            email: string;
-            nickname: string;
-            role: components["schemas"]["UserRole"];
-            status: components["schemas"]["UserStatus"];
-            interestCategorySlugs?: string[];
-        };
-        AuthResponseEnvelope: {
-            data: {
-                accessToken: string;
-                user: components["schemas"]["UserProfile"];
+            title: string;
+            content: string;
+            variables: string[];
+            /** @description 변수별 입력 예시 매핑 */
+            variableExamples?: {
+                [key: string]: string;
             };
+            expectedOutput?: string;
+            tips?: string;
         };
-        UserProfileEnvelope: {
-            data: components["schemas"]["UserProfile"];
+        GuideBeforeAfterExampleDto: {
+            id: string;
+            title: string;
+            beforeInput: string;
+            afterOutput: string;
+            improvementPoints: string[];
         };
+        GuideCommonMistakeDto: {
+            id: string;
+            /** @enum {string} */
+            category: "SECURITY" | "HALLUCINATION" | "FREE_LIMIT" | "WORKFLOW";
+            title: string;
+            mistake: string;
+            prevention: string;
+        };
+        GuideTocItemDto: {
+            id: string;
+            text: string;
+            level: number;
+        };
+        GuideDetailResponseDto: {
+            id: string;
+            type: string;
+            slug: string;
+            title: string;
+            summary: string;
+            publishStatus: string;
+            verificationStatus: string;
+            verifiedAt?: Record<string, never> | null;
+            publishedAt?: Record<string, never> | null;
+            sourceType: string;
+            sourceUrl: string;
+            sourceName?: Record<string, never> | null;
+            helpfulCount: number;
+            isFeatured: boolean;
+            isBookmarked: boolean;
+            isHelpful: boolean;
+            /** @enum {string} */
+            difficulty: "BEGINNER" | "PRACTICAL" | "ADVANCED";
+            estimatedMinutes?: Record<string, never> | null;
+            /** @enum {string} */
+            pricingModel: "FREE" | "FREEMIUM" | "PAID";
+            markdownBody: string;
+            prompts: components["schemas"]["GuidePromptDto"][];
+            beforeAfterExamples: components["schemas"]["GuideBeforeAfterExampleDto"][];
+            commonMistakes: components["schemas"]["GuideCommonMistakeDto"][];
+            verificationChecklist: string[];
+            cautions?: Record<string, never> | null;
+            toc: components["schemas"]["GuideTocItemDto"][];
+        };
+        GuideDetailEnvelopeResponseDto: {
+            data: components["schemas"]["GuideDetailResponseDto"];
+        };
+        SkillBeforeAfterDto: {
+            beforeItems: string[];
+            afterItems: string[];
+        };
+        SkillWorkflowStepDto: {
+            step: number;
+            title: string;
+            description: string;
+            badge?: string;
+        };
+        SkillPrerequisiteDto: {
+            name: string;
+            required: boolean;
+            description: string;
+        };
+        SkillInstallGuideDto: {
+            environment: string;
+            label: string;
+            steps: string[];
+            command?: string;
+            invokeExample?: string;
+        };
+        SkillExamplePromptDto: {
+            label: string;
+            prompt: string;
+        };
+        SkillExpectedOutputDto: {
+            order: string;
+            title: string;
+            description: string;
+        };
+        SkillFaqItemDto: {
+            question: string;
+            answer: string;
+        };
+        SkillWebAlternativeDto: {
+            title: string;
+            description: string;
+            recommendedTools: string[];
+            guideSlug?: string;
+        };
+        SkillDetailResponseDto: {
+            id: string;
+            type: string;
+            slug: string;
+            title: string;
+            summary: string;
+            publishStatus: string;
+            verificationStatus: string;
+            verifiedAt?: Record<string, never> | null;
+            publishedAt?: Record<string, never> | null;
+            sourceType: string;
+            sourceUrl: string;
+            sourceName?: Record<string, never> | null;
+            helpfulCount: number;
+            isFeatured: boolean;
+            isBookmarked: boolean;
+            isHelpful: boolean;
+            /** @enum {string} */
+            skillKind: "SKILL" | "PLUGIN" | "MCP";
+            skillSlug: string;
+            authorName: string;
+            license?: Record<string, never> | null;
+            repositoryUrl: string;
+            sourceFileUrl?: Record<string, never> | null;
+            /** @enum {string} */
+            executionVerification: "VERIFIED" | "SOURCE_CHECKED" | "UNVERIFIED";
+            /** @enum {string} */
+            difficulty: "BEGINNER" | "PRACTICAL" | "ADVANCED";
+            /** @enum {string} */
+            pricingModel: "FREE" | "FREEMIUM" | "PAID";
+            compatibleAgents: string[];
+            overview: string;
+            useCases: string[];
+            beforeAfter: components["schemas"]["SkillBeforeAfterDto"];
+            workflowSteps: components["schemas"]["SkillWorkflowStepDto"][];
+            prerequisites: components["schemas"]["SkillPrerequisiteDto"][];
+            installPrompt?: Record<string, never> | null;
+            installGuides: components["schemas"]["SkillInstallGuideDto"][];
+            examplePrompts: components["schemas"]["SkillExamplePromptDto"][];
+            expectedOutputs: components["schemas"]["SkillExpectedOutputDto"][];
+            postRunChecklist: string[];
+            tips: string[];
+            cautions?: Record<string, never> | null;
+            faq: components["schemas"]["SkillFaqItemDto"][];
+            fileStructure: string[];
+            skillMdPreview?: Record<string, never> | null;
+            webAlternative?: components["schemas"]["SkillWebAlternativeDto"] | null;
+            toc: components["schemas"]["GuideTocItemDto"][];
+        };
+        SkillDetailEnvelopeResponseDto: {
+            data: components["schemas"]["SkillDetailResponseDto"];
+        };
+        PreviewUrlDto: Record<string, never>;
+        CreateBookmarkDto: Record<string, never>;
+        CreateExternalUrlDto: Record<string, never>;
+        UpdateVaultItemDto: Record<string, never>;
+        CreateVaultFolderDto: Record<string, never>;
+        UpdateVaultFolderDto: Record<string, never>;
+        SubmitReportDto: Record<string, never>;
     };
     responses: never;
     parameters: never;
@@ -206,7 +1165,7 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
-    getHealth: {
+    HealthController_check: {
         parameters: {
             query?: never;
             header?: never;
@@ -215,20 +1174,15 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description OK */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": {
-                        status: string;
-                    };
-                };
+                content?: never;
             };
         };
     };
-    login: {
+    AuthController_signup: {
         parameters: {
             query?: never;
             header?: never;
@@ -237,25 +1191,82 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": {
-                    email: string;
-                    password: string;
-                };
+                "application/json": components["schemas"]["SignupDto"];
             };
         };
         responses: {
-            /** @description Logged in */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AuthController_verifyEmail: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VerifyEmailDto"];
+            };
+        };
+        responses: {
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": components["schemas"]["AuthResponseEnvelope"];
-                };
+                content?: never;
             };
         };
     };
-    refresh: {
+    AuthController_resendVerification: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ResendVerificationDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AuthController_login: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LoginDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AuthController_refresh: {
         parameters: {
             query?: never;
             header?: never;
@@ -264,18 +1275,15 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Refreshed */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": components["schemas"]["AuthResponseEnvelope"];
-                };
+                content?: never;
             };
         };
     };
-    logout: {
+    AuthController_logout: {
         parameters: {
             query?: never;
             header?: never;
@@ -284,7 +1292,6 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Logged out */
             204: {
                 headers: {
                     [name: string]: unknown;
@@ -293,7 +1300,49 @@ export interface operations {
             };
         };
     };
-    getMe: {
+    AuthController_requestPasswordReset: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PasswordResetRequestDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AuthController_confirmPasswordReset: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PasswordResetConfirmDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    UsersController_getMe: {
         parameters: {
             query?: never;
             header?: never;
@@ -302,14 +1351,599 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Current user */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": components["schemas"]["UserProfileEnvelope"];
+                content?: never;
+            };
+        };
+    };
+    UsersController_deleteMe: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
                 };
+                content?: never;
+            };
+        };
+    };
+    UsersController_updateProfile: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateProfileDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    UsersController_updateInterests: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateInterestsDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    UsersController_updatePassword: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdatePasswordDto"];
+            };
+        };
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getTaxonomies: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    adminListContents: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    adminCreateContent: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateAdminContentDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    adminDeleteContent: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    adminUpdateContent: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateAdminContentDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    adminVerifyContent: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    adminArchiveContent: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    adminListUsers: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    adminUpdateUserRole: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateUserRoleDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    adminUpdateUserStatus: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateUserStatusDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    adminListAiUsage: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    adminListInbox: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    adminGetInboxDetail: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    adminApproveInbox: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ApproveInboxDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    adminRejectInbox: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RejectInboxDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    adminListReports: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    adminUpdateReport: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateReportStatusDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    adminGetDashboard: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    adminListSources: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    adminCreateSource: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateSourceDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    adminDeleteSource: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    adminUpdateSource: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateSourceDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    adminTriggerSourceFetch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    adminManualUrl: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ManualUrlDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    adminListJobs: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getHome: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };
@@ -322,12 +1956,32 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Guide list */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+        };
+    };
+    getGuideBySlug: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GuideDetailEnvelopeResponseDto"];
+                };
             };
         };
     };
@@ -340,7 +1994,42 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Tool list */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    compareTools: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getToolBySlug: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -358,7 +2047,118 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description News list */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getNewsBySlug: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    listSkills: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getSkillBySlug: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SkillDetailEnvelopeResponseDto"];
+                };
+            };
+        };
+    };
+    search: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    searchSuggest: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    previewVaultUrl: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PreviewUrlDto"];
+            };
+        };
+        responses: {
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -376,7 +2176,6 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Vault items */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -385,7 +2184,91 @@ export interface operations {
             };
         };
     };
-    getAdminDashboard: {
+    createVaultBookmark: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateBookmarkDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    createVaultExternalUrl: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateExternalUrlDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    deleteVaultItem: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    updateVaultItem: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateVaultItemDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    listVaultFolders: {
         parameters: {
             query?: never;
             header?: never;
@@ -394,8 +2277,167 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Admin dashboard */
             200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    createVaultFolder: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateVaultFolderDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    deleteVaultFolder: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    updateVaultFolder: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateVaultFolderDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    listVaultTags: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    deleteVaultTag: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    markContentHelpful: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    unmarkContentHelpful: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    submitContentReport: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SubmitReportDto"];
+            };
+        };
+        responses: {
+            201: {
                 headers: {
                     [name: string]: unknown;
                 };

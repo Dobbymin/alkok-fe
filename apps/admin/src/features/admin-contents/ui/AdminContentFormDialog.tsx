@@ -8,6 +8,7 @@ import type {
   KoreanSupportLevel,
   PricingModel,
   PublishStatus,
+  SkillKind,
   SourceType,
   ToolKind,
 } from "@alkok/core";
@@ -65,6 +66,15 @@ export const AdminContentFormDialog = ({
   const [koreanSupport, setKoreanSupport] = useState<KoreanSupportLevel>("FULL");
   const [keyPointsRaw, setKeyPointsRaw] = useState("");
   const [workImpact, setWorkImpact] = useState("");
+  const [skillKind, setSkillKind] = useState<SkillKind>("SKILL");
+  const [skillSlug, setSkillSlug] = useState("");
+  const [authorName, setAuthorName] = useState("");
+  const [license, setLicense] = useState("");
+  const [compatibleAgentsRaw, setCompatibleAgentsRaw] = useState("");
+  const [overview, setOverview] = useState("");
+  const [installPrompt, setInstallPrompt] = useState("");
+  const [useCasesRaw, setUseCasesRaw] = useState("");
+  const [tipsRaw, setTipsRaw] = useState("");
   const [tagsRaw, setTagsRaw] = useState("");
 
   const handleSubmit = async (e: FormEvent) => {
@@ -112,6 +122,26 @@ export const AdminContentFormDialog = ({
         .filter(Boolean)
         .slice(0, 3);
       payload.workImpact = workImpact.trim();
+    } else if (type === "SKILL") {
+      payload.skillKind = skillKind;
+      payload.skillSlug = skillSlug.trim() || undefined;
+      payload.authorName = authorName.trim() || undefined;
+      payload.license = license.trim() || undefined;
+      payload.repositoryUrl = sourceUrl.trim();
+      payload.compatibleAgents = compatibleAgentsRaw
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean);
+      payload.overview = overview.trim() || summary.trim();
+      payload.installPrompt = installPrompt.trim() || undefined;
+      payload.useCases = useCasesRaw
+        .split("\n")
+        .map((s) => s.trim())
+        .filter(Boolean);
+      payload.tips = tipsRaw
+        .split("\n")
+        .map((s) => s.trim())
+        .filter(Boolean);
     }
 
     await onSubmit(payload);
@@ -144,6 +174,7 @@ export const AdminContentFormDialog = ({
                 <SelectContent>
                   <SelectItem value="GUIDE">업무 가이드</SelectItem>
                   <SelectItem value="TOOL">도구·모델</SelectItem>
+                  <SelectItem value="SKILL">플러그인·스킬·MCP</SelectItem>
                   <SelectItem value="NEWS">AI 소식</SelectItem>
                 </SelectContent>
               </Select>
@@ -335,6 +366,100 @@ export const AdminContentFormDialog = ({
                   value={workImpact}
                   onChange={(e) => setWorkImpact(e.target.value)}
                   placeholder="실무 직장인에게 어떤 변화가 있는지 요약하세요."
+                />
+              </FieldGroup>
+            </div>
+          ) : null}
+
+          {type === "SKILL" ? (
+            <div className="flex flex-col gap-3 rounded-md border border-border bg-muted/30 p-3">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+                <FieldGroup label="세부 유형">
+                  <Select
+                    value={skillKind}
+                    onValueChange={(v) => setSkillKind(v as SkillKind)}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="SKILL">에이전트 스킬</SelectItem>
+                      <SelectItem value="PLUGIN">플러그인</SelectItem>
+                      <SelectItem value="MCP">MCP 서버</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </FieldGroup>
+                <FieldGroup htmlFor="skill-slug" label="스킬 슬러그">
+                  <Input
+                    id="skill-slug"
+                    value={skillSlug}
+                    onChange={(e) => setSkillSlug(e.target.value)}
+                    placeholder="humanize-korean"
+                  />
+                </FieldGroup>
+                <FieldGroup htmlFor="skill-author" label="제작자">
+                  <Input
+                    id="skill-author"
+                    value={authorName}
+                    onChange={(e) => setAuthorName(e.target.value)}
+                    placeholder="epoko77-ai"
+                  />
+                </FieldGroup>
+              </div>
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                <FieldGroup htmlFor="skill-license" label="라이선스">
+                  <Input
+                    id="skill-license"
+                    value={license}
+                    onChange={(e) => setLicense(e.target.value)}
+                    placeholder="MIT"
+                  />
+                </FieldGroup>
+                <FieldGroup
+                  htmlFor="skill-agents"
+                  label="호환 에이전트 (쉼표 구분)"
+                >
+                  <Input
+                    id="skill-agents"
+                    value={compatibleAgentsRaw}
+                    onChange={(e) => setCompatibleAgentsRaw(e.target.value)}
+                    placeholder="Claude Code, Codex, Cursor"
+                  />
+                </FieldGroup>
+              </div>
+              <FieldGroup htmlFor="skill-overview" label="상세 개요">
+                <Textarea
+                  id="skill-overview"
+                  value={overview}
+                  onChange={(e) => setOverview(e.target.value)}
+                  placeholder="어떤 상황에서 왜 필요한 스킬·플러그인인지 설명하세요."
+                />
+              </FieldGroup>
+              <FieldGroup
+                htmlFor="skill-install-prompt"
+                label="자연어 설치 요청 프롬프트"
+              >
+                <Textarea
+                  id="skill-install-prompt"
+                  value={installPrompt}
+                  onChange={(e) => setInstallPrompt(e.target.value)}
+                  placeholder="에이전트에 붙여넣을 설치 요청문을 입력하세요."
+                />
+              </FieldGroup>
+              <FieldGroup htmlFor="skill-use-cases" label="활용 상황 (줄바꿈 구분)">
+                <Textarea
+                  id="skill-use-cases"
+                  value={useCasesRaw}
+                  onChange={(e) => setUseCasesRaw(e.target.value)}
+                  placeholder="이럴 때 써보세요 항목을 줄바꿈으로 입력하세요."
+                />
+              </FieldGroup>
+              <FieldGroup htmlFor="skill-tips" label="실무 팁 (줄바꿈 구분)">
+                <Textarea
+                  id="skill-tips"
+                  value={tipsRaw}
+                  onChange={(e) => setTipsRaw(e.target.value)}
+                  placeholder="실무 팁을 줄바꿈으로 입력하세요."
                 />
               </FieldGroup>
             </div>

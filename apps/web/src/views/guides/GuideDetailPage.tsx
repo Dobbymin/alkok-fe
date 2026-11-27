@@ -1,4 +1,10 @@
-import { AlertTriangle, Clock, ExternalLink } from "lucide-react";
+import {
+  AlertTriangle,
+  CheckCircle2,
+  Clock,
+  ExternalLink,
+  ShieldAlert,
+} from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { ContentCard, VerificationBadge } from "@/entities/content";
@@ -7,13 +13,32 @@ import { DIFFICULTY_LABELS } from "@/entities/taxonomy";
 import { HelpfulButton } from "@/features/content-helpful";
 import { ReportModal } from "@/features/content-report";
 import { BookmarkAction } from "@/features/vault-save";
-import type { GuideDetailData, PricingModel } from "@alkok/core";
-import { Badge, Button, Card, CardContent, CardHeader, ErrorState } from "@alkok/ui";
+import type {
+  GuideDetailData,
+  GuideMistakeCategory,
+  PricingModel,
+} from "@alkok/core";
+import {
+  Badge,
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  ErrorState,
+} from "@alkok/ui";
 
 const PRICING_LABELS: Record<PricingModel, string> = {
   FREE: "무료",
   FREEMIUM: "무료+유료",
   PAID: "유료",
+};
+
+const MISTAKE_CATEGORY_LABELS: Record<GuideMistakeCategory, string> = {
+  SECURITY: "보안 주의",
+  HALLUCINATION: "환각 방지",
+  FREE_LIMIT: "무료 한도",
+  WORKFLOW: "워크플로",
 };
 
 export interface GuideDetailPageProps {
@@ -41,7 +66,25 @@ export default function GuideDetailPage({
     );
   }
 
-  const headings = guide.toc ?? [];
+  const beforeAfterExamples = guide.beforeAfterExamples ?? [];
+  const commonMistakes = guide.commonMistakes ?? [];
+  const verificationChecklist = guide.verificationChecklist ?? [];
+
+  const headings = [
+    ...(guide.toc ?? []),
+    ...(guide.prompts.length > 0
+      ? [{ id: "prompts", text: "바로 쓰는 프롬프트", level: 2 }]
+      : []),
+    ...(beforeAfterExamples.length > 0
+      ? [{ id: "before-after", text: "Before / After 실행 예시", level: 2 }]
+      : []),
+    ...(commonMistakes.length > 0
+      ? [{ id: "common-mistakes", text: "자주 하는 실수와 예방법", level: 2 }]
+      : []),
+    ...(verificationChecklist.length > 0
+      ? [{ id: "verification-checklist", text: "결과 확인 체크리스트", level: 2 }]
+      : []),
+  ];
 
   return (
     <div className="flex flex-col gap-8 lg:flex-row">
@@ -101,7 +144,7 @@ export default function GuideDetailPage({
 
         {/* 3. Prompt Copy Blocks */}
         {guide.prompts.length > 0 ? (
-          <section className="flex flex-col gap-4">
+          <section id="prompts" className="scroll-mt-20 flex flex-col gap-4">
             <h2 className="text-xl font-bold tracking-tight">바로 쓰는 프롬프트</h2>
             {guide.prompts.map((prompt) => (
               <PromptCopyBlock
@@ -109,8 +152,133 @@ export default function GuideDetailPage({
                 title={prompt.title}
                 content={prompt.content ?? prompt.prompt ?? ""}
                 variables={prompt.variables ?? []}
+                variableExamples={prompt.variableExamples}
+                expectedOutput={prompt.expectedOutput}
+                tips={prompt.tips}
               />
             ))}
+          </section>
+        ) : null}
+
+        {/* 3.5 Before / After Examples */}
+        {beforeAfterExamples.length > 0 ? (
+          <section id="before-after" className="scroll-mt-20 flex flex-col gap-4">
+            <h2 className="text-xl font-bold tracking-tight">
+              Before / After 실행 예시
+            </h2>
+            <div className="flex flex-col gap-4">
+              {beforeAfterExamples.map((ex) => (
+                <Card key={ex.id}>
+                  <CardHeader>
+                    <CardTitle as="h3" className="text-base">
+                      {ex.title}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="flex flex-col gap-3">
+                    <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+                      <div className="rounded-lg border border-border bg-surface-sunken p-3">
+                        <p className="text-xs font-semibold text-muted-foreground">
+                          Before (원본 입력)
+                        </p>
+                        <p className="mt-1.5 whitespace-pre-wrap text-xs leading-[1.6] text-muted-foreground">
+                          {ex.beforeInput}
+                        </p>
+                      </div>
+                      <div className="rounded-lg border border-primary/30 bg-card p-3">
+                        <p className="text-xs font-semibold text-primary">
+                          After (AI 적용 결과)
+                        </p>
+                        <p className="mt-1.5 whitespace-pre-wrap text-xs leading-[1.6] text-foreground">
+                          {ex.afterOutput}
+                        </p>
+                      </div>
+                    </div>
+                    {(ex.improvementPoints ?? []).length > 0 ? (
+                      <div className="flex flex-wrap items-center gap-1.5">
+                        <span className="text-xs font-medium text-muted-foreground">
+                          개선 포인트:
+                        </span>
+                        {ex.improvementPoints.map((pt, idx) => (
+                          <Badge key={idx} variant="secondary">
+                            {pt}
+                          </Badge>
+                        ))}
+                      </div>
+                    ) : null}
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </section>
+        ) : null}
+
+        {/* 3.6 Common Mistakes */}
+        {commonMistakes.length > 0 ? (
+          <section id="common-mistakes" className="scroll-mt-20 flex flex-col gap-4">
+            <h2 className="flex items-center gap-2 text-xl font-bold tracking-tight">
+              <ShieldAlert
+                className="h-5 w-5 text-status-review-fg"
+                strokeWidth={1.75}
+                aria-hidden="true"
+              />
+              <span>자주 하는 실수와 예방법</span>
+            </h2>
+            <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+              {commonMistakes.map((m) => (
+                <Card key={m.id}>
+                  <CardHeader className="gap-2 pb-2">
+                    <div className="flex items-center justify-between gap-2">
+                      <Badge variant="outline">
+                        {MISTAKE_CATEGORY_LABELS[m.category] ?? m.category}
+                      </Badge>
+                    </div>
+                    <CardTitle as="h3" className="text-sm">
+                      {m.title}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="flex flex-col gap-2 text-xs leading-[1.6]">
+                    <p className="text-muted-foreground">
+                      <span className="font-semibold text-foreground">실수: </span>
+                      {m.mistake}
+                    </p>
+                    <p className="rounded-md bg-surface-sunken p-2.5 text-foreground">
+                      <span className="font-semibold text-primary">예방: </span>
+                      {m.prevention}
+                    </p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </section>
+        ) : null}
+
+        {/* 3.7 Verification Checklist */}
+        {verificationChecklist.length > 0 ? (
+          <section
+            id="verification-checklist"
+            className="scroll-mt-20 flex flex-col gap-3"
+          >
+            <Card>
+              <CardHeader>
+                <CardTitle as="h2" className="flex items-center gap-2 text-base">
+                  <CheckCircle2
+                    className="h-4 w-4 text-primary"
+                    strokeWidth={1.75}
+                    aria-hidden="true"
+                  />
+                  <span>결과 확인 체크리스트</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ol className="list-decimal space-y-2 pl-5 text-sm text-foreground">
+                  {verificationChecklist.map((item, idx) => (
+                    <li key={idx} className="leading-[1.6]">
+                      {item}
+                    </li>
+                  ))}
+                </ol>
+              </CardContent>
+            </Card>
           </section>
         ) : null}
 

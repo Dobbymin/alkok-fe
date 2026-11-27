@@ -6,6 +6,7 @@ import {
   Newspaper,
   Palette,
   Presentation,
+  Puzzle,
   Search,
   Table2,
   ThumbsUp,
@@ -23,6 +24,7 @@ const TYPE_META: Record<
 > = {
   GUIDE: { label: "업무 가이드", hrefPrefix: "/guides", Icon: BookOpen },
   TOOL: { label: "도구·모델", hrefPrefix: "/tools", Icon: Wrench },
+  SKILL: { label: "스킬·플러그인", hrefPrefix: "/skills", Icon: Puzzle },
   NEWS: { label: "AI 소식", hrefPrefix: "/news", Icon: Newspaper },
 };
 

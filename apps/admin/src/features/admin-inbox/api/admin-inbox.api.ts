@@ -30,6 +30,10 @@ export interface InboxReviewDetail extends InboxQueueItem {
   keyPoints?: string[];
   markdownBody?: string | null;
   pricingSummary?: string | null;
+  overview?: string | null;
+  compatibleAgents?: string[];
+  installPrompt?: string | null;
+  skillMdPreview?: string | null;
 }
 
 export interface InboxDraftPatch {
@@ -39,6 +43,9 @@ export interface InboxDraftPatch {
   workImpact?: string;
   markdownBody?: string;
   pricingSummary?: string;
+  overview?: string;
+  installPrompt?: string;
+  skillMdPreview?: string;
 }
 
 export const adminInboxApi = {

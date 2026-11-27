@@ -39,12 +39,14 @@ import {
 const TYPE_LABELS: Record<ContentType, string> = {
   GUIDE: "업무 가이드",
   TOOL: "도구·모델",
+  SKILL: "스킬·플러그인",
   NEWS: "AI 소식",
 };
 
 function getLocalItemHref(item: LocalVaultItem): string {
   if (!item.slug) return "/guides";
   if (item.contentType === "TOOL") return `/tools/${item.slug}`;
+  if (item.contentType === "SKILL") return `/skills/${item.slug}`;
   if (item.contentType === "NEWS") return `/news/${item.slug}`;
   return `/guides/${item.slug}`;
 }
@@ -204,6 +206,7 @@ export default function VaultPage({
                 { value: "", label: "전체" },
                 { value: "GUIDE", label: "업무 가이드" },
                 { value: "TOOL", label: "도구·모델" },
+                { value: "SKILL", label: "스킬·플러그인" },
                 { value: "NEWS", label: "AI 소식" },
               ] as const
             ).map((opt) => (

@@ -24,6 +24,14 @@ export const NEWS_QUERY_KEYS = {
     [...NEWS_QUERY_KEYS.all(), "detail", slugOrId] as const,
 };
 
+export const SKILL_QUERY_KEYS = {
+  all: () => ["skills"] as const,
+  list: (filters: Record<string, unknown> = {}) =>
+    [...SKILL_QUERY_KEYS.all(), "list", filters] as const,
+  detail: (slugOrId: string) =>
+    [...SKILL_QUERY_KEYS.all(), "detail", slugOrId] as const,
+};
+
 export const SEARCH_QUERY_KEYS = {
   all: () => ["search"] as const,
   list: (filters: Record<string, unknown> = {}) =>

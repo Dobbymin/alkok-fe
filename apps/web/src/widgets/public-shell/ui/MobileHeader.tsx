@@ -7,6 +7,7 @@ import {
   LogOut,
   Menu,
   Newspaper,
+  Puzzle,
   Scale,
   Search,
   Settings,
@@ -52,6 +53,13 @@ const MOBILE_NAV = [
     label: "도구 비교",
     icon: Scale,
     match: (p: string) => p.startsWith("/tools/compare"),
+  },
+  {
+    href: "/skills",
+    label: "스킬·플러그인",
+    icon: Puzzle,
+    match: (p: string) => p.startsWith("/skills"),
+    countKey: "skills" as const,
   },
   {
     href: "/news",

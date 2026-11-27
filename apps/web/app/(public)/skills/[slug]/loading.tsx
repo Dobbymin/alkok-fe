@@ -1,0 +1,26 @@
+import { Skeleton } from "@alkok/ui";
+
+export default function SkillDetailLoading() {
+  return (
+    <div
+      role="status"
+      aria-label="플러그인·스킬 상세 불러오는 중"
+      className="flex w-full flex-col gap-6"
+    >
+      <div className="rounded-2xl border border-border bg-surface-sunken/70 p-6">
+        <div className="flex items-center justify-between gap-2">
+          <Skeleton className="h-5 w-44" />
+          <Skeleton className="h-8 w-28" />
+        </div>
+        <Skeleton className="mt-4 h-8 w-64 max-w-full" />
+        <Skeleton className="mt-2 h-4 w-full max-w-xl" />
+      </div>
+      <Skeleton className="h-36 w-full rounded-xl" />
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <Skeleton className="h-40 w-full rounded-xl" />
+        <Skeleton className="h-40 w-full rounded-xl" />
+      </div>
+      <span className="sr-only">플러그인·스킬 상세를 불러오고 있습니다.</span>
+    </div>
+  );
+}

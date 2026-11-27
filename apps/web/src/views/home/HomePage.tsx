@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import { ContentCard, VerificationBadge } from "@/entities/content";
+import { SkillSpecCard } from "@/entities/skill";
 import {
   AI_USES,
   SOURCE_TYPE_LABELS,
@@ -20,6 +21,7 @@ import {
   useAuthStore,
   type ContentSummary,
   type NewsDetailData,
+  type SkillDetailData,
   type ToolDetailData,
 } from "@alkok/core";
 import {
@@ -36,14 +38,16 @@ import {
 const ALL_FILTER_VALUE = "__ALL__";
 import { AlkokHeroMark } from "./AlkokHeroMark";
 
-export type HomeCatalogTab = "guides" | "tools" | "news";
+export type HomeCatalogTab = "guides" | "tools" | "skills" | "news";
 
 export interface HomeCatalogPayload {
   guides: ContentSummary[];
   tools: ToolDetailData[];
+  skills?: SkillDetailData[];
   news: NewsDetailData[];
   guidesTotal?: number;
   toolsTotal?: number;
+  skillsTotal?: number;
   newsTotal?: number;
 }
 
@@ -51,7 +55,7 @@ export interface HomePageProps {
   initialCatalog?: HomeCatalogPayload | null;
 }
 
-const VALID_TABS = new Set<HomeCatalogTab>(["guides", "tools", "news"]);
+const VALID_TABS = new Set<HomeCatalogTab>(["guides", "tools", "skills", "news"]);
 const DOMAIN_SLUG_SET = new Set<string>(WORK_DOMAINS.map((d) => d.slug));
 
 function parseTab(raw: string | null): HomeCatalogTab {
@@ -78,9 +82,10 @@ function hasCategorySlug(item: ContentSummary, slug: string): boolean {
 function getLatestVerifiedDate(
   guides: ContentSummary[],
   tools: ToolDetailData[],
+  skills: SkillDetailData[],
   news: NewsDetailData[],
 ): string | null {
-  const dates = [...guides, ...tools, ...news]
+  const dates = [...guides, ...tools, ...skills, ...news]
     .map((item) => item.verifiedAt?.slice(0, 10))
     .filter((d): d is string => Boolean(d))
     .sort();
@@ -183,10 +188,11 @@ export default function HomePage({ initialCatalog }: HomePageProps) {
 
   const guides = useMemo(() => initialCatalog?.guides ?? [], [initialCatalog]);
   const tools = useMemo(() => initialCatalog?.tools ?? [], [initialCatalog]);
+  const skills = useMemo(() => initialCatalog?.skills ?? [], [initialCatalog]);
   const news = useMemo(() => initialCatalog?.news ?? [], [initialCatalog]);
   const latestVerifiedDate = useMemo(
-    () => getLatestVerifiedDate(guides, tools, news),
-    [guides, tools, news],
+    () => getLatestVerifiedDate(guides, tools, skills, news),
+    [guides, tools, skills, news],
   );
 
   const savedContentIds = useMemo(() => {
@@ -241,6 +247,21 @@ export default function HomePage({ initialCatalog }: HomePageProps) {
     });
   }, [tools, activeDomainSlug, activeUseFilter, savedOnly, savedContentIds, trimmedSearch]);
 
+  const filteredSkills = useMemo(() => {
+    return skills.filter((s) => {
+      if (activeDomainSlug && !hasCategorySlug(s, activeDomainSlug)) return false;
+      if (activeUseFilter && s.skillKind !== activeUseFilter) return false;
+      if (savedOnly && !savedContentIds.has(s.id)) return false;
+      return matchesSearchText(trimmedSearch, [
+        s.title,
+        s.summary,
+        s.authorName,
+        ...(s.compatibleAgents ?? []),
+        ...(s.categories?.map((c) => c.name) ?? []),
+      ]);
+    });
+  }, [skills, activeDomainSlug, activeUseFilter, savedOnly, savedContentIds, trimmedSearch]);
+
   const filteredNews = useMemo(() => {
     return news.filter((n) => {
       if (activeDomainSlug && !hasCategorySlug(n, activeDomainSlug)) return false;
@@ -262,6 +283,7 @@ export default function HomePage({ initialCatalog }: HomePageProps) {
 
   const guidesTotal = initialCatalog?.guidesTotal ?? guides.length;
   const toolsTotal = initialCatalog?.toolsTotal ?? tools.length;
+  const skillsTotal = initialCatalog?.skillsTotal ?? skills.length;
   const newsTotal = initialCatalog?.newsTotal ?? news.length;
 
   const activeTabTotal =
@@ -269,14 +291,18 @@ export default function HomePage({ initialCatalog }: HomePageProps) {
       ? guidesTotal
       : activeTab === "tools"
         ? toolsTotal
-        : newsTotal;
+        : activeTab === "skills"
+          ? skillsTotal
+          : newsTotal;
 
   const activeFilteredCount =
     activeTab === "guides"
       ? filteredGuides.length
       : activeTab === "tools"
         ? filteredTools.length
-        : filteredNews.length;
+        : activeTab === "skills"
+          ? filteredSkills.length
+          : filteredNews.length;
 
   const hasAnyFilter = Boolean(
     activeDomainSlug || activeUseFilter || trimmedSearch || savedOnly,
@@ -299,6 +325,7 @@ export default function HomePage({ initialCatalog }: HomePageProps) {
   }> = [
     { id: "guides", label: "업무 가이드", count: guides.length },
     { id: "tools", label: "AI 도구", count: tools.length },
+    { id: "skills", label: "스킬·플러그인", count: skills.length },
     { id: "news", label: "AI 소식", count: news.length },
   ];
 
@@ -580,6 +607,13 @@ export default function HomePage({ initialCatalog }: HomePageProps) {
                     무료 + 한국어 완전 지원
                   </SelectItem>
                 </>
+              ) : activeTab === "skills" ? (
+                <>
+                  <SelectItem value={ALL_FILTER_VALUE}>유형 전체</SelectItem>
+                  <SelectItem value="SKILL">에이전트 스킬</SelectItem>
+                  <SelectItem value="PLUGIN">플러그인</SelectItem>
+                  <SelectItem value="MCP">MCP 서버</SelectItem>
+                </>
               ) : (
                 <>
                   <SelectItem value={ALL_FILTER_VALUE}>출처 전체</SelectItem>
@@ -723,6 +757,49 @@ export default function HomePage({ initialCatalog }: HomePageProps) {
                 </Button>
                 <Button variant="secondary" size="sm" asChild>
                   <Link href="/tools/compare">AI 도구 비교하기</Link>
+                </Button>
+              </div>
+            }
+          />
+        )
+      ) : activeTab === "skills" ? (
+        filteredSkills.length > 0 ? (
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {filteredSkills.map((skill) => (
+              <SkillSpecCard
+                key={skill.id}
+                skill={skill}
+                verificationSlot={
+                  <VerificationBadge
+                    status={skill.verificationStatus}
+                    verifiedAt={skill.verifiedAt}
+                    sourceType={skill.sourceType}
+                  />
+                }
+                bookmarkSlot={
+                  <BookmarkAction
+                    iconOnly
+                    contentId={skill.id}
+                    title={skill.title}
+                    contentType={skill.type}
+                    slug={skill.slug}
+                    summary={skill.summary}
+                  />
+                }
+              />
+            ))}
+          </div>
+        ) : (
+          <EmptyState
+            title="조건에 맞는 플러그인·스킬이 없습니다."
+            description="필터를 초기화하거나 스킬 디렉터리에서 전체 목록을 확인하세요."
+            action={
+              <div className="flex flex-wrap items-center justify-center gap-2">
+                <Button variant="outline" size="sm" onClick={handleResetFilters}>
+                  필터 초기화
+                </Button>
+                <Button variant="secondary" size="sm" asChild>
+                  <Link href="/skills">스킬 디렉터리 열기</Link>
                 </Button>
               </div>
             }
