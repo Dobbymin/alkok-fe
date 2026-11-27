@@ -1,8 +1,13 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { AlertTriangle, Check, ExternalLink, Save, XCircle } from "lucide-react";
-import { useState } from "react";
-import type { ContentType, SourceType } from "@alkok/core";
+import { useForm } from "react-hook-form";
+import {
+  parseCommaSeparated,
+  type ContentType,
+  type SourceType,
+} from "@alkok/core";
 import {
   Badge,
   Button,
@@ -18,6 +23,10 @@ import {
   TabsTrigger,
   Textarea,
 } from "@alkok/ui";
+import {
+  adminReviewDraftSchema,
+  type AdminReviewDraftFormValues,
+} from "../model/admin-review.schema";
 
 export interface AdminReviewItem {
   id: string;
@@ -114,12 +123,26 @@ const SourcePanel = ({ item }: { item: AdminReviewItem }) => (
 
     <div className="flex flex-col gap-2">
       <h3 className="text-xs font-semibold text-foreground">원문 발췌(RawDocument)</h3>
-      <div className="max-h-80 overflow-y-auto rounded-md border border-border bg-muted/40 p-3 text-xs leading-relaxed text-foreground whitespace-pre-wrap">
+      <div className="max-h-80 overflow-y-auto whitespace-pre-wrap rounded-md border border-border bg-muted/40 p-3 text-xs leading-relaxed text-foreground">
         {item.rawTextExcerpt}
       </div>
     </div>
   </div>
 );
+
+const buildPayload = (
+  values: AdminReviewDraftFormValues,
+): AdminReviewDraftPayload => ({
+  title: values.title.trim(),
+  summary: values.summary.trim(),
+  tags: parseCommaSeparated(values.tagsRaw, true),
+  workImpact: values.workImpact.trim() || undefined,
+  markdownBody: values.markdownBody.trim() || undefined,
+  pricingSummary: values.pricingSummary.trim() || undefined,
+  overview: values.overview.trim() || undefined,
+  installPrompt: values.installPrompt.trim() || undefined,
+  skillMdPreview: values.skillMdPreview.trim() || undefined,
+});
 
 const DraftEditorPanel = ({
   item,
@@ -134,33 +157,33 @@ const DraftEditorPanel = ({
   onSaveDraft: (payload: AdminReviewDraftPayload) => void | Promise<void>;
   onReject: () => void | Promise<void>;
 }) => {
-  const [title, setTitle] = useState(item.title);
-  const [summary, setSummary] = useState(item.summary);
-  const [tagsRaw, setTagsRaw] = useState(item.tags.join(", "));
-  const [workImpact, setWorkImpact] = useState(item.workImpact ?? "");
-  const [markdownBody, setMarkdownBody] = useState(item.markdownBody ?? "");
-  const [pricingSummary, setPricingSummary] = useState(item.pricingSummary ?? "");
-  const [overview, setOverview] = useState(item.overview ?? "");
-  const [installPrompt, setInstallPrompt] = useState(item.installPrompt ?? "");
-  const [skillMdPreview, setSkillMdPreview] = useState(item.skillMdPreview ?? "");
-
-  const buildPayload = (): AdminReviewDraftPayload => ({
-    title: title.trim(),
-    summary: summary.trim(),
-    tags: tagsRaw
-      .split(",")
-      .map((s) => s.trim().toLowerCase())
-      .filter(Boolean),
-    workImpact: workImpact.trim() || undefined,
-    markdownBody: markdownBody.trim() || undefined,
-    pricingSummary: pricingSummary.trim() || undefined,
-    overview: overview.trim() || undefined,
-    installPrompt: installPrompt.trim() || undefined,
-    skillMdPreview: skillMdPreview.trim() || undefined,
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<AdminReviewDraftFormValues>({
+    resolver: zodResolver(adminReviewDraftSchema),
+    mode: "onSubmit",
+    reValidateMode: "onChange",
+    defaultValues: {
+      title: item.title,
+      summary: item.summary,
+      tagsRaw: item.tags.join(", "),
+      workImpact: item.workImpact ?? "",
+      markdownBody: item.markdownBody ?? "",
+      pricingSummary: item.pricingSummary ?? "",
+      overview: item.overview ?? "",
+      installPrompt: item.installPrompt ?? "",
+      skillMdPreview: item.skillMdPreview ?? "",
+    },
   });
 
   return (
-    <div className="flex flex-col gap-3">
+    <form
+      noValidate
+      onSubmit={handleSubmit((values) => onApprove(buildPayload(values)))}
+      className="flex flex-col gap-3"
+    >
       <div className="flex items-center justify-between border-b border-border pb-3">
         <span className="text-xs font-semibold text-foreground">
           AI 한국어 초안 편집
@@ -168,21 +191,39 @@ const DraftEditorPanel = ({
         <Badge variant="secondary">{item.type}</Badge>
       </div>
 
-      <FieldGroup htmlFor={`review-title-${item.id}`} label="제목" required>
+      <FieldGroup
+        htmlFor={`review-title-${item.id}`}
+        label="제목"
+        required
+        error={errors.title?.message}
+        errorId={`review-title-error-${item.id}`}
+      >
         <Input
           id={`review-title-${item.id}`}
           inputSize="sm"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          aria-invalid={Boolean(errors.title)}
+          aria-describedby={
+            errors.title ? `review-title-error-${item.id}` : undefined
+          }
+          {...register("title")}
         />
       </FieldGroup>
 
-      <FieldGroup htmlFor={`review-summary-${item.id}`} label="요약" required>
+      <FieldGroup
+        htmlFor={`review-summary-${item.id}`}
+        label="요약"
+        required
+        error={errors.summary?.message}
+        errorId={`review-summary-error-${item.id}`}
+      >
         <Textarea
           id={`review-summary-${item.id}`}
-          value={summary}
-          onChange={(e) => setSummary(e.target.value)}
           className="min-h-20 text-xs"
+          aria-invalid={Boolean(errors.summary)}
+          aria-describedby={
+            errors.summary ? `review-summary-error-${item.id}` : undefined
+          }
+          {...register("summary")}
         />
       </FieldGroup>
 
@@ -190,9 +231,8 @@ const DraftEditorPanel = ({
         <FieldGroup htmlFor={`review-impact-${item.id}`} label="실무 영향">
           <Textarea
             id={`review-impact-${item.id}`}
-            value={workImpact}
-            onChange={(e) => setWorkImpact(e.target.value)}
             className="min-h-20 text-xs"
+            {...register("workImpact")}
           />
         </FieldGroup>
       ) : null}
@@ -201,9 +241,8 @@ const DraftEditorPanel = ({
         <FieldGroup htmlFor={`review-md-${item.id}`} label="가이드 본문 (Markdown)">
           <Textarea
             id={`review-md-${item.id}`}
-            value={markdownBody}
-            onChange={(e) => setMarkdownBody(e.target.value)}
             className="min-h-28 font-mono text-xs"
+            {...register("markdownBody")}
           />
         </FieldGroup>
       ) : null}
@@ -213,8 +252,7 @@ const DraftEditorPanel = ({
           <Input
             id={`review-pricing-${item.id}`}
             inputSize="sm"
-            value={pricingSummary}
-            onChange={(e) => setPricingSummary(e.target.value)}
+            {...register("pricingSummary")}
           />
         </FieldGroup>
       ) : null}
@@ -236,25 +274,22 @@ const DraftEditorPanel = ({
           <FieldGroup htmlFor={`review-overview-${item.id}`} label="스킬·플러그인 개요">
             <Textarea
               id={`review-overview-${item.id}`}
-              value={overview}
-              onChange={(e) => setOverview(e.target.value)}
               className="min-h-20 text-xs"
+              {...register("overview")}
             />
           </FieldGroup>
           <FieldGroup htmlFor={`review-install-${item.id}`} label="자연어 설치 요청">
             <Textarea
               id={`review-install-${item.id}`}
-              value={installPrompt}
-              onChange={(e) => setInstallPrompt(e.target.value)}
               className="min-h-16 font-mono text-xs"
+              {...register("installPrompt")}
             />
           </FieldGroup>
           <FieldGroup htmlFor={`review-skillmd-${item.id}`} label="SKILL.md 미리보기">
             <Textarea
               id={`review-skillmd-${item.id}`}
-              value={skillMdPreview}
-              onChange={(e) => setSkillMdPreview(e.target.value)}
               className="min-h-24 font-mono text-xs"
+              {...register("skillMdPreview")}
             />
           </FieldGroup>
         </div>
@@ -264,13 +299,13 @@ const DraftEditorPanel = ({
         <Input
           id={`review-tags-${item.id}`}
           inputSize="sm"
-          value={tagsRaw}
-          onChange={(e) => setTagsRaw(e.target.value)}
+          {...register("tagsRaw")}
         />
       </FieldGroup>
 
       <div className="flex flex-wrap items-center justify-end gap-2 border-t border-border pt-3">
         <Button
+          type="button"
           variant="outline"
           size="sm"
           disabled={isSubmitting}
@@ -280,24 +315,21 @@ const DraftEditorPanel = ({
           반려
         </Button>
         <Button
+          type="button"
           variant="secondary"
           size="sm"
           disabled={isSubmitting}
-          onClick={() => onSaveDraft(buildPayload())}
+          onClick={() => void handleSubmit((values) => onSaveDraft(buildPayload(values)))()}
         >
           <Save className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden="true" />
           임시 저장
         </Button>
-        <Button
-          size="sm"
-          disabled={isSubmitting}
-          onClick={() => onApprove(buildPayload())}
-        >
+        <Button type="submit" size="sm" disabled={isSubmitting}>
           <Check className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden="true" />
           승인·즉시 공개
         </Button>
       </div>
-    </div>
+    </form>
   );
 };
 

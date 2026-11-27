@@ -63,4 +63,32 @@ describe("SettingsForms", () => {
       expect(replaceMock).toHaveBeenCalledWith("/");
     });
   });
+
+  it("validates nickname and password change forms inline", async () => {
+    const queryClient = new QueryClient();
+    render(
+      <QueryClientProvider client={queryClient}>
+        <SettingsForms />
+      </QueryClientProvider>,
+    );
+
+    fireEvent.change(screen.getByLabelText(/닉네임/), {
+      target: { value: "a" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "저장" }));
+
+    expect(
+      await screen.findByText("닉네임은 2자 이상 입력해 주세요."),
+    ).toBeInTheDocument();
+
+    fireEvent.change(screen.getByLabelText(/새 비밀번호/), {
+      target: { value: "123" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "비밀번호 변경" }));
+
+    expect(
+      await screen.findByText("비밀번호는 8자 이상 입력해 주세요."),
+    ).toBeInTheDocument();
+    expect(screen.getByText("비밀번호를 입력해 주세요.")).toBeInTheDocument();
+  });
 });

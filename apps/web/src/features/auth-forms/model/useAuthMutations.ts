@@ -1,9 +1,9 @@
 "use client";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
 import { syncLocalVaultToServer, useLocalVaultStore } from "@/entities/vault";
 import { useAuthStore } from "@alkok/core";
+import { toast } from "@alkok/ui";
 import { authApi } from "../api/auth.api";
 
 export function useLoginMutation() {

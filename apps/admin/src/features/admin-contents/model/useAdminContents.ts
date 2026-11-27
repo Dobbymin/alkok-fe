@@ -1,13 +1,13 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
 import {
   ADMIN_QUERY_KEYS,
   GUIDE_QUERY_KEYS,
   NEWS_QUERY_KEYS,
   TOOL_QUERY_KEYS,
 } from "@alkok/core";
+import { toast } from "@alkok/ui";
 import {
   adminContentsApi,
   type AdminContentCreatePayload,

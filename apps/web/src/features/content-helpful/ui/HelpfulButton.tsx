@@ -4,9 +4,8 @@ import { useMutation } from "@tanstack/react-query";
 import { ThumbsUp } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
-import { toast } from "sonner";
 import { selectIsAuthenticated, useAuthStore } from "@alkok/core";
-import { Button } from "@alkok/ui";
+import { Button, toast } from "@alkok/ui";
 import { helpfulApi } from "../api/helpful.api";
 
 export interface HelpfulButtonProps {
