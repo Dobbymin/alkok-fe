@@ -1,23 +1,16 @@
 "use client";
 
 import {
-  Bookmark,
-  BookOpen,
-  Home,
-  LogOut,
-  Newspaper,
-  PanelLeftClose,
-  PanelLeftOpen,
-  Puzzle,
-  Scale,
-  Search,
-  Settings,
-  Shield,
-  Wrench,
-} from "lucide-react";
+  CloudArrowUp,
+  GearSix,
+  MagnifyingGlass,
+  ShieldCheck,
+  SidebarSimple,
+  SignOut,
+} from "@phosphor-icons/react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { Suspense, useEffect, useSyncExternalStore } from "react";
+import { Suspense, useEffect, useSyncExternalStore, type ComponentType } from "react";
 import { WORK_DOMAINS } from "@/entities/taxonomy";
 import { useLocalVaultStore, useVaultItemsQuery } from "@/entities/vault";
 import { useQuickSearchStore } from "@/features/quick-search";
@@ -36,52 +29,78 @@ import {
 } from "@alkok/ui";
 import type { PublicShellCounts } from "../model/shell-counts.types";
 import { useSidebarStore } from "../model/sidebar.store";
-import { BrandLogo } from "./BrandLogo";
+import { BrandLogo, BrandSymbol } from "./BrandLogo";
+import {
+  CompareNavIcon,
+  GuideNavIcon,
+  HomeNavIcon,
+  NewsNavIcon,
+  SkillsNavIcon,
+  ToolsNavIcon,
+  VaultNavIcon,
+  type NavIconProps,
+} from "./NavIcons";
 import { ThemeToggle } from "./ThemeToggle";
 
 interface NavItem {
   href: string;
   label: string;
-  icon: typeof Home;
+  icon: ComponentType<NavIconProps>;
   match: (pathname: string) => boolean;
   count?: number;
 }
+
+const SettingsNavIcon = ({ active = false, className }: NavIconProps) => (
+  <GearSix
+    className={cn("shrink-0", className)}
+    weight={active ? "duotone" : "regular"}
+    aria-hidden="true"
+  />
+);
+
+const AdminNavIcon = ({ active = false, className }: NavIconProps) => (
+  <ShieldCheck
+    className={cn("shrink-0", className)}
+    weight={active ? "duotone" : "regular"}
+    aria-hidden="true"
+  />
+);
 
 const EXPLORE_NAV: readonly NavItem[] = [
   {
     href: "/",
     label: "홈",
-    icon: Home,
+    icon: HomeNavIcon,
     match: (p) => p === "/",
   },
   {
     href: "/guides",
     label: "업무 가이드",
-    icon: BookOpen,
+    icon: GuideNavIcon,
     match: (p) => p.startsWith("/guides"),
   },
   {
     href: "/tools",
     label: "AI 도구·모델",
-    icon: Wrench,
+    icon: ToolsNavIcon,
     match: (p) => p.startsWith("/tools") && !p.startsWith("/tools/compare"),
   },
   {
     href: "/tools/compare",
     label: "도구 비교",
-    icon: Scale,
+    icon: CompareNavIcon,
     match: (p) => p.startsWith("/tools/compare"),
   },
   {
     href: "/skills",
     label: "스킬·플러그인",
-    icon: Puzzle,
+    icon: SkillsNavIcon,
     match: (p) => p.startsWith("/skills"),
   },
   {
     href: "/news",
     label: "AI 소식",
-    icon: Newspaper,
+    icon: NewsNavIcon,
     match: (p) => p.startsWith("/news"),
   },
 ];
@@ -101,15 +120,15 @@ function NavLink({
   const link = (
     <Link
       href={item.href}
+      aria-label={collapsed ? item.label : undefined}
       aria-current={isActive ? "page" : undefined}
       className={cn(
-        "flex h-9 items-center rounded-lg text-sm [-webkit-tap-highlight-color:transparent] transition-[color,background-color] duration-150 ease-out focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
-        collapsed ? "justify-center px-0" : "gap-3 px-3",
+        "relative flex h-9 items-center rounded-lg text-sm [-webkit-tap-highlight-color:transparent] transition-[color,background-color] duration-150 ease-out focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
+        collapsed ? "mx-auto w-9 justify-center px-0" : "gap-3 px-3",
         isActive
-          ? cn(
-              "bg-sidebar-accent font-semibold text-sidebar-accent-foreground",
-              collapsed && "ring-1 ring-inset ring-primary/25",
-            )
+          ? collapsed
+            ? "bg-secondary text-foreground"
+            : "bg-sidebar-accent font-semibold text-sidebar-accent-foreground"
           : "font-medium text-muted-foreground hover:bg-secondary hover:text-foreground",
       )}
     >
@@ -122,12 +141,13 @@ function NavLink({
           )}
         />
       ) : null}
-      <Icon
-        className="h-4 w-4 shrink-0"
-        strokeWidth={isActive ? 2 : 1.75}
-        absoluteStrokeWidth
-        aria-hidden="true"
-      />
+      <Icon active={isActive} className="h-[18px] w-[18px] shrink-0" />
+      {collapsed && isActive ? (
+        <span
+          aria-hidden="true"
+          className="absolute right-1.5 top-1.5 h-1 w-1 rounded-full bg-primary"
+        />
+      ) : null}
       {!collapsed ? <span className="truncate">{item.label}</span> : null}
       {!collapsed && typeof item.count === "number" ? (
         <span
@@ -273,7 +293,7 @@ export const DesktopSidebar = ({ counts }: { counts?: PublicShellCounts }) => {
     {
       href: "/vault",
       label: "내 보관함",
-      icon: Bookmark,
+      icon: VaultNavIcon,
       match: (p) => p.startsWith("/vault"),
       count: savedCount > 0 ? savedCount : undefined,
     },
@@ -282,7 +302,7 @@ export const DesktopSidebar = ({ counts }: { counts?: PublicShellCounts }) => {
           {
             href: "/settings",
             label: "설정",
-            icon: Settings,
+            icon: SettingsNavIcon,
             match: (p: string) => p.startsWith("/settings"),
           },
         ]
@@ -292,39 +312,12 @@ export const DesktopSidebar = ({ counts }: { counts?: PublicShellCounts }) => {
           {
             href: "/admin",
             label: "관리자 CMS",
-            icon: Shield,
+            icon: AdminNavIcon,
             match: (p: string) => p.startsWith("/admin"),
           },
         ]
       : []),
   ];
-
-  const searchButton = (
-    <button
-      type="button"
-      onClick={openSearch}
-      aria-label="빠른 검색 열기"
-      className={cn(
-        "flex h-9 w-full items-center gap-2 rounded-lg border border-border/80 bg-surface-sunken px-3 text-xs text-muted-foreground [-webkit-tap-highlight-color:transparent] transition-[color,background-color,border-color] duration-150 ease-out hover:bg-secondary hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
-        collapsed && "justify-center px-0",
-      )}
-    >
-      <Search
-        className="h-3.5 w-3.5 shrink-0"
-        strokeWidth={1.75}
-        absoluteStrokeWidth
-        aria-hidden="true"
-      />
-      {!collapsed ? (
-        <>
-          <span className="truncate">빠른 검색</span>
-          <kbd className="ms-auto rounded-xs border border-border bg-card px-2 py-1 font-mono text-[10px] tabular-nums text-muted-foreground">
-            ⌘K
-          </kbd>
-        </>
-      ) : null}
-    </button>
-  );
 
   const userInitial = user?.nickname?.slice(0, 1).toUpperCase() ?? "A";
 
@@ -343,43 +336,89 @@ export const DesktopSidebar = ({ counts }: { counts?: PublicShellCounts }) => {
           collapsed ? "justify-center" : "justify-between",
         )}
       >
-        {!collapsed ? <BrandLogo /> : null}
-        <Button
-          variant="ghost"
-          size="icon-sm"
-          onClick={toggleCollapsed}
-          aria-label={collapsed ? "사이드바 펼치기" : "사이드바 접기"}
-          aria-expanded={!collapsed}
-        >
-          {collapsed ? (
-            <PanelLeftOpen
-              className="h-4 w-4"
-              strokeWidth={1.75}
-              absoluteStrokeWidth
-              aria-hidden="true"
-            />
-          ) : (
-            <PanelLeftClose
-              className="h-4 w-4"
-              strokeWidth={1.75}
-              absoluteStrokeWidth
-              aria-hidden="true"
-            />
-          )}
-        </Button>
+        {collapsed ? (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                type="button"
+                onClick={toggleCollapsed}
+                aria-label="사이드바 펼치기"
+                aria-expanded={false}
+                className="group relative inline-flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors duration-150 ease-out hover:bg-secondary hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+              >
+                <BrandSymbol className="h-6 w-6 transition-opacity duration-150 group-hover:opacity-0 group-focus-visible:opacity-0" />
+                <SidebarSimple
+                  weight="regular"
+                  aria-hidden="true"
+                  className="absolute h-[18px] w-[18px] opacity-0 transition-opacity duration-150 group-hover:opacity-100 group-focus-visible:opacity-100"
+                />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent side="right">사이드바 펼치기</TooltipContent>
+          </Tooltip>
+        ) : (
+          <>
+            <BrandLogo />
+            <Button
+              variant="ghost"
+              size="icon-sm"
+              onClick={toggleCollapsed}
+              aria-label="사이드바 접기"
+              aria-expanded={true}
+            >
+              <SidebarSimple
+                className="h-[18px] w-[18px]"
+                weight="regular"
+                aria-hidden="true"
+              />
+            </Button>
+          </>
+        )}
       </div>
 
       {/* Quick Search Trigger */}
-      <div className="px-3 pt-1 pb-3">
+      <div className={cn("px-3", collapsed ? "pt-1 pb-1" : "pt-1 pb-3")}>
         {collapsed ? (
           <Tooltip>
-            <TooltipTrigger asChild>{searchButton}</TooltipTrigger>
+            <TooltipTrigger asChild>
+              <button
+                type="button"
+                onClick={openSearch}
+                aria-label="빠른 검색 열기"
+                className="mx-auto flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground [-webkit-tap-highlight-color:transparent] transition-[color,background-color] duration-150 ease-out hover:bg-secondary hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+              >
+                <MagnifyingGlass
+                  className="h-[18px] w-[18px] shrink-0"
+                  weight="regular"
+                  aria-hidden="true"
+                />
+              </button>
+            </TooltipTrigger>
             <TooltipContent side="right">빠른 검색 (⌘K)</TooltipContent>
           </Tooltip>
         ) : (
-          searchButton
+          <button
+            type="button"
+            onClick={openSearch}
+            aria-label="빠른 검색 열기"
+            className="flex h-9 w-full items-center gap-2 rounded-lg border border-border/80 bg-surface-sunken px-3 text-xs text-muted-foreground [-webkit-tap-highlight-color:transparent] transition-[color,background-color,border-color] duration-150 ease-out hover:bg-secondary hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+          >
+            <MagnifyingGlass
+              className="h-4 w-4 shrink-0"
+              weight="regular"
+              aria-hidden="true"
+            />
+            <span className="truncate">빠른 검색</span>
+            <kbd className="ms-auto rounded-xs border border-border bg-card px-2 py-1 font-mono text-[10px] tabular-nums text-muted-foreground">
+              ⌘K
+            </kbd>
+          </button>
         )}
       </div>
+
+      {collapsed ? (
+        <div aria-hidden="true" className="mx-auto my-2 h-px w-5 bg-separator" />
+      ) : null}
 
       {/* Primary & Workspace Navigation */}
       <nav
@@ -408,7 +447,11 @@ export const DesktopSidebar = ({ counts }: { counts?: PublicShellCounts }) => {
           </Suspense>
         ) : null}
 
-        <div className="mt-6">
+        {collapsed ? (
+          <div aria-hidden="true" className="mx-auto my-2 h-px w-5 bg-separator" />
+        ) : null}
+
+        <div className={collapsed ? "" : "mt-6"}>
           {!collapsed ? (
             <p className="px-3 pb-2 text-[11px] font-medium tracking-[0.04em] text-muted-foreground">
               워크스페이스
@@ -432,7 +475,7 @@ export const DesktopSidebar = ({ counts }: { counts?: PublicShellCounts }) => {
         className={cn(
           "flex shrink-0 border-t border-separator p-3",
           collapsed
-            ? "flex-col items-center gap-2"
+            ? "flex-col items-center gap-1.5"
             : "items-center justify-between gap-2",
         )}
       >
@@ -440,18 +483,20 @@ export const DesktopSidebar = ({ counts }: { counts?: PublicShellCounts }) => {
           <Skeleton
             role="status"
             aria-label="계정 정보 확인 중"
-            className={cn("h-8 rounded-md", collapsed ? "w-8" : "flex-1")}
+            className={cn("h-9", collapsed ? "w-9 rounded-lg" : "flex-1 rounded-md")}
           />
         ) : isAuthenticated && user ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
-                variant="outline"
+                variant={collapsed ? "ghost" : "outline"}
                 size="sm"
                 aria-label="계정 메뉴 열기"
                 className={cn(
-                  "h-8 min-w-0",
-                  collapsed ? "w-8 px-0 justify-center" : "flex-1 justify-start gap-2 px-2",
+                  "h-9 min-w-0",
+                  collapsed
+                    ? "w-9 justify-center rounded-lg px-0"
+                    : "flex-1 justify-start gap-2 px-2",
                 )}
               >
                 <span
@@ -471,36 +516,76 @@ export const DesktopSidebar = ({ counts }: { counts?: PublicShellCounts }) => {
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
                 <Link href="/settings">
-                  <Settings className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
+                  <GearSix className="h-4 w-4" weight="regular" aria-hidden="true" />
                   설정
                 </Link>
               </DropdownMenuItem>
               {user.role === "ADMIN" ? (
                 <DropdownMenuItem asChild>
                   <Link href="/admin">
-                    <Shield className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
+                    <ShieldCheck className="h-4 w-4" weight="regular" aria-hidden="true" />
                     관리자 CMS
                   </Link>
                 </DropdownMenuItem>
               ) : null}
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => logout()}>
-                <LogOut className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
+                <SignOut className="h-4 w-4" weight="regular" aria-hidden="true" />
                 로그아웃
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+        ) : collapsed ? (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                asChild
+                variant="ghost"
+                size="icon-sm"
+                className="h-9 w-9 rounded-lg text-muted-foreground hover:bg-secondary hover:text-foreground"
+              >
+                <Link href="/login" aria-label="계정 · 동기화">
+                  <CloudArrowUp
+                    className="h-[18px] w-[18px]"
+                    weight="regular"
+                    aria-hidden="true"
+                  />
+                </Link>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="right">
+              계정 · 동기화 · 로그인하면 보관함이 동기화돼요
+            </TooltipContent>
+          </Tooltip>
         ) : (
-          <Button
-            asChild
-            size="sm"
-            className={cn("h-8", collapsed ? "w-10 px-0 text-[11px]" : "flex-1")}
-          >
-            <Link href="/login">로그인</Link>
-          </Button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                asChild
+                variant="ghost"
+                size="sm"
+                className="h-9 min-w-0 flex-1 justify-start gap-2 px-2.5 text-xs font-medium text-muted-foreground hover:text-foreground"
+              >
+                <Link href="/login" title="로그인하면 보관함이 동기화돼요">
+                  <CloudArrowUp
+                    className="h-4 w-4 shrink-0"
+                    weight="regular"
+                    aria-hidden="true"
+                  />
+                  <span className="truncate">계정 · 동기화</span>
+                </Link>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="top">로그인하면 보관함이 동기화돼요</TooltipContent>
+          </Tooltip>
         )}
 
-        <ThemeToggle />
+        <ThemeToggle
+          className={cn(
+            "text-muted-foreground hover:text-foreground",
+            collapsed && "h-9 w-9 rounded-lg",
+          )}
+        />
       </div>
     </aside>
   );

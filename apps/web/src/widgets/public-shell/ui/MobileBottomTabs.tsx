@@ -1,15 +1,20 @@
 "use client";
 
-import { Bookmark, BookOpen, Home, Wrench } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@alkok/core";
+import {
+  GuideNavIcon,
+  HomeNavIcon,
+  ToolsNavIcon,
+  VaultNavIcon,
+} from "./NavIcons";
 
 export const MOBILE_BOTTOM_TABS = [
-  { href: "/", label: "홈", icon: Home },
-  { href: "/guides", label: "가이드", icon: BookOpen },
-  { href: "/tools", label: "도구", icon: Wrench },
-  { href: "/vault", label: "보관함", icon: Bookmark },
+  { href: "/", label: "홈", icon: HomeNavIcon },
+  { href: "/guides", label: "가이드", icon: GuideNavIcon },
+  { href: "/tools", label: "도구", icon: ToolsNavIcon },
+  { href: "/vault", label: "보관함", icon: VaultNavIcon },
 ] as const;
 
 export const MobileBottomTabs = () => {
@@ -39,12 +44,7 @@ export const MobileBottomTabs = () => {
                   : "border-transparent font-medium text-muted-foreground",
               )}
             >
-              <Icon
-                className="h-5 w-5"
-                strokeWidth={isActive ? 2 : 1.75}
-                absoluteStrokeWidth
-                aria-hidden="true"
-              />
+              <Icon active={isActive} className="h-5 w-5" />
               <span>{tab.label}</span>
             </Link>
           );
