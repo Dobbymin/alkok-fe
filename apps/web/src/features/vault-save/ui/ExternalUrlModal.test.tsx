@@ -77,4 +77,34 @@ describe("ExternalUrlModal", () => {
       ).toBeInTheDocument();
     });
   });
+
+  it("validates non-http URL scheme before calling preview or save", async () => {
+    previewMutateAsyncMock.mockClear();
+    createMutateAsyncMock.mockClear();
+    const qc = new QueryClient();
+    render(
+      <QueryClientProvider client={qc}>
+        <ExternalUrlModal folders={[]} />
+      </QueryClientProvider>,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "외부 URL 추가" }));
+    fireEvent.change(screen.getByLabelText(/URL/), {
+      target: { value: "ftp://example.com/file" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "미리보기" }));
+
+    expect(
+      await screen.findByText(
+        "http:// 또는 https://로 시작하는 올바른 URL을 입력해 주세요.",
+      ),
+    ).toBeInTheDocument();
+    expect(previewMutateAsyncMock).not.toHaveBeenCalled();
+
+    fireEvent.click(screen.getByRole("button", { name: "보관함에 저장" }));
+    expect(
+      await screen.findByText("제목을 입력해 주세요."),
+    ).toBeInTheDocument();
+    expect(createMutateAsyncMock).not.toHaveBeenCalled();
+  });
 });

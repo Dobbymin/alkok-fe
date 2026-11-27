@@ -1,9 +1,10 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
-import { useState, type FormEvent } from "react";
-import { toast } from "sonner";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { WORK_DOMAINS } from "@/entities/taxonomy";
 import { useAuthStore } from "@alkok/core";
 import {
@@ -23,8 +24,15 @@ import {
   Input,
   ToggleGroup,
   ToggleGroupItem,
+  toast,
 } from "@alkok/ui";
 import { authApi } from "../api/auth.api";
+import {
+  changePasswordSchema,
+  updateProfileSchema,
+  type ChangePasswordFormValues,
+  type UpdateProfileFormValues,
+} from "../model/auth-forms.schema";
 import { useDeleteAccountMutation } from "../model/useAuthMutations";
 
 export const SettingsForms = () => {
@@ -33,20 +41,39 @@ export const SettingsForms = () => {
   const updateUser = useAuthStore((s) => s.updateUser);
   const { theme, setTheme } = useTheme();
 
-  const [nickname, setNickname] = useState(user?.nickname ?? "");
   const [interests, setInterests] = useState<string[]>(
     user?.interestCategorySlugs ?? [],
   );
-  const [currentPassword, setCurrentPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
   const [deleteOpen, setDeleteOpen] = useState(false);
 
   const deleteMutation = useDeleteAccountMutation();
 
-  const handleSaveProfile = async (e: FormEvent) => {
-    e.preventDefault();
+  const profileForm = useForm<UpdateProfileFormValues>({
+    resolver: zodResolver(updateProfileSchema),
+    mode: "onSubmit",
+    reValidateMode: "onChange",
+    defaultValues: {
+      nickname: user?.nickname ?? "",
+    },
+  });
+
+  const passwordForm = useForm<ChangePasswordFormValues>({
+    resolver: zodResolver(changePasswordSchema),
+    mode: "onSubmit",
+    reValidateMode: "onChange",
+    defaultValues: {
+      currentPassword: "",
+      newPassword: "",
+    },
+  });
+
+  useEffect(() => {
+    profileForm.reset({ nickname: user?.nickname ?? "" });
+  }, [user?.nickname, profileForm]);
+
+  const handleSaveProfile = async (values: UpdateProfileFormValues) => {
     try {
-      const res = await authApi.updateProfile(nickname.trim());
+      const res = await authApi.updateProfile(values.nickname.trim());
       updateUser(res.data);
       toast.success("프로필이 저장되었습니다.");
     } catch (err) {
@@ -64,12 +91,13 @@ export const SettingsForms = () => {
     }
   };
 
-  const handleChangePassword = async (e: FormEvent) => {
-    e.preventDefault();
+  const handleChangePassword = async (values: ChangePasswordFormValues) => {
     try {
-      await authApi.updatePassword({ currentPassword, newPassword });
-      setCurrentPassword("");
-      setNewPassword("");
+      await authApi.updatePassword({
+        currentPassword: values.currentPassword,
+        newPassword: values.newPassword,
+      });
+      passwordForm.reset();
       toast.success("비밀번호가 변경되었습니다.");
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "비밀번호 변경에 실패했습니다.");
@@ -89,16 +117,35 @@ export const SettingsForms = () => {
           <CardTitle as="h2">프로필 설정</CardTitle>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSaveProfile} className="flex items-end gap-3">
-            <FieldGroup htmlFor="settings-nickname" label="닉네임" className="flex-1">
+          <form
+            noValidate
+            onSubmit={profileForm.handleSubmit(handleSaveProfile)}
+            className="flex items-start gap-3"
+          >
+            <FieldGroup
+              htmlFor="settings-nickname"
+              label="닉네임"
+              className="flex-1"
+              error={profileForm.formState.errors.nickname?.message}
+              errorId="settings-nickname-error"
+            >
               <Input
                 id="settings-nickname"
-                value={nickname}
-                onChange={(e) => setNickname(e.target.value)}
-                required
+                aria-invalid={Boolean(profileForm.formState.errors.nickname)}
+                aria-describedby={
+                  profileForm.formState.errors.nickname
+                    ? "settings-nickname-error"
+                    : undefined
+                }
+                {...profileForm.register("nickname")}
               />
             </FieldGroup>
-            <Button type="submit" size="sm">
+            <Button
+              type="submit"
+              size="sm"
+              className="mt-6"
+              disabled={profileForm.formState.isSubmitting}
+            >
               저장
             </Button>
           </form>
@@ -153,28 +200,60 @@ export const SettingsForms = () => {
           <CardTitle as="h2">비밀번호 변경</CardTitle>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleChangePassword} className="flex flex-col gap-3">
-            <FieldGroup htmlFor="cur-pw" label="현재 비밀번호" required>
+          <form
+            noValidate
+            onSubmit={passwordForm.handleSubmit(handleChangePassword)}
+            className="flex flex-col gap-3"
+          >
+            <FieldGroup
+              htmlFor="cur-pw"
+              label="현재 비밀번호"
+              required
+              error={passwordForm.formState.errors.currentPassword?.message}
+              errorId="cur-pw-error"
+            >
               <Input
                 id="cur-pw"
                 type="password"
-                value={currentPassword}
-                onChange={(e) => setCurrentPassword(e.target.value)}
-                required
+                autoComplete="current-password"
+                aria-invalid={Boolean(
+                  passwordForm.formState.errors.currentPassword,
+                )}
+                aria-describedby={
+                  passwordForm.formState.errors.currentPassword
+                    ? "cur-pw-error"
+                    : undefined
+                }
+                {...passwordForm.register("currentPassword")}
               />
             </FieldGroup>
-            <FieldGroup htmlFor="new-pw" label="새 비밀번호" required>
+            <FieldGroup
+              htmlFor="new-pw"
+              label="새 비밀번호"
+              required
+              hint="8자 이상 입력해 주세요."
+              error={passwordForm.formState.errors.newPassword?.message}
+              errorId="new-pw-error"
+            >
               <Input
                 id="new-pw"
                 type="password"
-                minLength={8}
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                required
+                autoComplete="new-password"
+                aria-invalid={Boolean(passwordForm.formState.errors.newPassword)}
+                aria-describedby={
+                  passwordForm.formState.errors.newPassword
+                    ? "new-pw-error"
+                    : undefined
+                }
+                {...passwordForm.register("newPassword")}
               />
             </FieldGroup>
             <div>
-              <Button type="submit" size="sm">
+              <Button
+                type="submit"
+                size="sm"
+                disabled={passwordForm.formState.isSubmitting}
+              >
                 비밀번호 변경
               </Button>
             </div>
@@ -212,6 +291,7 @@ export const SettingsForms = () => {
           </DialogHeader>
           <DialogFooter>
             <Button
+              type="button"
               variant="outline"
               size="sm"
               onClick={() => setDeleteOpen(false)}
@@ -219,6 +299,7 @@ export const SettingsForms = () => {
               취소
             </Button>
             <Button
+              type="button"
               variant="destructive"
               size="sm"
               disabled={deleteMutation.isPending}

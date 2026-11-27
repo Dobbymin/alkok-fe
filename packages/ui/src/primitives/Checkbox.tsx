@@ -11,7 +11,7 @@ export const Checkbox = ({
 }: ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root>) => (
   <CheckboxPrimitive.Root
     className={cn(
-      "peer h-4 w-4 shrink-0 rounded-xs border border-input bg-card [-webkit-tap-highlight-color:transparent] transition-[background-color,border-color] duration-150 ease-out focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:border-primary data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground",
+      "peer h-4 w-4 shrink-0 rounded-xs border border-input bg-card [-webkit-tap-highlight-color:transparent] transition-[background-color,border-color] duration-150 ease-out focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring aria-invalid:border-destructive aria-invalid:focus-visible:outline-destructive disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:border-primary data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground",
       className,
     )}
     {...props}

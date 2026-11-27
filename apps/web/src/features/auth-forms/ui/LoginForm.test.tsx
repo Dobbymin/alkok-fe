@@ -73,4 +73,39 @@ describe("LoginForm", () => {
       expect(replaceMock).toHaveBeenCalledWith("/");
     });
   });
+
+  it("shows inline Zod errors with aria-invalid and clears on change", async () => {
+    loginMutateAsyncMock.mockClear();
+    const queryClient = new QueryClient();
+    render(
+      <QueryClientProvider client={queryClient}>
+        <LoginForm />
+      </QueryClientProvider>,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "로그인" }));
+
+    expect(
+      await screen.findByText("이메일을 입력해 주세요."),
+    ).toBeInTheDocument();
+    expect(screen.getByText("비밀번호를 입력해 주세요.")).toBeInTheDocument();
+    expect(screen.getByLabelText(/이메일/)).toHaveAttribute("aria-invalid", "true");
+    expect(loginMutateAsyncMock).not.toHaveBeenCalled();
+
+    fireEvent.change(screen.getByLabelText(/이메일/), {
+      target: { value: "invalid-email" },
+    });
+    expect(
+      await screen.findByText("올바른 이메일 형식을 입력해 주세요."),
+    ).toBeInTheDocument();
+
+    fireEvent.change(screen.getByLabelText(/이메일/), {
+      target: { value: "valid@example.com" },
+    });
+    await waitFor(() => {
+      expect(
+        screen.queryByText("올바른 이메일 형식을 입력해 주세요."),
+      ).not.toBeInTheDocument();
+    });
+  });
 });

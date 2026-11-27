@@ -1,8 +1,9 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState, type FormEvent } from "react";
+import { Controller, useForm } from "react-hook-form";
 import {
   Button,
   Card,
@@ -15,31 +16,43 @@ import {
   Input,
   Label,
 } from "@alkok/ui";
+import { signupSchema, type SignupFormValues } from "../model/auth-forms.schema";
 import { useSignupMutation } from "../model/useAuthMutations";
 
 export const SignupForm = () => {
   const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [nickname, setNickname] = useState("");
-  const [agreed, setAgreed] = useState(false);
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
-
   const signupMutation = useSignupMutation();
 
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    if (!agreed) {
-      setErrorMsg("필수 이용약관에 동의해 주세요.");
-      return;
+  const {
+    register,
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SignupFormValues>({
+    resolver: zodResolver(signupSchema),
+    mode: "onSubmit",
+    reValidateMode: "onChange",
+    defaultValues: {
+      email: "",
+      nickname: "",
+      password: "",
+      agreed: false,
+    },
+  });
+
+  const onSubmit = async (values: SignupFormValues) => {
+    try {
+      await signupMutation.mutateAsync({
+        email: values.email.trim(),
+        password: values.password,
+        nickname: values.nickname.trim(),
+      });
+      router.push(
+        `/verify-email?email=${encodeURIComponent(values.email.trim())}`,
+      );
+    } catch {
+      // Error toast handled in useSignupMutation
     }
-    setErrorMsg(null);
-    await signupMutation.mutateAsync({
-      email: email.trim(),
-      password,
-      nickname: nickname.trim(),
-    });
-    router.push(`/verify-email?email=${encodeURIComponent(email.trim())}`);
   };
 
   return (
@@ -53,29 +66,39 @@ export const SignupForm = () => {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <form noValidate onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
           <FieldGroup
             htmlFor="signup-email"
             label="이메일"
             required
-            error={errorMsg ?? undefined}
-            errorId="signup-error"
+            error={errors.email?.message}
+            errorId="signup-email-error"
           >
             <Input
               id="signup-email"
               type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
+              autoComplete="email"
+              aria-invalid={Boolean(errors.email)}
+              aria-describedby={errors.email ? "signup-email-error" : undefined}
+              {...register("email")}
             />
           </FieldGroup>
 
-          <FieldGroup htmlFor="signup-nickname" label="닉네임" required>
+          <FieldGroup
+            htmlFor="signup-nickname"
+            label="닉네임"
+            required
+            error={errors.nickname?.message}
+            errorId="signup-nickname-error"
+          >
             <Input
               id="signup-nickname"
-              value={nickname}
-              onChange={(e) => setNickname(e.target.value)}
-              required
+              autoComplete="nickname"
+              aria-invalid={Boolean(errors.nickname)}
+              aria-describedby={
+                errors.nickname ? "signup-nickname-error" : undefined
+              }
+              {...register("nickname")}
             />
           </FieldGroup>
 
@@ -84,26 +107,51 @@ export const SignupForm = () => {
             label="비밀번호"
             required
             hint="8자 이상 입력해 주세요."
+            error={errors.password?.message}
+            errorId="signup-password-error"
           >
             <Input
               id="signup-password"
               type="password"
-              minLength={8}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
+              autoComplete="new-password"
+              aria-invalid={Boolean(errors.password)}
+              aria-describedby={
+                errors.password ? "signup-password-error" : undefined
+              }
+              {...register("password")}
             />
           </FieldGroup>
 
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="signup-terms"
-              checked={agreed}
-              onCheckedChange={(v) => setAgreed(v === true)}
-            />
-            <Label htmlFor="signup-terms" className="text-xs font-normal">
-              (필수) 알콕 서비스 이용약관 및 개인정보 처리방침에 동의합니다.
-            </Label>
+          <div className="flex flex-col gap-1.5">
+            <div className="flex items-center gap-2">
+              <Controller
+                name="agreed"
+                control={control}
+                render={({ field }) => (
+                  <Checkbox
+                    id="signup-terms"
+                    checked={field.value}
+                    onCheckedChange={(v) => field.onChange(v === true)}
+                    aria-invalid={Boolean(errors.agreed)}
+                    aria-describedby={
+                      errors.agreed ? "signup-terms-error" : undefined
+                    }
+                  />
+                )}
+              />
+              <Label htmlFor="signup-terms" className="text-xs font-normal">
+                (필수) 알콕 서비스 이용약관 및 개인정보 처리방침에 동의합니다.
+              </Label>
+            </div>
+            {errors.agreed ? (
+              <p
+                id="signup-terms-error"
+                role="alert"
+                className="text-xs text-destructive"
+              >
+                {errors.agreed.message}
+              </p>
+            ) : null}
           </div>
 
           <Button type="submit" disabled={signupMutation.isPending}>

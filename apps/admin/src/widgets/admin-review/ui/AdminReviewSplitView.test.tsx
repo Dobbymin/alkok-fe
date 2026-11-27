@@ -49,4 +49,37 @@ describe("AdminReviewSplitView", () => {
       }),
     );
   });
+
+  it("blocks approve with inline error when title is empty, while reject still works", async () => {
+    const user = userEvent.setup();
+    const onApprove = vi.fn();
+    const onSaveDraft = vi.fn();
+    const onReject = vi.fn();
+
+    render(
+      <AdminReviewSplitView
+        item={sampleItem}
+        onApprove={onApprove}
+        onSaveDraft={onSaveDraft}
+        onReject={onReject}
+      />,
+    );
+
+    const titleInputs = screen.getAllByLabelText(/제목/);
+    await user.clear(titleInputs[0]!);
+
+    const approveButtons = screen.getAllByRole("button", {
+      name: /승인·즉시 공개/,
+    });
+    await user.click(approveButtons[0]!);
+
+    expect(
+      await screen.findByText("제목을 입력해 주세요."),
+    ).toBeInTheDocument();
+    expect(onApprove).not.toHaveBeenCalled();
+
+    const rejectButtons = screen.getAllByRole("button", { name: /반려/ });
+    await user.click(rejectButtons[0]!);
+    expect(onReject).toHaveBeenCalledTimes(1);
+  });
 });

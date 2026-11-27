@@ -1,10 +1,11 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState, type FormEvent } from "react";
-import { ApiError } from "@alkok/core";
-import { sanitizeNextPath } from "@alkok/core";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { ApiError, sanitizeNextPath } from "@alkok/core";
 import {
   Button,
   Card,
@@ -14,7 +15,9 @@ import {
   CardTitle,
   FieldGroup,
   Input,
+  toast,
 } from "@alkok/ui";
+import { loginSchema, type LoginFormValues } from "../model/auth-forms.schema";
 import {
   useLoginMutation,
   useResendVerificationMutation,
@@ -25,14 +28,27 @@ export const LoginForm = () => {
   const searchParams = useSearchParams();
   const nextPath = sanitizeNextPath(searchParams.get("next"));
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [serverError, setServerError] = useState<string | null>(null);
   const [needsVerify, setNeedsVerify] = useState(false);
   const [cooldown, setCooldown] = useState(0);
 
   const loginMutation = useLoginMutation();
   const resendMutation = useResendVerificationMutation();
+
+  const {
+    register,
+    handleSubmit,
+    getValues,
+    formState: { errors },
+  } = useForm<LoginFormValues>({
+    resolver: zodResolver(loginSchema),
+    mode: "onSubmit",
+    reValidateMode: "onChange",
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
 
   useEffect(() => {
     if (cooldown <= 0) return;
@@ -40,28 +56,34 @@ export const LoginForm = () => {
     return () => window.clearTimeout(timer);
   }, [cooldown]);
 
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    setErrorMsg(null);
+  const onSubmit = async (values: LoginFormValues) => {
+    setServerError(null);
     setNeedsVerify(false);
     try {
-      await loginMutation.mutateAsync({ email: email.trim(), password });
+      await loginMutation.mutateAsync({
+        email: values.email.trim(),
+        password: values.password,
+      });
       router.replace(nextPath);
     } catch (err) {
       if (err instanceof ApiError && err.errorCode === "AUTH_EMAIL_NOT_VERIFIED") {
+        const message = "이메일 인증 완료 후 로그인할 수 있습니다.";
         setNeedsVerify(true);
-        setErrorMsg("이메일 인증 완료 후 로그인할 수 있습니다.");
+        setServerError(message);
+        toast.error(message);
       } else {
-        setErrorMsg(
-          err instanceof Error ? err.message : "로그인에 실패했습니다.",
-        );
+        const message =
+          err instanceof Error ? err.message : "로그인에 실패했습니다.";
+        setServerError(message);
+        toast.error(message);
       }
     }
   };
 
   const handleResend = async () => {
-    if (cooldown > 0 || !email.trim()) return;
-    await resendMutation.mutateAsync(email.trim());
+    const email = getValues("email").trim();
+    if (cooldown > 0 || !email) return;
+    await resendMutation.mutateAsync(email);
     setCooldown(60);
   };
 
@@ -74,35 +96,51 @@ export const LoginForm = () => {
         <CardDescription>알콕(Alkok) 계정으로 로그인하세요.</CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <form noValidate onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
           <FieldGroup
             htmlFor="login-email"
             label="이메일"
             required
-            error={errorMsg ?? undefined}
-            errorId="login-error"
+            error={errors.email?.message}
+            errorId="login-email-error"
           >
             <Input
               id="login-email"
               type="email"
               autoComplete="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              aria-describedby={errorMsg ? "login-error" : undefined}
-              required
+              aria-invalid={Boolean(errors.email)}
+              aria-describedby={errors.email ? "login-email-error" : undefined}
+              {...register("email")}
             />
           </FieldGroup>
 
-          <FieldGroup htmlFor="login-password" label="비밀번호" required>
+          <FieldGroup
+            htmlFor="login-password"
+            label="비밀번호"
+            required
+            error={errors.password?.message}
+            errorId="login-password-error"
+          >
             <Input
               id="login-password"
               type="password"
               autoComplete="current-password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
+              aria-invalid={Boolean(errors.password)}
+              aria-describedby={
+                errors.password ? "login-password-error" : undefined
+              }
+              {...register("password")}
             />
           </FieldGroup>
+
+          {serverError && !needsVerify ? (
+            <p
+              role="alert"
+              className="rounded-md border border-status-expired-border bg-status-expired-bg px-3 py-2 text-xs text-status-expired-fg"
+            >
+              {serverError}
+            </p>
+          ) : null}
 
           {needsVerify ? (
             <div className="rounded-md border border-status-review-border bg-status-review-bg p-3 text-xs">

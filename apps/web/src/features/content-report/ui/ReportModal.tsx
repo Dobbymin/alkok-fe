@@ -1,9 +1,10 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { Flag } from "lucide-react";
-import { useState, type FormEvent } from "react";
-import { toast } from "sonner";
+import { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import type { ReportReason } from "@alkok/core";
 import {
   Button,
@@ -22,8 +23,10 @@ import {
   SelectTrigger,
   SelectValue,
   Textarea,
+  toast,
 } from "@alkok/ui";
 import { reportApi } from "../api/report.api";
+import { reportSchema, type ReportFormValues } from "../model/report.schema";
 
 const REASON_OPTIONS: Array<{ value: ReportReason; label: string }> = [
   { value: "PRICING_CHANGED", label: "요금·무료 한도 변경" },
@@ -39,26 +42,37 @@ export interface ReportModalProps {
 
 export const ReportModal = ({ contentId, contentTitle }: ReportModalProps) => {
   const [open, setOpen] = useState(false);
-  const [reason, setReason] = useState<ReportReason>("PRICING_CHANGED");
-  const [detail, setDetail] = useState("");
-  const [reporterEmail, setReporterEmail] = useState("");
-  const [website, setWebsite] = useState("");
+
+  const {
+    register,
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<ReportFormValues>({
+    resolver: zodResolver(reportSchema),
+    mode: "onSubmit",
+    reValidateMode: "onChange",
+    defaultValues: {
+      reason: "PRICING_CHANGED",
+      detail: "",
+      reporterEmail: "",
+      website: "",
+    },
+  });
 
   const mutation = useMutation({
-    mutationFn: () =>
+    mutationFn: (values: ReportFormValues) =>
       reportApi.submitReport(contentId, {
-        reason,
-        detail: detail.trim(),
-        reporterEmail: reporterEmail.trim() || undefined,
-        website: website || undefined,
+        reason: values.reason,
+        detail: values.detail.trim(),
+        reporterEmail: values.reporterEmail.trim() || undefined,
+        website: values.website || undefined,
       }),
     onSuccess: () => {
       toast.success("오류·최신화 제보가 접수되었습니다. 감사합니다.");
       setOpen(false);
-      setReason("PRICING_CHANGED");
-      setDetail("");
-      setReporterEmail("");
-      setWebsite("");
+      reset();
     },
     onError: (err) => {
       toast.error(
@@ -67,14 +81,18 @@ export const ReportModal = ({ contentId, contentTitle }: ReportModalProps) => {
     },
   });
 
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    if (!detail.trim()) return;
-    mutation.mutate();
+  const onSubmit = (values: ReportFormValues) => {
+    mutation.mutate(values);
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog
+      open={open}
+      onOpenChange={(next) => {
+        setOpen(next);
+        if (!next) reset();
+      }}
+    >
       <DialogTrigger asChild>
         <Button type="button" variant="ghost" size="sm">
           <Flag className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden="true" />
@@ -91,57 +109,74 @@ export const ReportModal = ({ contentId, contentTitle }: ReportModalProps) => {
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <form noValidate onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
           <FieldGroup
             htmlFor={`report-reason-${contentId}`}
             label="제보 사유"
             required
+            error={errors.reason?.message}
+            errorId={`report-reason-error-${contentId}`}
           >
-            <Select
-              value={reason}
-              onValueChange={(v) => setReason(v as ReportReason)}
-            >
-              <SelectTrigger
-                id={`report-reason-${contentId}`}
-                className="h-9 bg-background text-sm"
-              >
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {REASON_OPTIONS.map((opt) => (
-                  <SelectItem key={opt.value} value={opt.value}>
-                    {opt.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <Controller
+              name="reason"
+              control={control}
+              render={({ field }) => (
+                <Select value={field.value} onValueChange={field.onChange}>
+                  <SelectTrigger
+                    id={`report-reason-${contentId}`}
+                    className="h-9 bg-background text-sm"
+                    aria-invalid={Boolean(errors.reason)}
+                  >
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {REASON_OPTIONS.map((opt) => (
+                      <SelectItem key={opt.value} value={opt.value}>
+                        {opt.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            />
           </FieldGroup>
 
           <FieldGroup
             htmlFor={`report-detail-${contentId}`}
             label="상세 내용"
             required
+            error={errors.detail?.message}
+            errorId={`report-detail-error-${contentId}`}
           >
             <Textarea
               id={`report-detail-${contentId}`}
               rows={3}
-              value={detail}
-              onChange={(e) => setDetail(e.target.value)}
               placeholder="예: 무료 플랜이 월 10회로 변경되었습니다."
-              required
+              aria-invalid={Boolean(errors.detail)}
+              aria-describedby={
+                errors.detail ? `report-detail-error-${contentId}` : undefined
+              }
+              {...register("detail")}
             />
           </FieldGroup>
 
           <FieldGroup
             htmlFor={`report-email-${contentId}`}
             label="회신 이메일 (선택)"
+            error={errors.reporterEmail?.message}
+            errorId={`report-email-error-${contentId}`}
           >
             <Input
               id={`report-email-${contentId}`}
               type="email"
-              value={reporterEmail}
-              onChange={(e) => setReporterEmail(e.target.value)}
               placeholder="name@example.com"
+              aria-invalid={Boolean(errors.reporterEmail)}
+              aria-describedby={
+                errors.reporterEmail
+                  ? `report-email-error-${contentId}`
+                  : undefined
+              }
+              {...register("reporterEmail")}
             />
           </FieldGroup>
 
@@ -150,12 +185,10 @@ export const ReportModal = ({ contentId, contentTitle }: ReportModalProps) => {
             <label htmlFor={`report-website-${contentId}`}>Website</label>
             <input
               id={`report-website-${contentId}`}
-              name="website"
               type="text"
               tabIndex={-1}
               autoComplete="off"
-              value={website}
-              onChange={(e) => setWebsite(e.target.value)}
+              {...register("website")}
             />
           </div>
 
@@ -171,7 +204,7 @@ export const ReportModal = ({ contentId, contentTitle }: ReportModalProps) => {
             <Button
               type="submit"
               size="sm"
-              disabled={mutation.isPending || !detail.trim()}
+              disabled={mutation.isPending}
             >
               {mutation.isPending ? "접수 중..." : "제보 제출"}
             </Button>

@@ -29,7 +29,7 @@ import {
 } from "@alkok/ui";
 import type { PublicShellCounts } from "../model/shell-counts.types";
 import { useSidebarStore } from "../model/sidebar.store";
-import { BrandLogo, BrandSymbol } from "./BrandLogo";
+import { BrandLogo } from "./BrandLogo";
 import {
   CompareNavIcon,
   GuideNavIcon,
@@ -182,7 +182,7 @@ function SidebarDomainSection({
 
   return (
     <div className="mt-6">
-      <p className="px-3 pb-2 text-[11px] font-medium tracking-[0.04em] text-muted-foreground">
+      <p className="whitespace-nowrap px-3 pb-2 text-[11px] font-medium tracking-[0.04em] text-muted-foreground">
         업무별 탐색
       </p>
       <div className="flex flex-col gap-0.5">
@@ -228,7 +228,7 @@ function SidebarDomainSection({
 function SidebarDomainSectionSkeleton() {
   return (
     <div className="mt-6" aria-hidden="true">
-      <p className="px-3 pb-2 text-[11px] font-medium tracking-[0.04em] text-muted-foreground">
+      <p className="whitespace-nowrap px-3 pb-2 text-[11px] font-medium tracking-[0.04em] text-muted-foreground">
         업무별 탐색
       </p>
       <div className="flex flex-col gap-0.5">
@@ -325,36 +325,26 @@ export const DesktopSidebar = ({ counts }: { counts?: PublicShellCounts }) => {
     <aside
       aria-label="주 사이드바"
       className={cn(
-        "sticky top-0 hidden h-dvh shrink-0 flex-col border-e border-sidebar-border bg-sidebar text-sidebar-foreground transition-[width] duration-200 ease-out md:flex",
+        "sticky top-0 hidden h-dvh shrink-0 flex-col overflow-x-hidden border-e border-sidebar-border bg-sidebar text-sidebar-foreground transition-[width] duration-200 ease-out md:flex",
         collapsed ? "w-16" : "w-60",
       )}
     >
       {/* Top: Brand & Collapse Toggle */}
       <div
         className={cn(
-          "flex h-14 shrink-0 items-center px-3",
+          "flex h-14 shrink-0 items-center gap-2 overflow-hidden px-3",
           collapsed ? "justify-center" : "justify-between",
         )}
       >
         {collapsed ? (
           <Tooltip>
             <TooltipTrigger asChild>
-              <button
-                type="button"
-                onClick={toggleCollapsed}
-                aria-label="사이드바 펼치기"
-                aria-expanded={false}
-                className="group relative inline-flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors duration-150 ease-out hover:bg-secondary hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
-              >
-                <BrandSymbol className="h-6 w-6 transition-opacity duration-150 group-hover:opacity-0 group-focus-visible:opacity-0" />
-                <SidebarSimple
-                  weight="regular"
-                  aria-hidden="true"
-                  className="absolute h-[18px] w-[18px] opacity-0 transition-opacity duration-150 group-hover:opacity-100 group-focus-visible:opacity-100"
-                />
-              </button>
+              <BrandLogo
+                compact
+                className="flex h-9 w-9 items-center justify-center rounded-lg transition-colors duration-150 ease-out hover:bg-secondary"
+              />
             </TooltipTrigger>
-            <TooltipContent side="right">사이드바 펼치기</TooltipContent>
+            <TooltipContent side="right">알콕 홈</TooltipContent>
           </Tooltip>
         ) : (
           <>
@@ -365,6 +355,7 @@ export const DesktopSidebar = ({ counts }: { counts?: PublicShellCounts }) => {
               onClick={toggleCollapsed}
               aria-label="사이드바 접기"
               aria-expanded={true}
+              className="shrink-0"
             >
               <SidebarSimple
                 className="h-[18px] w-[18px]"
@@ -376,16 +367,34 @@ export const DesktopSidebar = ({ counts }: { counts?: PublicShellCounts }) => {
         )}
       </div>
 
-      {/* Quick Search Trigger */}
-      <div className={cn("px-3", collapsed ? "pt-1 pb-1" : "pt-1 pb-3")}>
-        {collapsed ? (
+      {/* Expand & Quick Search Triggers */}
+      {collapsed ? (
+        <div className="flex flex-col items-center gap-1 px-3 pt-1 pb-1">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                type="button"
+                onClick={toggleCollapsed}
+                aria-label="사이드바 펼치기"
+                aria-expanded={false}
+                className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground [-webkit-tap-highlight-color:transparent] transition-colors duration-150 ease-out hover:bg-secondary hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+              >
+                <SidebarSimple
+                  weight="regular"
+                  aria-hidden="true"
+                  className="h-[18px] w-[18px]"
+                />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent side="right">사이드바 펼치기</TooltipContent>
+          </Tooltip>
           <Tooltip>
             <TooltipTrigger asChild>
               <button
                 type="button"
                 onClick={openSearch}
                 aria-label="빠른 검색 열기"
-                className="mx-auto flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground [-webkit-tap-highlight-color:transparent] transition-[color,background-color] duration-150 ease-out hover:bg-secondary hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground [-webkit-tap-highlight-color:transparent] transition-colors duration-150 ease-out hover:bg-secondary hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
               >
                 <MagnifyingGlass
                   className="h-[18px] w-[18px] shrink-0"
@@ -396,7 +405,9 @@ export const DesktopSidebar = ({ counts }: { counts?: PublicShellCounts }) => {
             </TooltipTrigger>
             <TooltipContent side="right">빠른 검색 (⌘K)</TooltipContent>
           </Tooltip>
-        ) : (
+        </div>
+      ) : (
+        <div className="px-3 pt-1 pb-3">
           <button
             type="button"
             onClick={openSearch}
@@ -413,8 +424,8 @@ export const DesktopSidebar = ({ counts }: { counts?: PublicShellCounts }) => {
               ⌘K
             </kbd>
           </button>
-        )}
-      </div>
+        </div>
+      )}
 
       {collapsed ? (
         <div aria-hidden="true" className="mx-auto my-2 h-px w-5 bg-separator" />
@@ -426,7 +437,7 @@ export const DesktopSidebar = ({ counts }: { counts?: PublicShellCounts }) => {
         className="flex-1 overflow-y-auto overscroll-contain px-3 py-1"
       >
         {!collapsed ? (
-          <p className="px-3 pb-2 text-[11px] font-medium tracking-[0.04em] text-muted-foreground">
+          <p className="whitespace-nowrap px-3 pb-2 text-[11px] font-medium tracking-[0.04em] text-muted-foreground">
             탐색
           </p>
         ) : null}
@@ -453,7 +464,7 @@ export const DesktopSidebar = ({ counts }: { counts?: PublicShellCounts }) => {
 
         <div className={collapsed ? "" : "mt-6"}>
           {!collapsed ? (
-            <p className="px-3 pb-2 text-[11px] font-medium tracking-[0.04em] text-muted-foreground">
+            <p className="whitespace-nowrap px-3 pb-2 text-[11px] font-medium tracking-[0.04em] text-muted-foreground">
               워크스페이스
             </p>
           ) : null}

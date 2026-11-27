@@ -2,8 +2,7 @@
 
 import { Check, Scale } from "lucide-react";
 import { useEffect } from "react";
-import { toast } from "sonner";
-import { Button } from "@alkok/ui";
+import { Button, toast } from "@alkok/ui";
 import { getCompareMaxLimit, useCompareStore } from "../model/compare.store";
 
 export const CompareToggleButton = ({

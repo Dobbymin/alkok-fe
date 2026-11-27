@@ -1,9 +1,10 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Bookmark, Check, Folder, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState, type FormEvent } from "react";
-import { toast } from "sonner";
+import { useEffect, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import {
   useCreateBookmarkMutation,
   useDeleteVaultItemMutation,
@@ -14,6 +15,7 @@ import {
 } from "@/entities/vault";
 import {
   cn,
+  parseCommaSeparated,
   selectIsAuthenticated,
   useAuthStore,
   type ContentType,
@@ -36,7 +38,12 @@ import {
   SheetHeader,
   SheetTitle,
   Textarea,
+  toast,
 } from "@alkok/ui";
+import {
+  bookmarkMetaSchema,
+  type BookmarkMetaFormValues,
+} from "../model/vault-save.schema";
 
 const UNCLASSIFIED_FOLDER_VALUE = "__UNCLASSIFIED__";
 
@@ -83,18 +90,28 @@ export const BookmarkAction = ({
   const [savedItem, setSavedItem] = useState<VaultItem | null>(initialSavedItem);
   const [editorOpen, setEditorOpen] = useState(false);
   const [useSheet, setUseSheet] = useState(false);
-  const [folderId, setFolderId] = useState<string>(
-    initialSavedItem?.folderId ?? "",
-  );
-  const [memo, setMemo] = useState<string>(initialSavedItem?.memo ?? "");
-  const [tagsText, setTagsText] = useState<string>(
-    initialSavedItem?.tags.map((t) => t.name).join(", ") ?? "",
-  );
 
   const foldersQuery = useVaultFoldersQuery(isAuthenticated && editorOpen);
   const createBookmark = useCreateBookmarkMutation();
   const updateItem = useUpdateVaultItemMutation();
   const deleteItem = useDeleteVaultItemMutation();
+
+  const {
+    register,
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<BookmarkMetaFormValues>({
+    resolver: zodResolver(bookmarkMetaSchema),
+    mode: "onSubmit",
+    reValidateMode: "onChange",
+    defaultValues: {
+      folderId: initialSavedItem?.folderId ?? "",
+      memo: initialSavedItem?.memo ?? "",
+      tagsText: initialSavedItem?.tags.map((t) => t.name).join(", ") ?? "",
+    },
+  });
 
   const folders = foldersQuery.data?.data ?? [];
   const isSaved = isAuthenticated ? Boolean(savedItem) : localSaved;
@@ -132,9 +149,11 @@ export const BookmarkAction = ({
       const res = await createBookmark.mutateAsync({ contentId });
       const created = res.data;
       setSavedItem(created);
-      setFolderId(created.folderId ?? "");
-      setMemo(created.memo ?? "");
-      setTagsText(created.tags.map((t) => t.name).join(", "));
+      reset({
+        folderId: created.folderId ?? "",
+        memo: created.memo ?? "",
+        tagsText: created.tags.map((t) => t.name).join(", "),
+      });
       setEditorOpen(true);
       toast.success("내 보관함에 저장되었습니다.");
     } catch (err) {
@@ -144,19 +163,15 @@ export const BookmarkAction = ({
     }
   };
 
-  const handleSaveMeta = async (e: FormEvent) => {
-    e.preventDefault();
+  const handleSaveMeta = async (values: BookmarkMetaFormValues) => {
     if (!savedItem) return;
-    const tagNames = tagsText
-      .split(",")
-      .map((s) => s.trim())
-      .filter(Boolean);
+    const tagNames = parseCommaSeparated(values.tagsText);
     try {
       const res = await updateItem.mutateAsync({
         id: savedItem.id,
         input: {
-          folderId: folderId || null,
-          memo: memo.trim() || null,
+          folderId: values.folderId || null,
+          memo: values.memo.trim() || null,
           tagNames,
         },
       });
@@ -173,9 +188,7 @@ export const BookmarkAction = ({
     try {
       await deleteItem.mutateAsync(savedItem.id);
       setSavedItem(null);
-      setFolderId("");
-      setMemo("");
-      setTagsText("");
+      reset({ folderId: "", memo: "", tagsText: "" });
       setEditorOpen(false);
       toast.success("보관함에서 제거되었습니다.");
     } catch (err) {
@@ -184,66 +197,92 @@ export const BookmarkAction = ({
   };
 
   const formBody = (
-    <form onSubmit={handleSaveMeta} className="flex flex-col gap-3">
+    <form
+      noValidate
+      onSubmit={handleSubmit(handleSaveMeta)}
+      className="flex flex-col gap-3"
+    >
       <div className="flex items-center justify-between gap-2">
         <span className="text-xs font-semibold text-foreground">
           보관함 빠른 정리
         </span>
         {title ? (
-          <span className="truncate text-[11px] text-muted-foreground max-w-44">
+          <span className="max-w-44 truncate text-[11px] text-muted-foreground">
             {title}
           </span>
         ) : null}
       </div>
 
       <FieldGroup htmlFor={`bm-folder-${contentId}`} label="폴더">
-        <Select
-          value={folderId || UNCLASSIFIED_FOLDER_VALUE}
-          onValueChange={(v) =>
-            setFolderId(v === UNCLASSIFIED_FOLDER_VALUE ? "" : v)
-          }
-        >
-          <SelectTrigger
-            id={`bm-folder-${contentId}`}
-            className="h-9 bg-background text-xs"
-          >
-            <span className="flex min-w-0 items-center gap-2">
-              <Folder
-                className="h-3.5 w-3.5 shrink-0 text-muted-foreground"
-                aria-hidden="true"
-              />
-              <span className="truncate">
-                <SelectValue />
-              </span>
-            </span>
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value={UNCLASSIFIED_FOLDER_VALUE}>미분류</SelectItem>
-            {folders.map((f) => (
-              <SelectItem key={f.id} value={f.id}>
-                {f.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </FieldGroup>
-
-      <FieldGroup htmlFor={`bm-tags-${contentId}`} label="태그 (쉼표 구분)">
-        <Input
-          id={`bm-tags-${contentId}`}
-          value={tagsText}
-          onChange={(e) => setTagsText(e.target.value)}
-          placeholder="예: 보고서, 주간업무"
+        <Controller
+          name="folderId"
+          control={control}
+          render={({ field }) => (
+            <Select
+              value={field.value || UNCLASSIFIED_FOLDER_VALUE}
+              onValueChange={(v) =>
+                field.onChange(v === UNCLASSIFIED_FOLDER_VALUE ? "" : v)
+              }
+            >
+              <SelectTrigger
+                id={`bm-folder-${contentId}`}
+                className="h-9 bg-background text-xs"
+              >
+                <span className="flex min-w-0 items-center gap-2">
+                  <Folder
+                    className="h-3.5 w-3.5 shrink-0 text-muted-foreground"
+                    aria-hidden="true"
+                  />
+                  <span className="truncate">
+                    <SelectValue />
+                  </span>
+                </span>
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value={UNCLASSIFIED_FOLDER_VALUE}>미분류</SelectItem>
+                {folders.map((f) => (
+                  <SelectItem key={f.id} value={f.id}>
+                    {f.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
         />
       </FieldGroup>
 
-      <FieldGroup htmlFor={`bm-memo-${contentId}`} label="메모">
+      <FieldGroup
+        htmlFor={`bm-tags-${contentId}`}
+        label="태그 (쉼표 구분)"
+        error={errors.tagsText?.message}
+        errorId={`bm-tags-error-${contentId}`}
+      >
+        <Input
+          id={`bm-tags-${contentId}`}
+          placeholder="예: 보고서, 주간업무"
+          aria-invalid={Boolean(errors.tagsText)}
+          aria-describedby={
+            errors.tagsText ? `bm-tags-error-${contentId}` : undefined
+          }
+          {...register("tagsText")}
+        />
+      </FieldGroup>
+
+      <FieldGroup
+        htmlFor={`bm-memo-${contentId}`}
+        label="메모"
+        error={errors.memo?.message}
+        errorId={`bm-memo-error-${contentId}`}
+      >
         <Textarea
           id={`bm-memo-${contentId}`}
           rows={2}
-          value={memo}
-          onChange={(e) => setMemo(e.target.value)}
           placeholder="활용 팁이나 참고 메모"
+          aria-invalid={Boolean(errors.memo)}
+          aria-describedby={
+            errors.memo ? `bm-memo-error-${contentId}` : undefined
+          }
+          {...register("memo")}
         />
       </FieldGroup>
 

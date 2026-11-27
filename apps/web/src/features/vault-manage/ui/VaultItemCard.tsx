@@ -1,15 +1,17 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { ExternalLink, Folder, Pencil, Trash2 } from "lucide-react";
 import Link from "next/link";
-import { useState, type FormEvent } from "react";
-import { toast } from "sonner";
+import { useEffect, useMemo, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import {
   useDeleteVaultItemMutation,
   useUpdateVaultItemMutation,
   type VaultFolder,
   type VaultItem,
 } from "@/entities/vault";
+import { parseCommaSeparated } from "@alkok/core";
 import {
   Badge,
   Button,
@@ -30,7 +32,12 @@ import {
   SelectTrigger,
   SelectValue,
   Textarea,
+  toast,
 } from "@alkok/ui";
+import {
+  createVaultItemEditSchema,
+  type VaultItemEditFormValues,
+} from "../model/vault-manage.schema";
 
 const UNCLASSIFIED_FOLDER_VALUE = "__UNCLASSIFIED__";
 
@@ -51,32 +58,54 @@ const getInternalHref = (item: VaultItem) => {
 
 export const VaultItemCard = ({ item, folders }: VaultItemCardProps) => {
   const [editOpen, setEditOpen] = useState(false);
-  const [title, setTitle] = useState(item.title);
-  const [folderId, setFolderId] = useState(item.folderId ?? "");
-  const [memo, setMemo] = useState(item.memo ?? "");
-  const [tagsText, setTagsText] = useState(
-    item.tags.map((t) => t.name).join(", "),
-  );
 
   const updateMutation = useUpdateVaultItemMutation();
   const deleteMutation = useDeleteVaultItemMutation();
 
   const isExternal = item.itemType === "EXTERNAL_URL";
   const href = isExternal ? item.externalUrl ?? "#" : getInternalHref(item);
+  const schema = useMemo(
+    () => createVaultItemEditSchema(isExternal),
+    [isExternal],
+  );
 
-  const handleSave = async (e: FormEvent) => {
-    e.preventDefault();
-    const tagNames = tagsText
-      .split(",")
-      .map((s) => s.trim())
-      .filter(Boolean);
+  const {
+    register,
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<VaultItemEditFormValues>({
+    resolver: zodResolver(schema),
+    mode: "onSubmit",
+    reValidateMode: "onChange",
+    defaultValues: {
+      title: item.title,
+      folderId: item.folderId ?? "",
+      memo: item.memo ?? "",
+      tagsText: item.tags.map((t) => t.name).join(", "),
+    },
+  });
+
+  useEffect(() => {
+    if (!editOpen) return;
+    reset({
+      title: item.title,
+      folderId: item.folderId ?? "",
+      memo: item.memo ?? "",
+      tagsText: item.tags.map((t) => t.name).join(", "),
+    });
+  }, [editOpen, item, reset]);
+
+  const handleSave = async (values: VaultItemEditFormValues) => {
+    const tagNames = parseCommaSeparated(values.tagsText);
     try {
       await updateMutation.mutateAsync({
         id: item.id,
         input: {
-          title: isExternal ? title.trim() : undefined,
-          folderId: folderId || null,
-          memo: memo.trim() || null,
+          title: isExternal ? values.title.trim() : undefined,
+          folderId: values.folderId || null,
+          memo: values.memo.trim() || null,
           tagNames,
         },
       });
@@ -183,53 +212,87 @@ export const VaultItemCard = ({ item, folders }: VaultItemCardProps) => {
           <DialogHeader>
             <DialogTitle>보관함 항목 편집</DialogTitle>
           </DialogHeader>
-          <form onSubmit={handleSave} className="flex flex-col gap-3">
+          <form
+            noValidate
+            onSubmit={handleSubmit(handleSave)}
+            className="flex flex-col gap-3"
+          >
             {isExternal ? (
-              <FieldGroup htmlFor={`edit-title-${item.id}`} label="제목" required>
+              <FieldGroup
+                htmlFor={`edit-title-${item.id}`}
+                label="제목"
+                required
+                error={errors.title?.message}
+                errorId={`edit-title-error-${item.id}`}
+              >
                 <Input
                   id={`edit-title-${item.id}`}
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  required
+                  aria-invalid={Boolean(errors.title)}
+                  aria-describedby={
+                    errors.title ? `edit-title-error-${item.id}` : undefined
+                  }
+                  {...register("title")}
                 />
               </FieldGroup>
             ) : null}
             <FieldGroup htmlFor={`edit-folder-${item.id}`} label="폴더">
-              <Select
-                value={folderId || UNCLASSIFIED_FOLDER_VALUE}
-                onValueChange={(v) =>
-                  setFolderId(v === UNCLASSIFIED_FOLDER_VALUE ? "" : v)
-                }
-              >
-                <SelectTrigger
-                  id={`edit-folder-${item.id}`}
-                  className="h-9 bg-background text-sm"
-                >
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value={UNCLASSIFIED_FOLDER_VALUE}>미분류</SelectItem>
-                  {folders.map((f) => (
-                    <SelectItem key={f.id} value={f.id}>
-                      {f.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </FieldGroup>
-            <FieldGroup htmlFor={`edit-tags-${item.id}`} label="태그 (쉼표 구분)">
-              <Input
-                id={`edit-tags-${item.id}`}
-                value={tagsText}
-                onChange={(e) => setTagsText(e.target.value)}
+              <Controller
+                name="folderId"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    value={field.value || UNCLASSIFIED_FOLDER_VALUE}
+                    onValueChange={(v) =>
+                      field.onChange(v === UNCLASSIFIED_FOLDER_VALUE ? "" : v)
+                    }
+                  >
+                    <SelectTrigger
+                      id={`edit-folder-${item.id}`}
+                      className="h-9 bg-background text-sm"
+                    >
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value={UNCLASSIFIED_FOLDER_VALUE}>미분류</SelectItem>
+                      {folders.map((f) => (
+                        <SelectItem key={f.id} value={f.id}>
+                          {f.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
               />
             </FieldGroup>
-            <FieldGroup htmlFor={`edit-memo-${item.id}`} label="메모">
+            <FieldGroup
+              htmlFor={`edit-tags-${item.id}`}
+              label="태그 (쉼표 구분)"
+              error={errors.tagsText?.message}
+              errorId={`edit-tags-error-${item.id}`}
+            >
+              <Input
+                id={`edit-tags-${item.id}`}
+                aria-invalid={Boolean(errors.tagsText)}
+                aria-describedby={
+                  errors.tagsText ? `edit-tags-error-${item.id}` : undefined
+                }
+                {...register("tagsText")}
+              />
+            </FieldGroup>
+            <FieldGroup
+              htmlFor={`edit-memo-${item.id}`}
+              label="메모"
+              error={errors.memo?.message}
+              errorId={`edit-memo-error-${item.id}`}
+            >
               <Textarea
                 id={`edit-memo-${item.id}`}
                 rows={3}
-                value={memo}
-                onChange={(e) => setMemo(e.target.value)}
+                aria-invalid={Boolean(errors.memo)}
+                aria-describedby={
+                  errors.memo ? `edit-memo-error-${item.id}` : undefined
+                }
+                {...register("memo")}
               />
             </FieldGroup>
             <DialogFooter>

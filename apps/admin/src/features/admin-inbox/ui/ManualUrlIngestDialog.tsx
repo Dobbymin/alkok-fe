@@ -1,6 +1,8 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
 import {
   Button,
   Dialog,
@@ -12,6 +14,10 @@ import {
   FieldGroup,
   Input,
 } from "@alkok/ui";
+import {
+  manualIngestSchema,
+  type ManualIngestFormValues,
+} from "../model/manual-ingest.schema";
 
 interface ManualUrlIngestDialogProps {
   open: boolean;
@@ -26,13 +32,25 @@ export const ManualUrlIngestDialog = ({
   onSubmit,
   isPending = false,
 }: ManualUrlIngestDialogProps) => {
-  const [url, setUrl] = useState("");
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<ManualIngestFormValues>({
+    resolver: zodResolver(manualIngestSchema),
+    mode: "onSubmit",
+    reValidateMode: "onChange",
+    defaultValues: { url: "" },
+  });
 
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    if (!url.trim()) return;
-    await onSubmit(url.trim());
-    setUrl("");
+  useEffect(() => {
+    if (!open) reset({ url: "" });
+  }, [open, reset]);
+
+  const handleValidSubmit = async (values: ManualIngestFormValues) => {
+    await onSubmit(values.url.trim());
+    reset({ url: "" });
     onOpenChange(false);
   };
 
@@ -45,19 +63,32 @@ export const ManualUrlIngestDialog = ({
             공식 블로그나 문서 URL을 입력하면 원문을 추출해 AI 한국어 초안을 생성합니다.
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <FieldGroup htmlFor="manual-ingest-url" label="원문 URL" required>
+        <form
+          noValidate
+          onSubmit={handleSubmit(handleValidSubmit)}
+          className="flex flex-col gap-4"
+        >
+          <FieldGroup
+            htmlFor="manual-ingest-url"
+            label="원문 URL"
+            required
+            error={errors.url?.message}
+            errorId="manual-ingest-url-error"
+          >
             <Input
               id="manual-ingest-url"
               type="url"
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
               placeholder="https://openai.com/index/..."
-              required
+              aria-invalid={Boolean(errors.url)}
+              aria-describedby={
+                errors.url ? "manual-ingest-url-error" : undefined
+              }
+              {...register("url")}
             />
           </FieldGroup>
           <DialogFooter>
             <Button
+              type="button"
               variant="outline"
               size="sm"
               onClick={() => onOpenChange(false)}

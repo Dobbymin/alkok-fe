@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { toast } from "sonner";
+import { toast } from "@alkok/ui";
 import { Workbox } from "workbox-window";
 
 export const PwaUpdateProvider = () => {

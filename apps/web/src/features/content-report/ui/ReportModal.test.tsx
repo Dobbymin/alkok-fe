@@ -43,4 +43,26 @@ describe("ReportModal", () => {
       });
     });
   });
+
+  it("shows inline validation errors for empty detail and invalid optional email", async () => {
+    const qc = new QueryClient();
+    render(
+      <QueryClientProvider client={qc}>
+        <ReportModal contentId="c2" />
+      </QueryClientProvider>,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: /오류·최신화 제보/ }));
+    fireEvent.change(screen.getByLabelText(/회신 이메일/), {
+      target: { value: "not-an-email" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "제보 제출" }));
+
+    expect(
+      await screen.findByText("상세 내용을 입력해 주세요."),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("올바른 이메일 형식을 입력해 주세요."),
+    ).toBeInTheDocument();
+  });
 });

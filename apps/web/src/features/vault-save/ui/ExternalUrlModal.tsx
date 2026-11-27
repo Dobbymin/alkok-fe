@@ -1,15 +1,16 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { AlertTriangle, Globe, Link2, Plus } from "lucide-react";
-import { useState, type FormEvent } from "react";
-import { toast } from "sonner";
+import { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import {
   useCreateExternalUrlMutation,
   usePreviewExternalUrlMutation,
   type VaultFolder,
   type VaultPreviewResult,
 } from "@/entities/vault";
-import { ApiError } from "@alkok/core";
+import { ApiError, parseCommaSeparated } from "@alkok/core";
 import {
   Button,
   Dialog,
@@ -27,7 +28,12 @@ import {
   SelectTrigger,
   SelectValue,
   Textarea,
+  toast,
 } from "@alkok/ui";
+import {
+  externalUrlSchema,
+  type ExternalUrlFormValues,
+} from "../model/vault-save.schema";
 
 const UNCLASSIFIED_FOLDER_VALUE = "__UNCLASSIFIED__";
 
@@ -41,13 +47,7 @@ export const ExternalUrlModal = ({
   defaultFolderId = "",
 }: ExternalUrlModalProps) => {
   const [open, setOpen] = useState(false);
-  const [url, setUrl] = useState("");
-  const [title, setTitle] = useState("");
-  const [summary, setSummary] = useState("");
   const [thumbnailUrl, setThumbnailUrl] = useState<string | null>(null);
-  const [folderId, setFolderId] = useState(defaultFolderId);
-  const [memo, setMemo] = useState("");
-  const [tagsText, setTagsText] = useState("");
   const [previewed, setPreviewed] = useState<VaultPreviewResult | null>(null);
   const [errorBanner, setErrorBanner] = useState<string | null>(null);
   const [duplicateUrl, setDuplicateUrl] = useState(false);
@@ -55,66 +55,94 @@ export const ExternalUrlModal = ({
   const previewMutation = usePreviewExternalUrlMutation();
   const createMutation = useCreateExternalUrlMutation();
 
+  const {
+    register,
+    control,
+    handleSubmit,
+    trigger,
+    getValues,
+    setValue,
+    reset,
+    formState: { errors },
+  } = useForm<ExternalUrlFormValues>({
+    resolver: zodResolver(externalUrlSchema),
+    mode: "onSubmit",
+    reValidateMode: "onChange",
+    defaultValues: {
+      url: "",
+      title: "",
+      summary: "",
+      folderId: defaultFolderId,
+      tagsText: "",
+      memo: "",
+    },
+  });
+
   const resetForm = () => {
-    setUrl("");
-    setTitle("");
-    setSummary("");
+    reset({
+      url: "",
+      title: "",
+      summary: "",
+      folderId: defaultFolderId,
+      tagsText: "",
+      memo: "",
+    });
     setThumbnailUrl(null);
-    setFolderId(defaultFolderId);
-    setMemo("");
-    setTagsText("");
     setPreviewed(null);
     setErrorBanner(null);
     setDuplicateUrl(false);
   };
 
   const handlePreview = async () => {
-    if (!url.trim()) return;
+    const valid = await trigger("url");
+    if (!valid) return;
+    const targetUrl = getValues("url").trim();
     setErrorBanner(null);
     setDuplicateUrl(false);
     try {
-      const res = await previewMutation.mutateAsync(url.trim());
+      const res = await previewMutation.mutateAsync(targetUrl);
       const data = res.data;
       setPreviewed(data);
-      setTitle(data.title ?? "");
-      setSummary(data.description ?? "");
+      setValue("title", data.title ?? "", { shouldValidate: false });
+      setValue("summary", data.description ?? "", { shouldValidate: false });
       setThumbnailUrl(data.thumbnailUrl ?? null);
     } catch (err) {
       if (err instanceof ApiError && err.errorCode === "SSRF_BLOCKED_URL") {
-        setErrorBanner("보안 정책상 허용되지 않는 내부/로컬 URL입니다.");
+        const message = "보안 정책상 허용되지 않는 내부/로컬 URL입니다.";
+        setErrorBanner(message);
+        toast.error(message);
       } else if (
         err instanceof ApiError &&
         err.errorCode === "VAULT_DUPLICATE_URL"
       ) {
+        const message = "이미 보관함에 저장된 URL입니다.";
         setDuplicateUrl(true);
-        setErrorBanner("이미 보관함에 저장된 URL입니다.");
+        setErrorBanner(message);
+        toast.error(message);
       } else {
-        setErrorBanner(
+        const message =
           err instanceof Error
             ? err.message
-            : "URL 미리보기를 불러오지 못했습니다.",
-        );
+            : "URL 미리보기를 불러오지 못했습니다.";
+        setErrorBanner(message);
+        toast.error(message);
       }
     }
   };
 
-  const handleSave = async (e: FormEvent) => {
-    e.preventDefault();
+  const onSave = async (values: ExternalUrlFormValues) => {
     setErrorBanner(null);
     setDuplicateUrl(false);
-    const tagNames = tagsText
-      .split(",")
-      .map((s) => s.trim())
-      .filter(Boolean);
+    const tagNames = parseCommaSeparated(values.tagsText);
 
     try {
       await createMutation.mutateAsync({
-        url: url.trim(),
-        title: title.trim() || url.trim(),
-        summary: summary.trim() || undefined,
+        url: values.url.trim(),
+        title: values.title.trim(),
+        summary: values.summary.trim() || undefined,
         thumbnailUrl,
-        folderId: folderId || null,
-        memo: memo.trim() || undefined,
+        folderId: values.folderId || null,
+        memo: values.memo.trim() || undefined,
         tagNames,
       });
       toast.success("외부 링크가 보관함에 저장되었습니다.");
@@ -122,17 +150,22 @@ export const ExternalUrlModal = ({
       resetForm();
     } catch (err) {
       if (err instanceof ApiError && err.errorCode === "VAULT_DUPLICATE_URL") {
+        const message = "이미 보관함에 저장된 URL입니다.";
         setDuplicateUrl(true);
-        setErrorBanner("이미 보관함에 저장된 URL입니다.");
+        setErrorBanner(message);
+        toast.error(message);
       } else if (
         err instanceof ApiError &&
         err.errorCode === "SSRF_BLOCKED_URL"
       ) {
-        setErrorBanner("보안 정책상 허용되지 않는 내부/로컬 URL입니다.");
+        const message = "보안 정책상 허용되지 않는 내부/로컬 URL입니다.";
+        setErrorBanner(message);
+        toast.error(message);
       } else {
-        setErrorBanner(
-          err instanceof Error ? err.message : "외부 URL 저장에 실패했습니다.",
-        );
+        const message =
+          err instanceof Error ? err.message : "외부 URL 저장에 실패했습니다.";
+        setErrorBanner(message);
+        toast.error(message);
       }
     }
   };
@@ -159,25 +192,31 @@ export const ExternalUrlModal = ({
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSave} className="flex flex-col gap-4">
-          <FieldGroup htmlFor="vault-ext-url" label="URL" required>
+        <form noValidate onSubmit={handleSubmit(onSave)} className="flex flex-col gap-4">
+          <FieldGroup
+            htmlFor="vault-ext-url"
+            label="URL"
+            required
+            error={errors.url?.message}
+            errorId="vault-ext-url-error"
+          >
             <div className="flex gap-2">
               <Input
                 id="vault-ext-url"
                 type="url"
-                value={url}
-                onChange={(e) => setUrl(e.target.value)}
                 placeholder="https://example.com/article"
                 wrapperClassName="flex-1"
                 startIcon={<Link2 className="h-4 w-4" />}
-                required
+                aria-invalid={Boolean(errors.url)}
+                aria-describedby={errors.url ? "vault-ext-url-error" : undefined}
+                {...register("url")}
               />
               <Button
                 type="button"
                 variant="outline"
                 size="sm"
                 onClick={handlePreview}
-                disabled={previewMutation.isPending || !url.trim()}
+                disabled={previewMutation.isPending}
               >
                 <Globe className="h-3.5 w-3.5" aria-hidden="true" />
                 {previewMutation.isPending ? "조회 중..." : "미리보기"}
@@ -208,67 +247,101 @@ export const ExternalUrlModal = ({
             </div>
           ) : null}
 
-          <FieldGroup htmlFor="vault-ext-title" label="제목" required>
+          <FieldGroup
+            htmlFor="vault-ext-title"
+            label="제목"
+            required
+            error={errors.title?.message}
+            errorId="vault-ext-title-error"
+          >
             <Input
               id="vault-ext-title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
               placeholder="링크 제목"
-              required
+              aria-invalid={Boolean(errors.title)}
+              aria-describedby={errors.title ? "vault-ext-title-error" : undefined}
+              {...register("title")}
             />
           </FieldGroup>
 
-          <FieldGroup htmlFor="vault-ext-summary" label="설명">
+          <FieldGroup
+            htmlFor="vault-ext-summary"
+            label="설명"
+            error={errors.summary?.message}
+            errorId="vault-ext-summary-error"
+          >
             <Textarea
               id="vault-ext-summary"
               rows={2}
-              value={summary}
-              onChange={(e) => setSummary(e.target.value)}
               placeholder="간단한 요약 (선택)"
+              aria-invalid={Boolean(errors.summary)}
+              aria-describedby={
+                errors.summary ? "vault-ext-summary-error" : undefined
+              }
+              {...register("summary")}
             />
           </FieldGroup>
 
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <FieldGroup htmlFor="vault-ext-folder" label="폴더">
-              <Select
-                value={folderId || UNCLASSIFIED_FOLDER_VALUE}
-                onValueChange={(v) =>
-                  setFolderId(v === UNCLASSIFIED_FOLDER_VALUE ? "" : v)
-                }
-              >
-                <SelectTrigger
-                  id="vault-ext-folder"
-                  className="h-9 bg-background text-xs"
-                >
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value={UNCLASSIFIED_FOLDER_VALUE}>미분류</SelectItem>
-                  {folders.map((f) => (
-                    <SelectItem key={f.id} value={f.id}>
-                      {f.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <Controller
+                name="folderId"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    value={field.value || UNCLASSIFIED_FOLDER_VALUE}
+                    onValueChange={(v) =>
+                      field.onChange(v === UNCLASSIFIED_FOLDER_VALUE ? "" : v)
+                    }
+                  >
+                    <SelectTrigger
+                      id="vault-ext-folder"
+                      className="h-9 bg-background text-xs"
+                    >
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value={UNCLASSIFIED_FOLDER_VALUE}>미분류</SelectItem>
+                      {folders.map((f) => (
+                        <SelectItem key={f.id} value={f.id}>
+                          {f.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              />
             </FieldGroup>
 
-            <FieldGroup htmlFor="vault-ext-tags" label="태그 (쉼표 구분)">
+            <FieldGroup
+              htmlFor="vault-ext-tags"
+              label="태그 (쉼표 구분)"
+              error={errors.tagsText?.message}
+              errorId="vault-ext-tags-error"
+            >
               <Input
                 id="vault-ext-tags"
-                value={tagsText}
-                onChange={(e) => setTagsText(e.target.value)}
                 placeholder="예: 리서치, 프롬프트"
+                aria-invalid={Boolean(errors.tagsText)}
+                aria-describedby={
+                  errors.tagsText ? "vault-ext-tags-error" : undefined
+                }
+                {...register("tagsText")}
               />
             </FieldGroup>
           </div>
 
-          <FieldGroup htmlFor="vault-ext-memo" label="메모">
+          <FieldGroup
+            htmlFor="vault-ext-memo"
+            label="메모"
+            error={errors.memo?.message}
+            errorId="vault-ext-memo-error"
+          >
             <Input
               id="vault-ext-memo"
-              value={memo}
-              onChange={(e) => setMemo(e.target.value)}
               placeholder="나중에 참고할 메모"
+              aria-invalid={Boolean(errors.memo)}
+              aria-describedby={errors.memo ? "vault-ext-memo-error" : undefined}
+              {...register("memo")}
             />
           </FieldGroup>
 

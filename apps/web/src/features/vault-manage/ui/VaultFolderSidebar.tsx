@@ -1,8 +1,9 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Folder, FolderPlus, Pencil, Trash2 } from "lucide-react";
-import { useState, type FormEvent } from "react";
-import { toast } from "sonner";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 import {
   useCreateVaultFolderMutation,
   useDeleteVaultFolderMutation,
@@ -19,7 +20,12 @@ import {
   SelectTrigger,
   SelectValue,
   Skeleton,
+  toast,
 } from "@alkok/ui";
+import {
+  vaultFolderNameSchema,
+  type VaultFolderNameFormValues,
+} from "../model/vault-manage.schema";
 
 const ALL_FOLDERS_VALUE = "__ALL__";
 
@@ -36,33 +42,45 @@ export const VaultFolderSidebar = ({
   onSelectFolder,
   isLoading = false,
 }: VaultFolderSidebarProps) => {
-  const [newName, setNewName] = useState("");
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [editingName, setEditingName] = useState("");
 
   const createFolder = useCreateVaultFolderMutation();
   const renameFolder = useRenameVaultFolderMutation();
   const deleteFolder = useDeleteVaultFolderMutation();
 
-  const handleCreate = async (e: FormEvent) => {
-    e.preventDefault();
-    if (!newName.trim()) return;
+  const createForm = useForm<VaultFolderNameFormValues>({
+    resolver: zodResolver(vaultFolderNameSchema),
+    mode: "onSubmit",
+    reValidateMode: "onChange",
+    defaultValues: { name: "" },
+  });
+
+  const renameForm = useForm<VaultFolderNameFormValues>({
+    resolver: zodResolver(vaultFolderNameSchema),
+    mode: "onSubmit",
+    reValidateMode: "onChange",
+    defaultValues: { name: "" },
+  });
+
+  const handleCreate = async (values: VaultFolderNameFormValues) => {
     try {
-      await createFolder.mutateAsync(newName.trim());
-      setNewName("");
+      await createFolder.mutateAsync(values.name.trim());
+      createForm.reset();
       toast.success("폴더가 생성되었습니다.");
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "폴더 생성 실패");
     }
   };
 
-  const handleRename = async (e: FormEvent) => {
-    e.preventDefault();
-    if (!editingId || !editingName.trim()) return;
+  const handleRename = async (values: VaultFolderNameFormValues) => {
+    if (!editingId) return;
     try {
-      await renameFolder.mutateAsync({ id: editingId, name: editingName.trim() });
+      await renameFolder.mutateAsync({
+        id: editingId,
+        name: values.name.trim(),
+      });
       setEditingId(null);
-      setEditingName("");
+      renameForm.reset();
       toast.success("폴더 이름이 변경되었습니다.");
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "폴더 이름 변경 실패");
@@ -89,25 +107,43 @@ export const VaultFolderSidebar = ({
         </h2>
       </div>
 
-      <form onSubmit={handleCreate} className="flex gap-2">
-        <Input
-          value={newName}
-          onChange={(e) => setNewName(e.target.value)}
-          placeholder="새 폴더 이름"
-          aria-label="새 폴더 이름"
-          className="h-8 text-xs"
-        />
-        <Button
-          type="submit"
-          variant="outline"
-          size="sm"
-          disabled={createFolder.isPending || !newName.trim()}
-          aria-label="폴더 추가"
-          className="h-8 px-3"
+      <div className="flex flex-col gap-1">
+        <form
+          noValidate
+          onSubmit={createForm.handleSubmit(handleCreate)}
+          className="flex gap-2"
         >
-          <FolderPlus className="h-3.5 w-3.5" aria-hidden="true" />
-        </Button>
-      </form>
+          <Input
+            placeholder="새 폴더 이름"
+            aria-label="새 폴더 이름"
+            aria-invalid={Boolean(createForm.formState.errors.name)}
+            aria-describedby={
+              createForm.formState.errors.name ? "vault-folder-create-error" : undefined
+            }
+            className="h-8 text-xs"
+            {...createForm.register("name")}
+          />
+          <Button
+            type="submit"
+            variant="outline"
+            size="sm"
+            disabled={createFolder.isPending}
+            aria-label="폴더 추가"
+            className="h-8 px-3"
+          >
+            <FolderPlus className="h-3.5 w-3.5" aria-hidden="true" />
+          </Button>
+        </form>
+        {createForm.formState.errors.name ? (
+          <p
+            id="vault-folder-create-error"
+            role="alert"
+            className="text-xs text-destructive"
+          >
+            {createForm.formState.errors.name.message}
+          </p>
+        ) : null}
+      </div>
 
       {/* Mobile selector */}
       <div className="md:hidden">
@@ -161,21 +197,38 @@ export const VaultFolderSidebar = ({
         ) : (
           folders.map((folder) =>
             editingId === folder.id ? (
-              <form
-                key={folder.id}
-                onSubmit={handleRename}
-                className="flex items-center gap-1 py-1"
-              >
-                <Input
-                  value={editingName}
-                  onChange={(e) => setEditingName(e.target.value)}
-                  className="h-8 text-xs"
-                  autoFocus
-                />
-                <Button type="submit" size="sm" className="h-8 px-2 text-xs">
-                  확인
-                </Button>
-              </form>
+              <div key={folder.id} className="flex flex-col gap-1 py-1">
+                <form
+                  noValidate
+                  onSubmit={renameForm.handleSubmit(handleRename)}
+                  className="flex items-center gap-1"
+                >
+                  <Input
+                    aria-label="폴더 이름 수정"
+                    aria-invalid={Boolean(renameForm.formState.errors.name)}
+                    aria-describedby={
+                      renameForm.formState.errors.name
+                        ? `vault-folder-rename-error-${folder.id}`
+                        : undefined
+                    }
+                    className="h-8 text-xs"
+                    autoFocus
+                    {...renameForm.register("name")}
+                  />
+                  <Button type="submit" size="sm" className="h-8 px-2 text-xs">
+                    확인
+                  </Button>
+                </form>
+                {renameForm.formState.errors.name ? (
+                  <p
+                    id={`vault-folder-rename-error-${folder.id}`}
+                    role="alert"
+                    className="text-xs text-destructive"
+                  >
+                    {renameForm.formState.errors.name.message}
+                  </p>
+                ) : null}
+              </div>
             ) : (
               <div
                 key={folder.id}
@@ -200,7 +253,7 @@ export const VaultFolderSidebar = ({
                     aria-label={`${folder.name} 이름 변경`}
                     onClick={() => {
                       setEditingId(folder.id);
-                      setEditingName(folder.name);
+                      renameForm.reset({ name: folder.name });
                     }}
                     className="rounded p-1 hover:bg-background"
                   >

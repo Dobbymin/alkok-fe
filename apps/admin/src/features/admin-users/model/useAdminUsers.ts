@@ -1,9 +1,9 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
 import { ADMIN_QUERY_KEYS } from "@alkok/core";
 import type { UserRole, UserStatus } from "@alkok/core";
+import { toast } from "@alkok/ui";
 import { adminUsersApi, type AdminUserListParams } from "../api/admin-users.api";
 
 export function useAdminUsersList(params: AdminUserListParams) {

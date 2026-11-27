@@ -16,7 +16,7 @@ export const SelectTrigger = ({
 }: ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger>) => (
   <SelectPrimitive.Trigger
     className={cn(
-      "flex h-10 w-full items-center justify-between gap-2 rounded-md border border-input bg-card pl-3 pr-2 py-1 text-sm text-foreground placeholder:text-muted-foreground transition-[border-color,box-shadow] duration-150 ease-out focus-visible:outline-2 focus-visible:outline-offset-0 focus-visible:outline-ring disabled:cursor-not-allowed disabled:opacity-50 [&>span]:min-w-0 [&>span]:truncate [&>span]:text-left",
+      "flex h-10 w-full items-center justify-between gap-2 rounded-md border border-input bg-card pl-3 pr-2 py-1 text-sm text-foreground placeholder:text-muted-foreground transition-[border-color,box-shadow] duration-150 ease-out focus-visible:outline-2 focus-visible:outline-offset-0 focus-visible:outline-ring aria-invalid:border-destructive aria-invalid:focus-visible:outline-destructive disabled:cursor-not-allowed disabled:opacity-50 [&>span]:min-w-0 [&>span]:truncate [&>span]:text-left",
       className,
     )}
     {...props}

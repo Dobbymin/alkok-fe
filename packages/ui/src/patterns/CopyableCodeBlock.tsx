@@ -2,9 +2,9 @@
 
 import { Check, Copy } from "lucide-react";
 import { useState, type ReactNode } from "react";
-import { toast } from "sonner";
 import { cn } from "@alkok/core";
 import { Button } from "../primitives/Button";
+import { toast } from "../primitives/SonnerToaster";
 
 export interface CopyableCodeBlockProps {
   title?: string;

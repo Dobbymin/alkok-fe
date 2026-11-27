@@ -123,6 +123,11 @@
     outline-offset: -1px;
   }
 
+  [data-sonner-toast].alkok-toast {
+    box-shadow: var(--shadow-elevated);
+    font-family: var(--font-sans);
+  }
+
   @media (prefers-reduced-motion: reduce) {
     *,
     *::before,

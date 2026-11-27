@@ -4,7 +4,6 @@ import { useQueryClient } from "@tanstack/react-query";
 import { BookmarkCheck, Search, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { toast } from "sonner";
 import {
   syncLocalVaultToServer,
   useDeleteVaultTagMutation,
@@ -34,6 +33,7 @@ import {
   FilterBar,
   Input,
   Skeleton,
+  toast,
 } from "@alkok/ui";
 
 const TYPE_LABELS: Record<ContentType, string> = {

@@ -1,8 +1,9 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState, type FormEvent } from "react";
-import { toast } from "sonner";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 import {
   Button,
   Card,
@@ -12,23 +13,40 @@ import {
   CardTitle,
   FieldGroup,
   Input,
+  toast,
 } from "@alkok/ui";
 import { authApi } from "../api/auth.api";
+import {
+  resetPasswordConfirmSchema,
+  resetPasswordRequestSchema,
+  type ResetPasswordConfirmFormValues,
+  type ResetPasswordRequestFormValues,
+} from "../model/auth-forms.schema";
 
 export const ResetPasswordForm = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
-
-  const [email, setEmail] = useState("");
-  const [newPassword, setNewPassword] = useState("");
   const [isPending, setIsPending] = useState(false);
 
-  const handleRequest = async (e: FormEvent) => {
-    e.preventDefault();
+  const requestForm = useForm<ResetPasswordRequestFormValues>({
+    resolver: zodResolver(resetPasswordRequestSchema),
+    mode: "onSubmit",
+    reValidateMode: "onChange",
+    defaultValues: { email: "" },
+  });
+
+  const confirmForm = useForm<ResetPasswordConfirmFormValues>({
+    resolver: zodResolver(resetPasswordConfirmSchema),
+    mode: "onSubmit",
+    reValidateMode: "onChange",
+    defaultValues: { newPassword: "" },
+  });
+
+  const handleRequest = async (values: ResetPasswordRequestFormValues) => {
     setIsPending(true);
     try {
-      await authApi.requestPasswordReset(email.trim());
+      await authApi.requestPasswordReset(values.email.trim());
       toast.success("비밀번호 재설정 링크를 발송했습니다.");
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "요청에 실패했습니다.");
@@ -37,12 +55,14 @@ export const ResetPasswordForm = () => {
     }
   };
 
-  const handleConfirm = async (e: FormEvent) => {
-    e.preventDefault();
+  const handleConfirm = async (values: ResetPasswordConfirmFormValues) => {
     if (!token) return;
     setIsPending(true);
     try {
-      await authApi.confirmPasswordReset({ token, newPassword });
+      await authApi.confirmPasswordReset({
+        token,
+        newPassword: values.newPassword,
+      });
       toast.success("비밀번호가 재설정되었습니다.");
       router.replace("/login");
     } catch (err) {
@@ -66,15 +86,30 @@ export const ResetPasswordForm = () => {
       </CardHeader>
       <CardContent>
         {token ? (
-          <form onSubmit={handleConfirm} className="flex flex-col gap-4">
-            <FieldGroup htmlFor="reset-new-pw" label="새 비밀번호" required>
+          <form
+            noValidate
+            onSubmit={confirmForm.handleSubmit(handleConfirm)}
+            className="flex flex-col gap-4"
+          >
+            <FieldGroup
+              htmlFor="reset-new-pw"
+              label="새 비밀번호"
+              required
+              hint="8자 이상 입력해 주세요."
+              error={confirmForm.formState.errors.newPassword?.message}
+              errorId="reset-new-pw-error"
+            >
               <Input
                 id="reset-new-pw"
                 type="password"
-                minLength={8}
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                required
+                autoComplete="new-password"
+                aria-invalid={Boolean(confirmForm.formState.errors.newPassword)}
+                aria-describedby={
+                  confirmForm.formState.errors.newPassword
+                    ? "reset-new-pw-error"
+                    : undefined
+                }
+                {...confirmForm.register("newPassword")}
               />
             </FieldGroup>
             <Button type="submit" disabled={isPending}>
@@ -82,14 +117,29 @@ export const ResetPasswordForm = () => {
             </Button>
           </form>
         ) : (
-          <form onSubmit={handleRequest} className="flex flex-col gap-4">
-            <FieldGroup htmlFor="reset-email" label="이메일" required>
+          <form
+            noValidate
+            onSubmit={requestForm.handleSubmit(handleRequest)}
+            className="flex flex-col gap-4"
+          >
+            <FieldGroup
+              htmlFor="reset-email"
+              label="이메일"
+              required
+              error={requestForm.formState.errors.email?.message}
+              errorId="reset-email-error"
+            >
               <Input
                 id="reset-email"
                 type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
+                autoComplete="email"
+                aria-invalid={Boolean(requestForm.formState.errors.email)}
+                aria-describedby={
+                  requestForm.formState.errors.email
+                    ? "reset-email-error"
+                    : undefined
+                }
+                {...requestForm.register("email")}
               />
             </FieldGroup>
             <Button type="submit" disabled={isPending}>

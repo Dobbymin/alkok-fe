@@ -2,7 +2,6 @@
 
 import { Check, Copy, ExternalLink, Share2 } from "lucide-react";
 import { useState } from "react";
-import { toast } from "sonner";
 import { VerificationBadge } from "@/entities/content";
 import type { KoreanSupportLevel, ToolDetailData } from "@alkok/core";
 import { formatCompareSummaryText } from "../model/format-compare-summary";
@@ -27,6 +26,7 @@ import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
+  toast,
 } from "@alkok/ui";
 
 const KOREAN_LABEL: Record<KoreanSupportLevel, string> = {

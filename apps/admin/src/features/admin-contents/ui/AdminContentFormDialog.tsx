@@ -1,16 +1,12 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
-import type {
-  ContentSummary,
-  ContentType,
-  DifficultyLevel,
-  KoreanSupportLevel,
-  PricingModel,
-  PublishStatus,
-  SkillKind,
-  SourceType,
-  ToolKind,
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
+import { Controller, useForm, useWatch } from "react-hook-form";
+import {
+  parseCommaSeparated,
+  parseNewlineSeparated,
+  type ContentSummary,
 } from "@alkok/core";
 import {
   Button,
@@ -30,6 +26,10 @@ import {
   Textarea,
 } from "@alkok/ui";
 import type { AdminContentCreatePayload } from "../api/admin-contents.api";
+import {
+  adminContentFormSchema,
+  type AdminContentFormValues,
+} from "../model/admin-content-form.schema";
 
 interface AdminContentFormDialogProps {
   open: boolean;
@@ -39,6 +39,37 @@ interface AdminContentFormDialogProps {
   isPending?: boolean;
 }
 
+const getDefaultValues = (
+  initialData?: ContentSummary | null,
+): AdminContentFormValues => ({
+  type: initialData?.type ?? "GUIDE",
+  publishStatus: initialData?.publishStatus ?? "PUBLISHED",
+  sourceType: initialData?.sourceType ?? "OFFICIAL",
+  title: initialData?.title ?? "",
+  summary: initialData?.summary ?? "",
+  sourceUrl: initialData?.sourceUrl ?? "",
+  difficulty: "PRACTICAL",
+  pricingModel: "FREEMIUM",
+  markdownBody: "",
+  promptContent: "",
+  toolKind: "TOOL",
+  providerName: "",
+  pricingSummary: "",
+  koreanSupport: "FULL",
+  keyPointsRaw: "",
+  workImpact: "",
+  skillKind: "SKILL",
+  skillSlug: "",
+  authorName: "",
+  license: "",
+  compatibleAgentsRaw: "",
+  overview: "",
+  installPrompt: "",
+  useCasesRaw: "",
+  tipsRaw: "",
+  tagsRaw: "",
+});
+
 export const AdminContentFormDialog = ({
   open,
   onOpenChange,
@@ -46,102 +77,74 @@ export const AdminContentFormDialog = ({
   onSubmit,
   isPending = false,
 }: AdminContentFormDialogProps) => {
-  const [type, setType] = useState<ContentType>(initialData?.type ?? "GUIDE");
-  const [title, setTitle] = useState(initialData?.title ?? "");
-  const [summary, setSummary] = useState(initialData?.summary ?? "");
-  const [publishStatus, setPublishStatus] = useState<PublishStatus>(
-    initialData?.publishStatus ?? "PUBLISHED",
-  );
-  const [sourceType, setSourceType] = useState<SourceType>(
-    initialData?.sourceType ?? "OFFICIAL",
-  );
-  const [sourceUrl, setSourceUrl] = useState(initialData?.sourceUrl ?? "");
-  const [difficulty, setDifficulty] = useState<DifficultyLevel>("PRACTICAL");
-  const [pricingModel, setPricingModel] = useState<PricingModel>("FREEMIUM");
-  const [markdownBody, setMarkdownBody] = useState("");
-  const [promptContent, setPromptContent] = useState("");
-  const [toolKind, setToolKind] = useState<ToolKind>("TOOL");
-  const [providerName, setProviderName] = useState("");
-  const [pricingSummary, setPricingSummary] = useState("");
-  const [koreanSupport, setKoreanSupport] = useState<KoreanSupportLevel>("FULL");
-  const [keyPointsRaw, setKeyPointsRaw] = useState("");
-  const [workImpact, setWorkImpact] = useState("");
-  const [skillKind, setSkillKind] = useState<SkillKind>("SKILL");
-  const [skillSlug, setSkillSlug] = useState("");
-  const [authorName, setAuthorName] = useState("");
-  const [license, setLicense] = useState("");
-  const [compatibleAgentsRaw, setCompatibleAgentsRaw] = useState("");
-  const [overview, setOverview] = useState("");
-  const [installPrompt, setInstallPrompt] = useState("");
-  const [useCasesRaw, setUseCasesRaw] = useState("");
-  const [tipsRaw, setTipsRaw] = useState("");
-  const [tagsRaw, setTagsRaw] = useState("");
+  const {
+    register,
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<AdminContentFormValues>({
+    resolver: zodResolver(adminContentFormSchema),
+    mode: "onSubmit",
+    reValidateMode: "onChange",
+    defaultValues: getDefaultValues(initialData),
+  });
 
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    const tagSlugs = tagsRaw
-      .split(",")
-      .map((s) => s.trim().toLowerCase())
-      .filter(Boolean);
+  useEffect(() => {
+    if (!open) return;
+    reset(getDefaultValues(initialData));
+  }, [open, initialData, reset]);
+
+  const type = useWatch({ control, name: "type" });
+
+  const handleValidSubmit = async (values: AdminContentFormValues) => {
+    const tagSlugs = parseCommaSeparated(values.tagsRaw, true);
 
     const payload: AdminContentCreatePayload = {
-      type,
-      title: title.trim(),
-      summary: summary.trim(),
-      publishStatus,
-      sourceType,
-      sourceUrl: sourceUrl.trim(),
+      type: values.type,
+      title: values.title.trim(),
+      summary: values.summary.trim(),
+      publishStatus: values.publishStatus,
+      sourceType: values.sourceType,
+      sourceUrl: values.sourceUrl.trim(),
       tagSlugs,
     };
 
-    if (type === "GUIDE") {
-      payload.difficulty = difficulty;
-      payload.pricingModel = pricingModel;
-      payload.markdownBody = markdownBody.trim();
-      if (promptContent.trim()) {
+    if (values.type === "GUIDE") {
+      payload.difficulty = values.difficulty;
+      payload.pricingModel = values.pricingModel;
+      payload.markdownBody = values.markdownBody.trim();
+      if (values.promptContent.trim()) {
         payload.prompts = [
           {
             title: "기본 프롬프트",
-            content: promptContent.trim(),
+            content: values.promptContent.trim(),
             variables: [],
           },
         ];
       }
-    } else if (type === "TOOL") {
-      payload.toolKind = toolKind;
-      payload.providerName = providerName.trim();
-      payload.officialUrl = sourceUrl.trim();
-      payload.pricingModel = pricingModel;
-      payload.hasFreePlan = pricingModel !== "PAID";
-      payload.pricingSummary = pricingSummary.trim();
-      payload.koreanSupport = koreanSupport;
-    } else if (type === "NEWS") {
-      payload.keyPoints = keyPointsRaw
-        .split("\n")
-        .map((s) => s.trim())
-        .filter(Boolean)
-        .slice(0, 3);
-      payload.workImpact = workImpact.trim();
-    } else if (type === "SKILL") {
-      payload.skillKind = skillKind;
-      payload.skillSlug = skillSlug.trim() || undefined;
-      payload.authorName = authorName.trim() || undefined;
-      payload.license = license.trim() || undefined;
-      payload.repositoryUrl = sourceUrl.trim();
-      payload.compatibleAgents = compatibleAgentsRaw
-        .split(",")
-        .map((s) => s.trim())
-        .filter(Boolean);
-      payload.overview = overview.trim() || summary.trim();
-      payload.installPrompt = installPrompt.trim() || undefined;
-      payload.useCases = useCasesRaw
-        .split("\n")
-        .map((s) => s.trim())
-        .filter(Boolean);
-      payload.tips = tipsRaw
-        .split("\n")
-        .map((s) => s.trim())
-        .filter(Boolean);
+    } else if (values.type === "TOOL") {
+      payload.toolKind = values.toolKind;
+      payload.providerName = values.providerName.trim();
+      payload.officialUrl = values.sourceUrl.trim();
+      payload.pricingModel = values.pricingModel;
+      payload.hasFreePlan = values.pricingModel !== "PAID";
+      payload.pricingSummary = values.pricingSummary.trim();
+      payload.koreanSupport = values.koreanSupport;
+    } else if (values.type === "NEWS") {
+      payload.keyPoints = parseNewlineSeparated(values.keyPointsRaw, 3);
+      payload.workImpact = values.workImpact.trim();
+    } else if (values.type === "SKILL") {
+      payload.skillKind = values.skillKind;
+      payload.skillSlug = values.skillSlug.trim() || undefined;
+      payload.authorName = values.authorName.trim() || undefined;
+      payload.license = values.license.trim() || undefined;
+      payload.repositoryUrl = values.sourceUrl.trim();
+      payload.compatibleAgents = parseCommaSeparated(values.compatibleAgentsRaw);
+      payload.overview = values.overview.trim() || values.summary.trim();
+      payload.installPrompt = values.installPrompt.trim() || undefined;
+      payload.useCases = parseNewlineSeparated(values.useCasesRaw);
+      payload.tips = parseNewlineSeparated(values.tipsRaw);
     }
 
     await onSubmit(payload);
@@ -160,88 +163,126 @@ export const AdminContentFormDialog = ({
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <form
+          noValidate
+          onSubmit={handleSubmit(handleValidSubmit)}
+          className="flex flex-col gap-4"
+        >
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
             <FieldGroup label="유형" required>
-              <Select
-                value={type}
-                onValueChange={(v) => setType(v as ContentType)}
-                disabled={Boolean(initialData)}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="GUIDE">업무 가이드</SelectItem>
-                  <SelectItem value="TOOL">도구·모델</SelectItem>
-                  <SelectItem value="SKILL">플러그인·스킬·MCP</SelectItem>
-                  <SelectItem value="NEWS">AI 소식</SelectItem>
-                </SelectContent>
-              </Select>
+              <Controller
+                name="type"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    value={field.value}
+                    onValueChange={field.onChange}
+                    disabled={Boolean(initialData)}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="GUIDE">업무 가이드</SelectItem>
+                      <SelectItem value="TOOL">도구·모델</SelectItem>
+                      <SelectItem value="SKILL">플러그인·스킬·MCP</SelectItem>
+                      <SelectItem value="NEWS">AI 소식</SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
             </FieldGroup>
 
             <FieldGroup label="발행 상태" required>
-              <Select
-                value={publishStatus}
-                onValueChange={(v) => setPublishStatus(v as PublishStatus)}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="DRAFT">초안 (DRAFT)</SelectItem>
-                  <SelectItem value="IN_REVIEW">검수 중 (IN_REVIEW)</SelectItem>
-                  <SelectItem value="PUBLISHED">공개 (PUBLISHED)</SelectItem>
-                  <SelectItem value="ARCHIVED">보관 (ARCHIVED)</SelectItem>
-                </SelectContent>
-              </Select>
+              <Controller
+                name="publishStatus"
+                control={control}
+                render={({ field }) => (
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="DRAFT">초안 (DRAFT)</SelectItem>
+                      <SelectItem value="IN_REVIEW">검수 중 (IN_REVIEW)</SelectItem>
+                      <SelectItem value="PUBLISHED">공개 (PUBLISHED)</SelectItem>
+                      <SelectItem value="ARCHIVED">보관 (ARCHIVED)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
             </FieldGroup>
 
             <FieldGroup label="출처 유형" required>
-              <Select
-                value={sourceType}
-                onValueChange={(v) => setSourceType(v as SourceType)}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="OFFICIAL">공식</SelectItem>
-                  <SelectItem value="MEDIA">전문 미디어</SelectItem>
-                  <SelectItem value="COMMUNITY">커뮤니티</SelectItem>
-                </SelectContent>
-              </Select>
+              <Controller
+                name="sourceType"
+                control={control}
+                render={({ field }) => (
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="OFFICIAL">공식</SelectItem>
+                      <SelectItem value="MEDIA">전문 미디어</SelectItem>
+                      <SelectItem value="COMMUNITY">커뮤니티</SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
             </FieldGroup>
           </div>
 
-          <FieldGroup htmlFor="content-title" label="제목" required>
+          <FieldGroup
+            htmlFor="content-title"
+            label="제목"
+            required
+            error={errors.title?.message}
+            errorId="content-title-error"
+          >
             <Input
               id="content-title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
               placeholder="예: 회의록 3분 요약 실무 가이드"
-              required
+              aria-invalid={Boolean(errors.title)}
+              aria-describedby={errors.title ? "content-title-error" : undefined}
+              {...register("title")}
             />
           </FieldGroup>
 
-          <FieldGroup htmlFor="content-summary" label="요약" required>
+          <FieldGroup
+            htmlFor="content-summary"
+            label="요약"
+            required
+            error={errors.summary?.message}
+            errorId="content-summary-error"
+          >
             <Textarea
               id="content-summary"
-              value={summary}
-              onChange={(e) => setSummary(e.target.value)}
               placeholder="핵심 결론과 활용 대상을 1~2줄로 작성하세요."
-              required
+              aria-invalid={Boolean(errors.summary)}
+              aria-describedby={
+                errors.summary ? "content-summary-error" : undefined
+              }
+              {...register("summary")}
             />
           </FieldGroup>
 
-          <FieldGroup htmlFor="content-source-url" label="원문/공식 출처 URL" required>
+          <FieldGroup
+            htmlFor="content-source-url"
+            label="원문/공식 출처 URL"
+            required
+            error={errors.sourceUrl?.message}
+            errorId="content-source-url-error"
+          >
             <Input
               id="content-source-url"
               type="url"
-              value={sourceUrl}
-              onChange={(e) => setSourceUrl(e.target.value)}
               placeholder="https://example.com"
-              required
+              aria-invalid={Boolean(errors.sourceUrl)}
+              aria-describedby={
+                errors.sourceUrl ? "content-source-url-error" : undefined
+              }
+              {...register("sourceUrl")}
             />
           </FieldGroup>
 
@@ -249,50 +290,54 @@ export const AdminContentFormDialog = ({
             <div className="flex flex-col gap-3 rounded-md border border-border bg-muted/30 p-3">
               <div className="grid grid-cols-2 gap-3">
                 <FieldGroup label="난이도">
-                  <Select
-                    value={difficulty}
-                    onValueChange={(v) => setDifficulty(v as DifficultyLevel)}
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="BEGINNER">입문</SelectItem>
-                      <SelectItem value="PRACTICAL">실무</SelectItem>
-                      <SelectItem value="ADVANCED">응용</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <Controller
+                    name="difficulty"
+                    control={control}
+                    render={({ field }) => (
+                      <Select value={field.value} onValueChange={field.onChange}>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="BEGINNER">입문</SelectItem>
+                          <SelectItem value="PRACTICAL">실무</SelectItem>
+                          <SelectItem value="ADVANCED">응용</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
                 </FieldGroup>
                 <FieldGroup label="과금 형태">
-                  <Select
-                    value={pricingModel}
-                    onValueChange={(v) => setPricingModel(v as PricingModel)}
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="FREE">무료</SelectItem>
-                      <SelectItem value="FREEMIUM">무료+유료</SelectItem>
-                      <SelectItem value="PAID">유료</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <Controller
+                    name="pricingModel"
+                    control={control}
+                    render={({ field }) => (
+                      <Select value={field.value} onValueChange={field.onChange}>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="FREE">무료</SelectItem>
+                          <SelectItem value="FREEMIUM">무료+유료</SelectItem>
+                          <SelectItem value="PAID">유료</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
                 </FieldGroup>
               </div>
               <FieldGroup htmlFor="guide-md" label="본문 (Markdown)">
                 <Textarea
                   id="guide-md"
-                  value={markdownBody}
-                  onChange={(e) => setMarkdownBody(e.target.value)}
                   placeholder="## 1단계..."
+                  {...register("markdownBody")}
                 />
               </FieldGroup>
               <FieldGroup htmlFor="guide-prompt" label="프롬프트 블록">
                 <Textarea
                   id="guide-prompt"
-                  value={promptContent}
-                  onChange={(e) => setPromptContent(e.target.value)}
                   placeholder="다음 [회의록]을 요약해줘."
+                  {...register("promptContent")}
                 />
               </FieldGroup>
             </div>
@@ -302,49 +347,53 @@ export const AdminContentFormDialog = ({
             <div className="flex flex-col gap-3 rounded-md border border-border bg-muted/30 p-3">
               <div className="grid grid-cols-3 gap-3">
                 <FieldGroup label="구분">
-                  <Select
-                    value={toolKind}
-                    onValueChange={(v) => setToolKind(v as ToolKind)}
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="TOOL">AI 도구</SelectItem>
-                      <SelectItem value="MODEL">AI 모델</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <Controller
+                    name="toolKind"
+                    control={control}
+                    render={({ field }) => (
+                      <Select value={field.value} onValueChange={field.onChange}>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="TOOL">AI 도구</SelectItem>
+                          <SelectItem value="MODEL">AI 모델</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
                 </FieldGroup>
                 <FieldGroup htmlFor="tool-provider" label="제공사">
                   <Input
                     id="tool-provider"
-                    value={providerName}
-                    onChange={(e) => setProviderName(e.target.value)}
                     placeholder="OpenAI"
+                    {...register("providerName")}
                   />
                 </FieldGroup>
                 <FieldGroup label="한국어 지원">
-                  <Select
-                    value={koreanSupport}
-                    onValueChange={(v) => setKoreanSupport(v as KoreanSupportLevel)}
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="FULL">완전 지원</SelectItem>
-                      <SelectItem value="PARTIAL">부분 지원</SelectItem>
-                      <SelectItem value="NONE">미지원</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <Controller
+                    name="koreanSupport"
+                    control={control}
+                    render={({ field }) => (
+                      <Select value={field.value} onValueChange={field.onChange}>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="FULL">완전 지원</SelectItem>
+                          <SelectItem value="PARTIAL">부분 지원</SelectItem>
+                          <SelectItem value="NONE">미지원</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
                 </FieldGroup>
               </div>
               <FieldGroup htmlFor="tool-pricing" label="요금·무료 한도 요약">
                 <Input
                   id="tool-pricing"
-                  value={pricingSummary}
-                  onChange={(e) => setPricingSummary(e.target.value)}
                   placeholder="무료 플랜 제공 / Plus 월 $20"
+                  {...register("pricingSummary")}
                 />
               </FieldGroup>
             </div>
@@ -355,17 +404,15 @@ export const AdminContentFormDialog = ({
               <FieldGroup htmlFor="news-keypoints" label="핵심 3줄 요약 (줄바꿈 구분)">
                 <Textarea
                   id="news-keypoints"
-                  value={keyPointsRaw}
-                  onChange={(e) => setKeyPointsRaw(e.target.value)}
                   placeholder={"1. 핵심 변화...\n2. 적용 대상...\n3. 요금/일정..."}
+                  {...register("keyPointsRaw")}
                 />
               </FieldGroup>
               <FieldGroup htmlFor="news-impact" label="실무 영향">
                 <Textarea
                   id="news-impact"
-                  value={workImpact}
-                  onChange={(e) => setWorkImpact(e.target.value)}
                   placeholder="실무 직장인에게 어떤 변화가 있는지 요약하세요."
+                  {...register("workImpact")}
                 />
               </FieldGroup>
             </div>
@@ -375,34 +422,44 @@ export const AdminContentFormDialog = ({
             <div className="flex flex-col gap-3 rounded-md border border-border bg-muted/30 p-3">
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
                 <FieldGroup label="세부 유형">
-                  <Select
-                    value={skillKind}
-                    onValueChange={(v) => setSkillKind(v as SkillKind)}
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="SKILL">에이전트 스킬</SelectItem>
-                      <SelectItem value="PLUGIN">플러그인</SelectItem>
-                      <SelectItem value="MCP">MCP 서버</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <Controller
+                    name="skillKind"
+                    control={control}
+                    render={({ field }) => (
+                      <Select value={field.value} onValueChange={field.onChange}>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="SKILL">에이전트 스킬</SelectItem>
+                          <SelectItem value="PLUGIN">플러그인</SelectItem>
+                          <SelectItem value="MCP">MCP 서버</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
                 </FieldGroup>
-                <FieldGroup htmlFor="skill-slug" label="스킬 슬러그">
+                <FieldGroup
+                  htmlFor="skill-slug"
+                  label="스킬 슬러그"
+                  error={errors.skillSlug?.message}
+                  errorId="skill-slug-error"
+                >
                   <Input
                     id="skill-slug"
-                    value={skillSlug}
-                    onChange={(e) => setSkillSlug(e.target.value)}
                     placeholder="humanize-korean"
+                    aria-invalid={Boolean(errors.skillSlug)}
+                    aria-describedby={
+                      errors.skillSlug ? "skill-slug-error" : undefined
+                    }
+                    {...register("skillSlug")}
                   />
                 </FieldGroup>
                 <FieldGroup htmlFor="skill-author" label="제작자">
                   <Input
                     id="skill-author"
-                    value={authorName}
-                    onChange={(e) => setAuthorName(e.target.value)}
                     placeholder="epoko77-ai"
+                    {...register("authorName")}
                   />
                 </FieldGroup>
               </div>
@@ -410,9 +467,8 @@ export const AdminContentFormDialog = ({
                 <FieldGroup htmlFor="skill-license" label="라이선스">
                   <Input
                     id="skill-license"
-                    value={license}
-                    onChange={(e) => setLicense(e.target.value)}
                     placeholder="MIT"
+                    {...register("license")}
                   />
                 </FieldGroup>
                 <FieldGroup
@@ -421,18 +477,16 @@ export const AdminContentFormDialog = ({
                 >
                   <Input
                     id="skill-agents"
-                    value={compatibleAgentsRaw}
-                    onChange={(e) => setCompatibleAgentsRaw(e.target.value)}
                     placeholder="Claude Code, Codex, Cursor"
+                    {...register("compatibleAgentsRaw")}
                   />
                 </FieldGroup>
               </div>
               <FieldGroup htmlFor="skill-overview" label="상세 개요">
                 <Textarea
                   id="skill-overview"
-                  value={overview}
-                  onChange={(e) => setOverview(e.target.value)}
                   placeholder="어떤 상황에서 왜 필요한 스킬·플러그인인지 설명하세요."
+                  {...register("overview")}
                 />
               </FieldGroup>
               <FieldGroup
@@ -441,25 +495,22 @@ export const AdminContentFormDialog = ({
               >
                 <Textarea
                   id="skill-install-prompt"
-                  value={installPrompt}
-                  onChange={(e) => setInstallPrompt(e.target.value)}
                   placeholder="에이전트에 붙여넣을 설치 요청문을 입력하세요."
+                  {...register("installPrompt")}
                 />
               </FieldGroup>
               <FieldGroup htmlFor="skill-use-cases" label="활용 상황 (줄바꿈 구분)">
                 <Textarea
                   id="skill-use-cases"
-                  value={useCasesRaw}
-                  onChange={(e) => setUseCasesRaw(e.target.value)}
                   placeholder="이럴 때 써보세요 항목을 줄바꿈으로 입력하세요."
+                  {...register("useCasesRaw")}
                 />
               </FieldGroup>
               <FieldGroup htmlFor="skill-tips" label="실무 팁 (줄바꿈 구분)">
                 <Textarea
                   id="skill-tips"
-                  value={tipsRaw}
-                  onChange={(e) => setTipsRaw(e.target.value)}
                   placeholder="실무 팁을 줄바꿈으로 입력하세요."
+                  {...register("tipsRaw")}
                 />
               </FieldGroup>
             </div>
@@ -468,14 +519,14 @@ export const AdminContentFormDialog = ({
           <FieldGroup htmlFor="content-tags" label="태그 (쉼표 구분)">
             <Input
               id="content-tags"
-              value={tagsRaw}
-              onChange={(e) => setTagsRaw(e.target.value)}
               placeholder="회의록, 요약, chatgpt"
+              {...register("tagsRaw")}
             />
           </FieldGroup>
 
           <DialogFooter>
             <Button
+              type="button"
               variant="outline"
               size="sm"
               onClick={() => onOpenChange(false)}
