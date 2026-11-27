@@ -192,4 +192,22 @@ describe("PublicShell, DesktopSidebar & MobileBottomTabs", () => {
     expect(sheetAccountLink).toBeDefined();
     expect(sheetAccountLink?.className).not.toContain("bg-primary");
   });
+
+  it("does not expose /admin or 관리자 CMS links even when ADMIN is authenticated", () => {
+    useAuthStore.setState({
+      user: {
+        id: "a1",
+        email: "admin@alkok.dobbymin.cloud",
+        nickname: "관리자",
+        role: "ADMIN",
+        status: "ACTIVE",
+      },
+      isLoading: false,
+    });
+    renderShell("/");
+
+    expect(screen.queryByText("관리자 CMS")).not.toBeInTheDocument();
+    const adminLinks = document.querySelectorAll('a[href="/admin"]');
+    expect(adminLinks).toHaveLength(0);
+  });
 });

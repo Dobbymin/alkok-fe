@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import type { ReactNode } from "react";
 import { AppProviders } from "@/app/providers";
-import { AdminGuard, AdminShell } from "@/widgets/admin-shell";
 import "./globals.css";
 
 const pretendard = localFont({
@@ -38,11 +37,7 @@ export default function AdminRootLayout({ children }: { children: ReactNode }) {
       className={`${pretendard.variable} ${jetbrainsMono.variable}`}
     >
       <body className="min-h-screen bg-background text-foreground font-sans antialiased">
-        <AppProviders>
-          <AdminGuard>
-            <AdminShell>{children}</AdminShell>
-          </AdminGuard>
-        </AppProviders>
+        <AppProviders>{children}</AppProviders>
       </body>
     </html>
   );

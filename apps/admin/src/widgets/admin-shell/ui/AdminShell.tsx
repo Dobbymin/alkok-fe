@@ -5,14 +5,15 @@ import {
   Flag,
   Inbox,
   LayoutDashboard,
+  LogOut,
   Menu,
   Rss,
   Users,
 } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState, type ReactNode } from "react";
-import { cn } from "@alkok/core";
+import { cn, getWebUrl, useAuthStore } from "@alkok/core";
 import {
   Button,
   Sheet,
@@ -88,8 +89,18 @@ const AdminNavLinks = ({
 
 export const AdminShell = ({ children }: { children: ReactNode }) => {
   const pathname = usePathname() || "/";
+  const router = useRouter();
+  const user = useAuthStore((s) => s.user);
+  const logout = useAuthStore((s) => s.logout);
   const [mobileOpen, setMobileOpen] = useState(false);
   const currentLabel = getCurrentPageLabel(pathname);
+  const webUrl = getWebUrl();
+
+  const handleLogout = async () => {
+    setMobileOpen(false);
+    await logout();
+    router.replace("/login");
+  };
 
   return (
     <div className="flex min-h-dvh bg-background text-foreground">
@@ -112,9 +123,8 @@ export const AdminShell = ({ children }: { children: ReactNode }) => {
           >
             Alkok Admin
           </Link>
-          {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
           <a
-            href="/"
+            href={webUrl}
             className="text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
           >
             공개 웹
@@ -154,15 +164,24 @@ export const AdminShell = ({ children }: { children: ReactNode }) => {
                     pathname={pathname}
                     onNavigate={() => setMobileOpen(false)}
                   />
-                  <div className="mt-6 border-t border-separator pt-4">
-                    {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+                  <div className="mt-6 flex flex-col gap-3 border-t border-separator pt-4">
                     <a
-                      href="/"
+                      href={webUrl}
                       onClick={() => setMobileOpen(false)}
                       className="text-xs font-medium text-muted-foreground hover:text-foreground"
                     >
                       공개 웹으로 이동
                     </a>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={handleLogout}
+                      className="justify-start gap-2"
+                    >
+                      <LogOut className="h-3.5 w-3.5" aria-hidden="true" />
+                      로그아웃
+                    </Button>
                   </div>
                 </SheetContent>
               </Sheet>
@@ -173,6 +192,23 @@ export const AdminShell = ({ children }: { children: ReactNode }) => {
                 </span>
                 <span className="font-semibold text-foreground">{currentLabel}</span>
               </nav>
+            </div>
+            <div className="flex items-center gap-3">
+              {user ? (
+                <span className="hidden text-xs text-muted-foreground sm:inline">
+                  {user.nickname || user.email}
+                </span>
+              ) : null}
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={handleLogout}
+                className="gap-1.5 text-muted-foreground hover:text-foreground"
+              >
+                <LogOut className="h-4 w-4" aria-hidden="true" />
+                <span>로그아웃</span>
+              </Button>
             </div>
           </div>
         </header>

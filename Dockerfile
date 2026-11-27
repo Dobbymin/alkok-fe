@@ -23,8 +23,10 @@ RUN pnpm install --frozen-lockfile
 COPY --from=pruner /app/out/full/ .
 ARG NEXT_PUBLIC_API_BASE_URL=https://alkok.dobbymin.cloud
 ARG NEXT_PUBLIC_SITE_URL=https://alkok.dobbymin.cloud
+ARG NEXT_PUBLIC_WEB_URL=https://alkok.dobbymin.cloud
 ENV NEXT_PUBLIC_API_BASE_URL=$NEXT_PUBLIC_API_BASE_URL
 ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL
+ENV NEXT_PUBLIC_WEB_URL=$NEXT_PUBLIC_WEB_URL
 ENV NEXT_TELEMETRY_DISABLED=1
 
 RUN pnpm turbo run build --filter=@alkok/${APP_NAME}...

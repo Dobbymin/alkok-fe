@@ -45,6 +45,7 @@ jobs:
         env:
           NEXT_PUBLIC_API_BASE_URL: https://alkok.dobbymin.cloud
           NEXT_PUBLIC_SITE_URL: https://alkok.dobbymin.cloud
+          NEXT_PUBLIC_WEB_URL: https://alkok.dobbymin.cloud
           INTERNAL_API_BASE_URL: http://alkok-be:8080
 
       - name: Build Storybook

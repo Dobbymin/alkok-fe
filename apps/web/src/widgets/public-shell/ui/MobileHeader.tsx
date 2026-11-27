@@ -5,7 +5,6 @@ import {
   GearSix,
   List,
   MagnifyingGlass,
-  ShieldCheck,
   SignOut,
 } from "@phosphor-icons/react";
 import Link from "next/link";
@@ -77,7 +76,6 @@ export const MobileHeader = ({ counts }: { counts?: PublicShellCounts }) => {
   const [open, setOpen] = useState(false);
   const pathname = usePathname() || "/";
   const openSearch = useQuickSearchStore((s) => s.openModal);
-  const user = useAuthStore((s) => s.user);
   const isAuthenticated = useAuthStore(selectIsAuthenticated);
   const logout = useAuthStore((s) => s.logout);
 
@@ -218,20 +216,6 @@ export const MobileHeader = ({ counts }: { counts?: PublicShellCounts }) => {
                         aria-hidden="true"
                       />
                       설정
-                    </Link>
-                  ) : null}
-                  {user?.role === "ADMIN" ? (
-                    <Link
-                      href="/admin"
-                      onClick={() => setOpen(false)}
-                      className="flex h-11 items-center gap-3 rounded-lg px-3 text-sm font-medium text-muted-foreground hover:bg-secondary hover:text-foreground"
-                    >
-                      <ShieldCheck
-                        className="h-[18px] w-[18px] shrink-0"
-                        weight={pathname.startsWith("/admin") ? "duotone" : "regular"}
-                        aria-hidden="true"
-                      />
-                      관리자 CMS
                     </Link>
                   ) : null}
                 </div>

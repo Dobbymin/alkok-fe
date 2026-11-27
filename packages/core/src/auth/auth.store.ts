@@ -25,7 +25,7 @@ export function registerAuthCacheClearListener(listener: () => void): () => void
 }
 
 export const useAuthStore = create<AuthState>()((set, get) => ({
-  // Start with isLoading: true so reload or direct /admin/** entry waits for cookie bootstrap
+  // Start with isLoading: true so reload or direct protected entry waits for cookie bootstrap
   user: null,
   isLoading: true,
   setSession: (accessToken, user) => {
