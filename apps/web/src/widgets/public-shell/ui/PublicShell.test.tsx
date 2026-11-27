@@ -37,6 +37,7 @@ function renderShell(
       "data-sheets": 2,
       "planning-slides": 2,
       "content-design": 1,
+      career: 13,
     },
   },
 ) {
@@ -153,6 +154,9 @@ describe("PublicShell, DesktopSidebar & MobileBottomTabs", () => {
     const docsLink = screen.getByRole("link", { name: "문서·보고서" });
     expect(docsLink).toHaveAttribute("href", "/?domain=docs-reports");
     expect(docsLink).toHaveAttribute("aria-current", "page");
+    const careerLink = screen.getByRole("link", { name: "취업·이직" });
+    expect(careerLink).toHaveAttribute("href", "/?domain=career");
+    expect(screen.getByText("13")).toBeInTheDocument();
     expect(screen.getByText("14")).toBeInTheDocument();
     expect(screen.getByText("20")).toBeInTheDocument();
   });

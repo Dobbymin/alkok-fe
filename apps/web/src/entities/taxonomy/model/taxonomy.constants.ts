@@ -7,6 +7,7 @@ export const WORK_DOMAINS = [
   { slug: "data-sheets", name: "데이터·스프레드시트" },
   { slug: "planning-slides", name: "기획·프레젠테이션" },
   { slug: "content-design", name: "콘텐츠·디자인" },
+  { slug: "career", name: "취업·이직" },
 ] as const;
 
 export const AI_USES = [
