@@ -1,5 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { fireEvent, render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { TooltipProvider } from "@alkok/ui";
 import { resetLocalVaultStore, useLocalVaultStore } from "@/entities/vault";
@@ -239,7 +240,9 @@ describe("HomePage", () => {
   });
 
   it("switches tabs, filters tools + links CompareTray, and shows workImpact on news tab", async () => {
+    const user = userEvent.setup();
     const view = renderHome();
+    expect(document.querySelectorAll("select")).toHaveLength(0);
 
     fireEvent.click(screen.getByRole("tab", { name: /AI 도구/ }));
     expect(replaceMock).toHaveBeenCalledWith("/?tab=tools", { scroll: false });
@@ -254,9 +257,8 @@ describe("HomePage", () => {
     expect(screen.getByText("ChatGPT")).toBeInTheDocument();
     expect(screen.getByText("Claude")).toBeInTheDocument();
 
-    fireEvent.change(screen.getByRole("combobox", { name: "세부 조건 필터" }), {
-      target: { value: "free" },
-    });
+    await user.click(screen.getByRole("combobox", { name: "세부 조건 필터" }));
+    await user.click(await screen.findByRole("option", { name: "무료 플랜 있음" }));
     view.rerender(
       <QueryClientProvider client={new QueryClient()}>
         <TooltipProvider>

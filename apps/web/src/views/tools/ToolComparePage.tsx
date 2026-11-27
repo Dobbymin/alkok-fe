@@ -12,7 +12,16 @@ import {
 import { useToolCompare, useToolsList } from "@/entities/tool";
 import { ToolCompareSummary, ToolCompareTable } from "@/widgets/tool-compare";
 import type { ToolDetailData } from "@alkok/core";
-import { Badge, Button, Skeleton } from "@alkok/ui";
+import {
+  Badge,
+  Button,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+  Skeleton,
+} from "@alkok/ui";
 
 export interface ToolComparePageProps {
   initialAllTools?: ToolDetailData[];
@@ -146,18 +155,24 @@ export default function ToolComparePage({
           </div>
         ) : slugs.length < 4 && availableToAdd.length > 0 ? (
           <div className="flex items-center gap-2">
-            <select
-              aria-label="비교에 추가할 도구 선택"
+            <Select
               value={selectedCandidate || availableToAdd[0]?.slug || ""}
-              onChange={(e) => setSelectedCandidate(e.target.value)}
-              className="min-h-11 w-36 truncate rounded-md border border-input bg-background px-2.5 text-xs text-foreground sm:min-h-8"
+              onValueChange={setSelectedCandidate}
             >
-              {availableToAdd.map((tool) => (
-                <option key={tool.slug} value={tool.slug}>
-                  {tool.title}
-                </option>
-              ))}
-            </select>
+              <SelectTrigger
+                aria-label="비교에 추가할 도구 선택"
+                className="h-11 w-36 bg-background text-xs sm:h-8"
+              >
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {availableToAdd.map((tool) => (
+                  <SelectItem key={tool.slug} value={tool.slug}>
+                    {tool.title}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
             <Button
               type="button"
               size="sm"

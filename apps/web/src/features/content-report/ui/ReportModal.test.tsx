@@ -1,11 +1,13 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { reportApi } from "../api/report.api";
 import { ReportModal } from "./ReportModal";
 
 describe("ReportModal", () => {
   it("supports 4 reasons, hidden honeypot field, and submits report", async () => {
+    const user = userEvent.setup();
     const submitSpy = vi
       .spyOn(reportApi, "submitReport")
       .mockResolvedValueOnce({ data: { id: "r1" } });
@@ -19,11 +21,14 @@ describe("ReportModal", () => {
 
     fireEvent.click(screen.getByRole("button", { name: /오류·최신화 제보/ }));
 
-    const select = screen.getByLabelText(/제보 사유/);
-    expect(select.querySelectorAll("option")).toHaveLength(4);
+    const trigger = screen.getByLabelText(/제보 사유/);
     expect(screen.getByLabelText("Website")).toHaveAttribute("tabindex", "-1");
 
-    fireEvent.change(select, { target: { value: "BROKEN_LINK" } });
+    await user.click(trigger);
+    expect(await screen.findAllByRole("option")).toHaveLength(4);
+    await user.click(
+      screen.getByRole("option", { name: "링크 깨짐 / 페이지 이동 불가" }),
+    );
     fireEvent.change(screen.getByLabelText(/상세 내용/), {
       target: { value: "공식 문서 링크가 404입니다." },
     });

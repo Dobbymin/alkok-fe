@@ -21,8 +21,15 @@ import {
   DialogTrigger,
   FieldGroup,
   Input,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
   Textarea,
 } from "@alkok/ui";
+
+const UNCLASSIFIED_FOLDER_VALUE = "__UNCLASSIFIED__";
 
 export interface ExternalUrlModalProps {
   folders: VaultFolder[];
@@ -223,19 +230,27 @@ export const ExternalUrlModal = ({
 
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <FieldGroup htmlFor="vault-ext-folder" label="폴더">
-              <select
-                id="vault-ext-folder"
-                value={folderId}
-                onChange={(e) => setFolderId(e.target.value)}
-                className="h-9 w-full rounded-md border border-input bg-background px-3 text-xs text-foreground"
+              <Select
+                value={folderId || UNCLASSIFIED_FOLDER_VALUE}
+                onValueChange={(v) =>
+                  setFolderId(v === UNCLASSIFIED_FOLDER_VALUE ? "" : v)
+                }
               >
-                <option value="">미분류</option>
-                {folders.map((f) => (
-                  <option key={f.id} value={f.id}>
-                    {f.name}
-                  </option>
-                ))}
-              </select>
+                <SelectTrigger
+                  id="vault-ext-folder"
+                  className="h-9 bg-background text-xs"
+                >
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={UNCLASSIFIED_FOLDER_VALUE}>미분류</SelectItem>
+                  {folders.map((f) => (
+                    <SelectItem key={f.id} value={f.id}>
+                      {f.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </FieldGroup>
 
             <FieldGroup htmlFor="vault-ext-tags" label="태그 (쉼표 구분)">

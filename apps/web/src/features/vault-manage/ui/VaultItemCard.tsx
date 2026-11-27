@@ -24,8 +24,15 @@ import {
   DialogTitle,
   FieldGroup,
   Input,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
   Textarea,
 } from "@alkok/ui";
+
+const UNCLASSIFIED_FOLDER_VALUE = "__UNCLASSIFIED__";
 
 export interface VaultItemCardProps {
   item: VaultItem;
@@ -187,19 +194,27 @@ export const VaultItemCard = ({ item, folders }: VaultItemCardProps) => {
               </FieldGroup>
             ) : null}
             <FieldGroup htmlFor={`edit-folder-${item.id}`} label="폴더">
-              <select
-                id={`edit-folder-${item.id}`}
-                value={folderId}
-                onChange={(e) => setFolderId(e.target.value)}
-                className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm"
+              <Select
+                value={folderId || UNCLASSIFIED_FOLDER_VALUE}
+                onValueChange={(v) =>
+                  setFolderId(v === UNCLASSIFIED_FOLDER_VALUE ? "" : v)
+                }
               >
-                <option value="">미분류</option>
-                {folders.map((f) => (
-                  <option key={f.id} value={f.id}>
-                    {f.name}
-                  </option>
-                ))}
-              </select>
+                <SelectTrigger
+                  id={`edit-folder-${item.id}`}
+                  className="h-9 bg-background text-sm"
+                >
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={UNCLASSIFIED_FOLDER_VALUE}>미분류</SelectItem>
+                  {folders.map((f) => (
+                    <SelectItem key={f.id} value={f.id}>
+                      {f.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </FieldGroup>
             <FieldGroup htmlFor={`edit-tags-${item.id}`} label="태그 (쉼표 구분)">
               <Input

@@ -25,6 +25,11 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
   Sheet,
   SheetContent,
   SheetDescription,
@@ -32,6 +37,8 @@ import {
   SheetTitle,
   Textarea,
 } from "@alkok/ui";
+
+const UNCLASSIFIED_FOLDER_VALUE = "__UNCLASSIFIED__";
 
 export interface BookmarkActionProps {
   contentId: string;
@@ -190,25 +197,35 @@ export const BookmarkAction = ({
       </div>
 
       <FieldGroup htmlFor={`bm-folder-${contentId}`} label="폴더">
-        <div className="flex h-9 items-center gap-2 rounded-md border border-input bg-background px-3 focus-within:outline-none focus-within:ring-2 focus-within:ring-ring">
-          <Folder
-            className="h-3.5 w-3.5 shrink-0 text-muted-foreground"
-            aria-hidden="true"
-          />
-          <select
+        <Select
+          value={folderId || UNCLASSIFIED_FOLDER_VALUE}
+          onValueChange={(v) =>
+            setFolderId(v === UNCLASSIFIED_FOLDER_VALUE ? "" : v)
+          }
+        >
+          <SelectTrigger
             id={`bm-folder-${contentId}`}
-            value={folderId}
-            onChange={(e) => setFolderId(e.target.value)}
-            className="h-full w-full bg-transparent text-xs text-foreground focus:outline-none"
+            className="h-9 bg-background text-xs"
           >
-            <option value="">미분류</option>
+            <span className="flex min-w-0 items-center gap-2">
+              <Folder
+                className="h-3.5 w-3.5 shrink-0 text-muted-foreground"
+                aria-hidden="true"
+              />
+              <span className="truncate">
+                <SelectValue />
+              </span>
+            </span>
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value={UNCLASSIFIED_FOLDER_VALUE}>미분류</SelectItem>
             {folders.map((f) => (
-              <option key={f.id} value={f.id}>
+              <SelectItem key={f.id} value={f.id}>
                 {f.name}
-              </option>
+              </SelectItem>
             ))}
-          </select>
-        </div>
+          </SelectContent>
+        </Select>
       </FieldGroup>
 
       <FieldGroup htmlFor={`bm-tags-${contentId}`} label="태그 (쉼표 구분)">
