@@ -84,6 +84,12 @@ describe("PublicShell, DesktopSidebar & MobileBottomTabs", () => {
     const sidebar = screen.getByRole("complementary", { name: "주 사이드바" });
     expect(sidebar).toBeInTheDocument();
     expect(sidebar.className).toContain("w-60");
+    expect(sidebar.className).toContain("overflow-x-hidden");
+
+    const sidebarBrand = sidebar.querySelector('a[aria-label="알콕(Alkok) 홈으로 이동"]');
+    expect(sidebarBrand).not.toBeNull();
+    expect(sidebarBrand?.className).toContain("whitespace-nowrap");
+    expect(sidebarBrand?.className).toContain("shrink-0");
 
     const compareLink = screen.getByRole("link", { name: "도구 비교" });
     const toolsLink = screen.getByRole("link", { name: "AI 도구·모델" });
@@ -95,10 +101,16 @@ describe("PublicShell, DesktopSidebar & MobileBottomTabs", () => {
     await user.click(collapseBtn);
 
     expect(sidebar.className).toContain("w-16");
-    expect(screen.getByRole("button", { name: "사이드바 펼치기" })).toHaveAttribute(
-      "aria-expanded",
-      "false",
-    );
+    const expandBtn = screen.getByRole("button", { name: "사이드바 펼치기" });
+    expect(expandBtn).toHaveAttribute("aria-expanded", "false");
+    expect(expandBtn.className).toContain("h-9");
+    expect(expandBtn.className).toContain("w-9");
+    expect(expandBtn.querySelector("svg")?.getAttribute("class") ?? "").not.toContain("opacity-0");
+
+    const collapsedBrand = sidebar.querySelector('a[aria-label="알콕(Alkok) 홈으로 이동"]');
+    expect(collapsedBrand).toBeInTheDocument();
+    expect(collapsedBrand?.className).toContain("h-9");
+    expect(collapsedBrand?.className).toContain("w-9");
 
     const collapsedCompareLink = screen.getByRole("link", { name: "도구 비교" });
     expect(collapsedCompareLink.className).toContain("h-9");

@@ -97,7 +97,7 @@ export const BrandLogo = ({
   <Link
     href="/"
     className={cn(
-      "inline-flex items-center gap-2 rounded-sm font-bold tracking-tight text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
+      "inline-flex shrink-0 items-center gap-2 whitespace-nowrap rounded-sm font-bold tracking-tight text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
       className,
     )}
     aria-label="알콕(Alkok) 홈으로 이동"
@@ -105,8 +105,8 @@ export const BrandLogo = ({
     <BrandSymbol />
     {!compact ? (
       <>
-        <span className="text-base font-bold">알콕</span>
-        <span translate="no" className="text-xs font-medium text-muted-foreground">
+        <span className="whitespace-nowrap text-base font-bold">알콕</span>
+        <span translate="no" className="whitespace-nowrap text-xs font-medium text-muted-foreground">
           Alkok
         </span>
       </>
