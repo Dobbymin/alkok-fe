@@ -10,7 +10,18 @@ import {
   type VaultFolder,
 } from "@/entities/vault";
 import { cn } from "@alkok/core";
-import { Button, Input, Skeleton } from "@alkok/ui";
+import {
+  Button,
+  Input,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+  Skeleton,
+} from "@alkok/ui";
+
+const ALL_FOLDERS_VALUE = "__ALL__";
 
 export interface VaultFolderSidebarProps {
   folders: VaultFolder[];
@@ -100,19 +111,27 @@ export const VaultFolderSidebar = ({
 
       {/* Mobile selector */}
       <div className="md:hidden">
-        <select
-          aria-label="폴더 선택"
-          value={selectedFolderId}
-          onChange={(e) => onSelectFolder(e.target.value)}
-          className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm"
+        <Select
+          value={selectedFolderId || ALL_FOLDERS_VALUE}
+          onValueChange={(v) =>
+            onSelectFolder(v === ALL_FOLDERS_VALUE ? "" : v)
+          }
         >
-          <option value="">전체 항목</option>
-          {folders.map((f) => (
-            <option key={f.id} value={f.id}>
-              {f.name}
-            </option>
-          ))}
-        </select>
+          <SelectTrigger
+            aria-label="폴더 선택"
+            className="h-9 bg-background text-sm"
+          >
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value={ALL_FOLDERS_VALUE}>전체 항목</SelectItem>
+            {folders.map((f) => (
+              <SelectItem key={f.id} value={f.id}>
+                {f.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       {/* Desktop list */}

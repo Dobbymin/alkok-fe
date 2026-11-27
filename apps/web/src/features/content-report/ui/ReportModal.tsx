@@ -16,6 +16,11 @@ import {
   DialogTrigger,
   FieldGroup,
   Input,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
   Textarea,
 } from "@alkok/ui";
 import { reportApi } from "../api/report.api";
@@ -92,18 +97,24 @@ export const ReportModal = ({ contentId, contentTitle }: ReportModalProps) => {
             label="제보 사유"
             required
           >
-            <select
-              id={`report-reason-${contentId}`}
+            <Select
               value={reason}
-              onChange={(e) => setReason(e.target.value as ReportReason)}
-              className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm text-foreground"
+              onValueChange={(v) => setReason(v as ReportReason)}
             >
-              {REASON_OPTIONS.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
+              <SelectTrigger
+                id={`report-reason-${contentId}`}
+                className="h-9 bg-background text-sm"
+              >
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {REASON_OPTIONS.map((opt) => (
+                  <SelectItem key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </FieldGroup>
 
           <FieldGroup

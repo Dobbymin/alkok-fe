@@ -22,7 +22,18 @@ import {
   type NewsDetailData,
   type ToolDetailData,
 } from "@alkok/core";
-import { Button, EmptyState, Input } from "@alkok/ui";
+import {
+  Button,
+  EmptyState,
+  Input,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@alkok/ui";
+
+const ALL_FILTER_VALUE = "__ALL__";
 import { AlkokHeroMark } from "./AlkokHeroMark";
 
 export type HomeCatalogTab = "guides" | "tools" | "news";
@@ -515,51 +526,76 @@ export default function HomePage({ initialCatalog }: HomePageProps) {
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          <select
-            aria-label="업무 분야 필터"
-            value={activeDomainSlug}
-            onChange={(e) => updateParams({ domain: e.target.value || null })}
-            className="min-h-11 w-40 truncate rounded-md border border-input bg-card px-3 text-xs text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:min-h-9"
+          <Select
+            value={activeDomainSlug || ALL_FILTER_VALUE}
+            onValueChange={(v) =>
+              updateParams({ domain: v === ALL_FILTER_VALUE ? null : v })
+            }
           >
-            <option value="">업무 분야 전체</option>
-            {WORK_DOMAINS.map((domain) => (
-              <option key={domain.slug} value={domain.slug}>
-                {domain.name}
-              </option>
-            ))}
-          </select>
+            <SelectTrigger
+              aria-label="업무 분야 필터"
+              className="h-11 w-40 text-xs sm:h-9"
+            >
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value={ALL_FILTER_VALUE}>업무 분야 전체</SelectItem>
+              {WORK_DOMAINS.map((domain) => (
+                <SelectItem key={domain.slug} value={domain.slug}>
+                  {domain.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
 
-          <select
-            aria-label="세부 조건 필터"
-            value={activeUseFilter}
-            onChange={(e) => updateParams({ use: e.target.value || null })}
-            className="min-h-11 w-36 truncate rounded-md border border-input bg-card px-3 text-xs text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:min-h-9"
+          <Select
+            key={activeTab}
+            value={activeUseFilter || ALL_FILTER_VALUE}
+            onValueChange={(v) =>
+              updateParams({ use: v === ALL_FILTER_VALUE ? null : v })
+            }
           >
-            {activeTab === "guides" ? (
-              <>
-                <option value="">활용 목적 전체</option>
-                {AI_USES.map((use) => (
-                  <option key={use.slug} value={use.slug}>
-                    {use.name}
-                  </option>
-                ))}
-              </>
-            ) : activeTab === "tools" ? (
-              <>
-                <option value="">조건 전체</option>
-                <option value="free">무료 플랜 있음</option>
-                <option value="korean">한국어 완전 지원</option>
-                <option value="free-korean">무료 + 한국어 완전 지원</option>
-              </>
-            ) : (
-              <>
-                <option value="">출처 전체</option>
-                <option value="OFFICIAL">{SOURCE_TYPE_LABELS.OFFICIAL}</option>
-                <option value="MEDIA">{SOURCE_TYPE_LABELS.MEDIA}</option>
-                <option value="COMMUNITY">{SOURCE_TYPE_LABELS.COMMUNITY}</option>
-              </>
-            )}
-          </select>
+            <SelectTrigger
+              aria-label="세부 조건 필터"
+              className="h-11 w-36 text-xs sm:h-9"
+            >
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {activeTab === "guides" ? (
+                <>
+                  <SelectItem value={ALL_FILTER_VALUE}>활용 목적 전체</SelectItem>
+                  {AI_USES.map((use) => (
+                    <SelectItem key={use.slug} value={use.slug}>
+                      {use.name}
+                    </SelectItem>
+                  ))}
+                </>
+              ) : activeTab === "tools" ? (
+                <>
+                  <SelectItem value={ALL_FILTER_VALUE}>조건 전체</SelectItem>
+                  <SelectItem value="free">무료 플랜 있음</SelectItem>
+                  <SelectItem value="korean">한국어 완전 지원</SelectItem>
+                  <SelectItem value="free-korean">
+                    무료 + 한국어 완전 지원
+                  </SelectItem>
+                </>
+              ) : (
+                <>
+                  <SelectItem value={ALL_FILTER_VALUE}>출처 전체</SelectItem>
+                  <SelectItem value="OFFICIAL">
+                    {SOURCE_TYPE_LABELS.OFFICIAL}
+                  </SelectItem>
+                  <SelectItem value="MEDIA">
+                    {SOURCE_TYPE_LABELS.MEDIA}
+                  </SelectItem>
+                  <SelectItem value="COMMUNITY">
+                    {SOURCE_TYPE_LABELS.COMMUNITY}
+                  </SelectItem>
+                </>
+              )}
+            </SelectContent>
+          </Select>
 
           <button
             type="button"

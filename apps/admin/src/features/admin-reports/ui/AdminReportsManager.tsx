@@ -16,6 +16,11 @@ import {
   ErrorState,
   FieldGroup,
   FilterBar,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
   Skeleton,
   Textarea,
   type DataTableColumn,
@@ -187,17 +192,23 @@ export const AdminReportsManager = () => {
           </DialogHeader>
           <form onSubmit={handleSubmit} className="flex flex-col gap-3">
             <FieldGroup htmlFor="admin-report-status" label="처리 상태">
-              <select
-                id="admin-report-status"
+              <Select
                 value={nextStatus}
-                onChange={(e) => setNextStatus(e.target.value as ReportStatus)}
-                className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm"
+                onValueChange={(v) => setNextStatus(v as ReportStatus)}
               >
-                <option value="OPEN">접수됨</option>
-                <option value="IN_PROGRESS">확인 중</option>
-                <option value="RESOLVED">해결됨</option>
-                <option value="DISMISSED">반려됨</option>
-              </select>
+                <SelectTrigger
+                  id="admin-report-status"
+                  className="h-9 bg-background text-sm"
+                >
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="OPEN">접수됨</SelectItem>
+                  <SelectItem value="IN_PROGRESS">확인 중</SelectItem>
+                  <SelectItem value="RESOLVED">해결됨</SelectItem>
+                  <SelectItem value="DISMISSED">반려됨</SelectItem>
+                </SelectContent>
+              </Select>
             </FieldGroup>
 
             <FieldGroup htmlFor="admin-report-memo" label="처리 메모">

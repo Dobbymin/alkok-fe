@@ -16,7 +16,7 @@ export const SelectTrigger = ({
 }: ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger>) => (
   <SelectPrimitive.Trigger
     className={cn(
-      "flex h-10 w-full items-center justify-between rounded-md border border-input bg-card px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground transition-[border-color,box-shadow] duration-150 ease-out focus-visible:outline-2 focus-visible:outline-offset-0 focus-visible:outline-ring disabled:cursor-not-allowed disabled:opacity-50",
+      "flex h-10 w-full items-center justify-between gap-2 rounded-md border border-input bg-card pl-3 pr-2 py-1 text-sm text-foreground placeholder:text-muted-foreground transition-[border-color,box-shadow] duration-150 ease-out focus-visible:outline-2 focus-visible:outline-offset-0 focus-visible:outline-ring disabled:cursor-not-allowed disabled:opacity-50 [&>span]:min-w-0 [&>span]:truncate [&>span]:text-left",
       className,
     )}
     {...props}
@@ -24,7 +24,7 @@ export const SelectTrigger = ({
     {children}
     <SelectPrimitive.Icon asChild>
       <ChevronDown
-        className="h-4 w-4 text-muted-foreground"
+        className="h-4 w-4 shrink-0 text-muted-foreground"
         strokeWidth={1.75}
         absoluteStrokeWidth
         aria-hidden="true"
