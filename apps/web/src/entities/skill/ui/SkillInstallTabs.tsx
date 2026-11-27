@@ -1,5 +1,3 @@
-"use client";
-
 import type { SkillInstallGuide } from "@alkok/core";
 import {
   CopyableCodeBlock,

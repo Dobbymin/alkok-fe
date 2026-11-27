@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@alkok/core";
-import type { ApiEnvelope, SkillDetailData } from "@alkok/core";
-import { serverApiGet } from "@alkok/core/server";
 import { SkillDetailPage } from "@/views/skills";
+import { fetchSkillBySlug } from "../../../_lib/public-catalog";
 
 export async function generateMetadata({
   params,
@@ -10,10 +9,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const res = await serverApiGet<ApiEnvelope<SkillDetailData>>(
-    `/api/v1/skills/${slug}`,
-    { revalidate: 60 },
-  );
+  const res = await fetchSkillBySlug(slug);
   if (!res?.data) {
     return { title: "플러그인·스킬 상세" };
   }
@@ -30,9 +26,6 @@ export default async function Page({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const res = await serverApiGet<ApiEnvelope<SkillDetailData>>(
-    `/api/v1/skills/${slug}`,
-    { revalidate: 60 },
-  );
+  const res = await fetchSkillBySlug(slug);
   return <SkillDetailPage skill={res?.data ?? null} />;
 }

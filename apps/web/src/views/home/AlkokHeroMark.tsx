@@ -1,13 +1,13 @@
-"use client";
-
-import { useId } from "react";
 import { cn } from "@alkok/core";
 
-export const AlkokHeroMark = ({ className }: { className?: string }) => {
-  const maskId = useId();
-
-  return (
-    <svg
+export const AlkokHeroMark = ({
+  className,
+  maskId = "alkok-hero-mark-mask",
+}: {
+  className?: string;
+  maskId?: string;
+}) => (
+  <svg
       data-testid="alkok-hero-mark"
       aria-hidden="true"
       viewBox="5 6 54 52"
@@ -98,5 +98,4 @@ export const AlkokHeroMark = ({ className }: { className?: string }) => {
         className="stroke-[#F59E0B] dark:stroke-[#FDE047]"
       />
     </svg>
-  );
-};
+);

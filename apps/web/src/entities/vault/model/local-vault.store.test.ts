@@ -72,4 +72,37 @@ describe("localVaultStore & syncLocalVaultToServer", () => {
     expect(useLocalVaultStore.getState().items.map((i) => i.contentId)).toEqual(["c1"]);
     expect(invalidateSpy).toHaveBeenCalled();
   });
+
+  it("dispatches createBookmark calls in parallel instead of awaiting sequentially", async () => {
+    useLocalVaultStore.getState().saveItem({ contentId: "p1", title: "항목 1" });
+    useLocalVaultStore.getState().saveItem({ contentId: "p2", title: "항목 2" });
+
+    const resolvers: Array<() => void> = [];
+    vi.mocked(vaultApi.createBookmark).mockImplementation(
+      (input) =>
+        new Promise((resolve) => {
+          resolvers.push(() =>
+            resolve({
+              data: {
+                id: `v-${input.contentId}`,
+                itemType: "INTERNAL_CONTENT",
+                contentId: input.contentId,
+                title: input.contentId,
+                tags: [],
+                createdAt: "2026-11-27T00:00:00.000Z",
+              },
+            }),
+          );
+        }),
+    );
+
+    const syncPromise = syncLocalVaultToServer();
+    expect(vaultApi.createBookmark).toHaveBeenCalledTimes(2);
+    expect(resolvers).toHaveLength(2);
+
+    resolvers.forEach((resolve) => resolve());
+    const result = await syncPromise;
+    expect(result).toEqual({ syncedCount: 2, skippedCount: 0, failedCount: 0 });
+    expect(useLocalVaultStore.getState().items).toHaveLength(0);
+  });
 });

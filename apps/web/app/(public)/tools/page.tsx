@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { ToolsListPage } from "@/views/tools";
-import { fetchHomeCatalog } from "../../_lib/public-catalog";
+import { fetchToolsCatalog } from "../../_lib/public-catalog";
 
 export const metadata: Metadata = {
   title: "AI 도구·모델 디렉터리",
@@ -8,6 +8,6 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-  const catalog = await fetchHomeCatalog();
-  return <ToolsListPage initialTools={catalog.tools} />;
+  const res = await fetchToolsCatalog();
+  return <ToolsListPage initialTools={res?.data ?? []} />;
 }

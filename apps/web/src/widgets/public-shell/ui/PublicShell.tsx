@@ -1,5 +1,3 @@
-"use client";
-
 import type { ReactNode } from "react";
 import { QuickSearchModal } from "@/features/quick-search";
 import type { PublicShellCounts } from "../model/shell-counts.types";

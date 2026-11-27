@@ -12,6 +12,7 @@ import {
 import { serverApiGet } from "@alkok/core/server";
 import { ToolComparePage } from "@/views/tools";
 import { ToolComparePageSkeleton } from "@/widgets/tool-compare";
+import { fetchToolsCatalog } from "../../../_lib/public-catalog";
 
 export async function generateMetadata({
   searchParams,
@@ -77,10 +78,7 @@ export default async function Page({
   const slugs = normalizeCompareSlugs(slugsRaw);
 
   const [allToolsRes, compareRes] = await Promise.all([
-    serverApiGet<ApiEnvelope<ToolDetailData[]>>(
-      "/api/v1/tools?limit=50&sort=recommended",
-      { revalidate: 60 },
-    ),
+    fetchToolsCatalog(),
     slugs.length > 0
       ? serverApiGet<ApiEnvelope<ToolDetailData[]>>("/api/v1/tools/compare", {
           params: { slugs: slugs.join(",") },

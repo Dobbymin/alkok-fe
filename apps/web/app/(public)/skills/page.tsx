@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { SkillsListPage } from "@/views/skills";
-import { serverApiGet } from "@alkok/core/server";
-import type { ApiEnvelope, SkillDetailData } from "@alkok/core";
+import { fetchSkillsCatalog } from "../../_lib/public-catalog";
 
 export const metadata: Metadata = {
   title: "플러그인 · 스킬 · MCP 디렉터리",
@@ -10,9 +9,6 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-  const res = await serverApiGet<ApiEnvelope<SkillDetailData[]>>(
-    "/api/v1/skills?limit=50&sort=recommended",
-    { revalidate: 60 },
-  );
+  const res = await fetchSkillsCatalog();
   return <SkillsListPage initialSkills={res?.data ?? []} />;
 }
