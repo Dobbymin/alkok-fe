@@ -1,6 +1,6 @@
 "use client";
 
-import { Moon, Sun } from "lucide-react";
+import { Moon, Sun } from "@phosphor-icons/react";
 import { useTheme } from "next-themes";
 import { useSyncExternalStore } from "react";
 import { cn } from "@alkok/core";
@@ -37,15 +37,13 @@ export const ThemeToggle = ({
       className={cn(showLabel && "justify-start gap-2", className)}
     >
       <Moon
-        className="h-4 w-4 dark:hidden"
-        strokeWidth={1.75}
-        absoluteStrokeWidth
+        className="h-[18px] w-[18px] dark:hidden"
+        weight="regular"
         aria-hidden="true"
       />
       <Sun
-        className="hidden h-4 w-4 dark:block"
-        strokeWidth={1.75}
-        absoluteStrokeWidth
+        className="hidden h-[18px] w-[18px] dark:block"
+        weight="regular"
         aria-hidden="true"
       />
       {showLabel ? (

@@ -80,4 +80,22 @@ describe("QuickSearchModal", () => {
       "/search?q=%ED%9A%8C%EC%9D%98%EB%A1%9D%20%EC%A0%95%EB%A6%AC",
     );
   });
+
+  it("aligns search input and submit button height to h-10", () => {
+    const qc = new QueryClient();
+
+    render(
+      <QueryClientProvider client={qc}>
+        <QuickSearchModal />
+      </QueryClientProvider>,
+    );
+
+    const input = screen.getByLabelText("검색어 입력");
+    const inputWrapper = input.parentElement!;
+    const submitBtn = screen.getByRole("button", { name: "검색" });
+
+    expect(inputWrapper.className).toContain("h-10");
+    expect(submitBtn.className).toContain("h-10");
+    expect(submitBtn.className).not.toContain("h-8");
+  });
 });

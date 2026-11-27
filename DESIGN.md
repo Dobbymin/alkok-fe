@@ -142,7 +142,7 @@
 
 ## 8. Icons, Motion, Copywriting & Anti-Slop Guardrails
 
-- **Icons**: `lucide-react` (`strokeWidth={1.75}`, `16px`/`20px`)를 Pretendard와 균형 잡힌 UI 명확성을 위해 사용한다. AI 클리셰 아이콘(`Sparkles`, `Wand`, `Bot`, `Brain`, `Zap`의 장식 사용), 3D/토스페이스풍 글로시 일러스트, UI 텍스트·헤딩 내 이모지는 전면 금지한다.
+- **Icons**: 하이브리드 아이콘 시스템을 적용한다. 핵심 내비게이션 7종(`홈 · 업무 가이드 · AI 도구·모델 · 도구 비교 · 스킬·플러그인 · AI 소식 · 내 보관함`)은 알콕 전용 커스텀 SVG(비활성 `1.6px` 라인 ↔ 활성 듀오톤 채움)를 사용하고, 셸·검색 유틸리티 아이콘은 `@phosphor-icons/react`(`regular`/`duotone`)를 우선 적용하며 나머지 페이지는 점진 전환한다. AI 클리셰 아이콘(`Sparkles`, `Wand`, `Bot`, `Brain`, `Zap`의 장식 사용), 3D/토스페이스풍 글로시 일러스트, UI 텍스트·헤딩 내 이모지는 전면 금지한다.
 - **Button Arrows**: `↗` 화살표는 외부 공식 AI 서비스로 이동하는 핸드오프 CTA(`공식 사이트에서 바로 쓰기 ↗`)에만 사용하여 이탈 방향을 알린다. 내부 이동 버튼에는 붙이지 않는다.
 - **Motion (`MOTION 1`)**: 호버, 프레스, `Sheet`/모달 전환에만 절제된 트랜지션(`150~200ms ease-out`)을 사용한다. 패럴랙스, 바운스, 플로팅, 무한 펄스 도트, 스크롤 리빌 연출은 금지한다. `prefers-reduced-motion: reduce`를 준수한다.
 - **Copywriting**:

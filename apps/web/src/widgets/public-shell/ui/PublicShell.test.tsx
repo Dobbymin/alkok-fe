@@ -99,6 +99,17 @@ describe("PublicShell, DesktopSidebar & MobileBottomTabs", () => {
       "aria-expanded",
       "false",
     );
+
+    const collapsedCompareLink = screen.getByRole("link", { name: "도구 비교" });
+    expect(collapsedCompareLink.className).toContain("h-9");
+    expect(collapsedCompareLink.className).toContain("w-9");
+    expect(collapsedCompareLink.className).not.toContain("ring-1");
+    expect(collapsedCompareLink.className).toContain("bg-secondary");
+
+    const collapsedAccountLink = screen.getByRole("link", { name: "계정 · 동기화" });
+    expect(collapsedAccountLink.className).toContain("h-9");
+    expect(collapsedAccountLink.className).toContain("w-9");
+    expect(collapsedAccountLink.className).not.toContain("bg-primary");
   });
 
   it("applies pb-20 md:pb-8 safe bottom padding on main and Korean aria-labels on icon buttons", () => {
@@ -134,14 +145,22 @@ describe("PublicShell, DesktopSidebar & MobileBottomTabs", () => {
     expect(screen.getByText("20")).toBeInTheDocument();
   });
 
-  it("renders account skeleton instead of flashing login button while auth is loading", () => {
+  it("renders account skeleton instead of flashing account sync link while auth is loading", () => {
     useAuthStore.setState({ user: null, isLoading: true });
     renderShell("/");
 
     expect(
       screen.getByRole("status", { name: "계정 정보 확인 중" }),
     ).toBeInTheDocument();
-    expect(screen.queryByRole("link", { name: "로그인" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "계정 · 동기화" })).not.toBeInTheDocument();
+  });
+
+  it("renders low-emphasis ghost account sync entry when unauthenticated", () => {
+    renderShell("/");
+
+    const accountLink = screen.getByRole("link", { name: "계정 · 동기화" });
+    expect(accountLink).toHaveAttribute("href", "/login");
+    expect(accountLink.className).not.toContain("bg-primary");
   });
 
   it("opens mobile menu sheet from the right side matching the right hamburger trigger", async () => {
@@ -154,5 +173,11 @@ describe("PublicShell, DesktopSidebar & MobileBottomTabs", () => {
     expect(dialog.className).toContain("end-0");
     expect(dialog.className).toContain("border-s");
     expect(dialog.className).not.toContain("start-0");
+
+    const sheetAccountLink = screen.getAllByRole("link", { name: "계정 · 동기화" }).find((el) =>
+      dialog.contains(el),
+    );
+    expect(sheetAccountLink).toBeDefined();
+    expect(sheetAccountLink?.className).not.toContain("bg-primary");
   });
 });

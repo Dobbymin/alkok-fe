@@ -1,6 +1,6 @@
 "use client";
 
-import { Clock, Search } from "lucide-react";
+import { ClockCounterClockwise, MagnifyingGlass } from "@phosphor-icons/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, type FormEvent } from "react";
@@ -94,14 +94,14 @@ export const QuickSearchModal = () => {
             aria-label="검색어 입력"
             wrapperClassName="flex-1"
             startIcon={
-              <Search
+              <MagnifyingGlass
                 className="h-4 w-4"
-                strokeWidth={1.75}
-                absoluteStrokeWidth
+                weight="regular"
+                aria-hidden="true"
               />
             }
           />
-          <Button type="submit" size="sm">
+          <Button type="submit">
             검색
           </Button>
         </form>
@@ -160,7 +160,11 @@ export const QuickSearchModal = () => {
               {recent.length > 0 ? (
                 <div className="flex flex-col gap-2">
                   <p className="flex items-center gap-2 text-xs font-semibold text-muted-foreground">
-                    <Clock className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden="true" />
+                    <ClockCounterClockwise
+                      className="h-3.5 w-3.5"
+                      weight="regular"
+                      aria-hidden="true"
+                    />
                     최근 검색어
                   </p>
                   <div className="flex flex-wrap gap-2">
