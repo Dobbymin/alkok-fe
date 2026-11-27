@@ -34,6 +34,10 @@ export interface AdminReviewItem {
   workImpact?: string | null;
   markdownBody?: string | null;
   pricingSummary?: string | null;
+  overview?: string | null;
+  compatibleAgents?: string[];
+  installPrompt?: string | null;
+  skillMdPreview?: string | null;
 }
 
 export interface AdminReviewDraftPayload {
@@ -43,6 +47,9 @@ export interface AdminReviewDraftPayload {
   workImpact?: string;
   markdownBody?: string;
   pricingSummary?: string;
+  overview?: string;
+  installPrompt?: string;
+  skillMdPreview?: string;
 }
 
 export interface AdminReviewSplitViewProps {
@@ -133,6 +140,9 @@ const DraftEditorPanel = ({
   const [workImpact, setWorkImpact] = useState(item.workImpact ?? "");
   const [markdownBody, setMarkdownBody] = useState(item.markdownBody ?? "");
   const [pricingSummary, setPricingSummary] = useState(item.pricingSummary ?? "");
+  const [overview, setOverview] = useState(item.overview ?? "");
+  const [installPrompt, setInstallPrompt] = useState(item.installPrompt ?? "");
+  const [skillMdPreview, setSkillMdPreview] = useState(item.skillMdPreview ?? "");
 
   const buildPayload = (): AdminReviewDraftPayload => ({
     title: title.trim(),
@@ -144,6 +154,9 @@ const DraftEditorPanel = ({
     workImpact: workImpact.trim() || undefined,
     markdownBody: markdownBody.trim() || undefined,
     pricingSummary: pricingSummary.trim() || undefined,
+    overview: overview.trim() || undefined,
+    installPrompt: installPrompt.trim() || undefined,
+    skillMdPreview: skillMdPreview.trim() || undefined,
   });
 
   return (
@@ -204,6 +217,47 @@ const DraftEditorPanel = ({
             onChange={(e) => setPricingSummary(e.target.value)}
           />
         </FieldGroup>
+      ) : null}
+
+      {item.type === "SKILL" ? (
+        <div className="flex flex-col gap-3">
+          {item.compatibleAgents && item.compatibleAgents.length > 0 ? (
+            <div className="flex flex-wrap items-center gap-1.5">
+              <span className="text-xs font-medium text-muted-foreground">
+                호환 에이전트:
+              </span>
+              {item.compatibleAgents.map((agent) => (
+                <Badge key={agent} variant="outline">
+                  {agent}
+                </Badge>
+              ))}
+            </div>
+          ) : null}
+          <FieldGroup htmlFor={`review-overview-${item.id}`} label="스킬·플러그인 개요">
+            <Textarea
+              id={`review-overview-${item.id}`}
+              value={overview}
+              onChange={(e) => setOverview(e.target.value)}
+              className="min-h-20 text-xs"
+            />
+          </FieldGroup>
+          <FieldGroup htmlFor={`review-install-${item.id}`} label="자연어 설치 요청">
+            <Textarea
+              id={`review-install-${item.id}`}
+              value={installPrompt}
+              onChange={(e) => setInstallPrompt(e.target.value)}
+              className="min-h-16 font-mono text-xs"
+            />
+          </FieldGroup>
+          <FieldGroup htmlFor={`review-skillmd-${item.id}`} label="SKILL.md 미리보기">
+            <Textarea
+              id={`review-skillmd-${item.id}`}
+              value={skillMdPreview}
+              onChange={(e) => setSkillMdPreview(e.target.value)}
+              className="min-h-24 font-mono text-xs"
+            />
+          </FieldGroup>
+        </div>
       ) : null}
 
       <FieldGroup htmlFor={`review-tags-${item.id}`} label="태그 (쉼표 구분)">

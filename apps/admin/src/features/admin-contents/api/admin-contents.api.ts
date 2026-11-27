@@ -7,6 +7,7 @@ import type {
   KoreanSupportLevel,
   PricingModel,
   PublishStatus,
+  SkillKind,
   SourceType,
   ToolKind,
   VerificationStatus,
@@ -51,6 +52,17 @@ export interface AdminContentCreatePayload {
   // News fields
   keyPoints?: string[];
   workImpact?: string;
+  // Skill fields
+  skillKind?: SkillKind;
+  skillSlug?: string;
+  authorName?: string;
+  license?: string;
+  repositoryUrl?: string;
+  compatibleAgents?: string[];
+  overview?: string;
+  installPrompt?: string;
+  useCases?: string[];
+  tips?: string[];
 }
 
 export const adminContentsApi = {

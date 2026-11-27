@@ -2,6 +2,7 @@ import { ExternalLink } from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { ContentCard, VerificationBadge } from "@/entities/content";
+import { SkillSpecCard } from "@/entities/skill";
 import { HelpfulButton } from "@/features/content-helpful";
 import { ReportModal } from "@/features/content-report";
 import { CompareToggleButton } from "@/features/tool-compare";
@@ -14,6 +15,7 @@ import {
   CardContent,
   CardHeader,
   CardTitle,
+  CopyableCodeBlock,
   ErrorState,
 } from "@alkok/ui";
 
@@ -106,8 +108,8 @@ export default function ToolDetailPage({
             요금 · 무료 한도
           </CardTitle>
         </CardHeader>
-        <CardContent className="flex flex-col gap-2">
-          <div className="flex items-center gap-2">
+        <CardContent className="flex flex-col gap-4">
+          <div className="flex flex-wrap items-center gap-2">
             <Badge variant={tool.hasFreePlan ? "valid" : "outline"}>
               {tool.hasFreePlan ? "무료 플랜 있음" : "유료 전용"}
             </Badge>
@@ -115,6 +117,39 @@ export default function ToolDetailPage({
               {tool.pricingSummary}
             </span>
           </div>
+
+          {tool.pricingPlans && tool.pricingPlans.length > 0 ? (
+            <div className="overflow-x-auto rounded-lg border border-border">
+              <table className="w-full min-w-[480px] border-collapse text-left text-xs">
+                <thead className="bg-surface-sunken text-muted-foreground">
+                  <tr>
+                    <th className="px-3 py-2 font-semibold">플랜</th>
+                    <th className="px-3 py-2 font-semibold">가격</th>
+                    <th className="px-3 py-2 font-semibold">추천 대상</th>
+                    <th className="px-3 py-2 font-semibold">핵심 제공 범위</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-border">
+                  {tool.pricingPlans.map((plan, idx) => (
+                    <tr key={idx}>
+                      <td className="px-3 py-2.5 font-semibold text-foreground">
+                        {plan.name}
+                      </td>
+                      <td className="px-3 py-2.5 tabular-nums text-foreground">
+                        {plan.price}
+                      </td>
+                      <td className="px-3 py-2.5 text-muted-foreground">
+                        {plan.target}
+                      </td>
+                      <td className="px-3 py-2.5 text-foreground">
+                        {plan.highlights}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : null}
         </CardContent>
       </Card>
 
@@ -150,6 +185,69 @@ export default function ToolDetailPage({
         </Card>
       </div>
 
+      {tool.useCases && tool.useCases.length > 0 ? (
+        <Card>
+          <CardHeader>
+            <CardTitle as="h2" className="text-base">
+              이럴 때 쓰세요
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ul className="list-disc space-y-2 pl-4 text-sm text-foreground">
+              {tool.useCases.map((uc, idx) => (
+                <li key={idx} className="leading-[1.6]">
+                  {uc}
+                </li>
+              ))}
+            </ul>
+          </CardContent>
+        </Card>
+      ) : null}
+
+      {tool.gettingStartedSteps && tool.gettingStartedSteps.length > 0 ? (
+        <section className="flex flex-col gap-3">
+          <h2 className="text-lg font-bold tracking-tight">
+            빠르게 시작하기 (단계별 가이드)
+          </h2>
+          <ol className="flex flex-col gap-2.5">
+            {tool.gettingStartedSteps.map((step) => (
+              <li
+                key={step.step}
+                className="flex items-start gap-3 rounded-xl border border-border bg-card p-4"
+              >
+                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground tabular-nums">
+                  {step.step}
+                </span>
+                <div className="flex flex-col gap-1">
+                  <h3 className="text-sm font-semibold text-foreground">
+                    {step.title}
+                  </h3>
+                  <p className="text-xs leading-[1.6] text-muted-foreground">
+                    {step.description}
+                  </p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </section>
+      ) : null}
+
+      {tool.examplePrompts && tool.examplePrompts.length > 0 ? (
+        <section className="flex flex-col gap-3">
+          <h2 className="text-lg font-bold tracking-tight">
+            첫 요청 예시 프롬프트
+          </h2>
+          {tool.examplePrompts.map((ex, idx) => (
+            <CopyableCodeBlock
+              key={idx}
+              title={ex.title}
+              code={ex.prompt}
+              copyLabel="프롬프트 복사"
+            />
+          ))}
+        </section>
+      ) : null}
+
       <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-transparent bg-surface-sunken p-4 dark:border-border">
         <Button asChild>
           <a
@@ -171,6 +269,39 @@ export default function ToolDetailPage({
           </div>
         )}
       </div>
+
+      {tool.compatibleSkills && tool.compatibleSkills.length > 0 ? (
+        <section className="flex flex-col gap-4">
+          <h2 className="text-lg font-bold tracking-tight">
+            함께 쓰면 좋은 플러그인·스킬
+          </h2>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {tool.compatibleSkills.map((skill) => (
+              <SkillSpecCard key={skill.id} skill={skill} />
+            ))}
+          </div>
+        </section>
+      ) : null}
+
+      {tool.faq && tool.faq.length > 0 ? (
+        <section className="flex flex-col gap-3">
+          <h2 className="text-lg font-bold tracking-tight">자주 묻는 질문</h2>
+          {tool.faq.map((item, idx) => (
+            <Card key={idx}>
+              <CardHeader className="pb-2">
+                <CardTitle as="h3" className="text-sm">
+                  Q. {item.question}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm leading-[1.6] text-muted-foreground">
+                  {item.answer}
+                </p>
+              </CardContent>
+            </Card>
+          ))}
+        </section>
+      ) : null}
 
       {tool.relatedGuides && tool.relatedGuides.length > 0 ? (
         <section className="flex flex-col gap-4">

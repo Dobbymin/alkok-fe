@@ -47,4 +47,23 @@ describe("PromptCopyBlock & SafeMarkdown", () => {
     render(<PromptCopyBlock title="빈 프롬프트" content={undefined} />);
     expect(screen.getByText("빈 프롬프트")).toBeInTheDocument();
   });
+
+  it("highlights {{variables}} and renders variableExamples, expectedOutput, and tips", () => {
+    render(
+      <PromptCopyBlock
+        title="주간 보고"
+        content="{{부서}}의 {{메모}}를 요약해줘"
+        variables={["부서", "메모"]}
+        variableExamples={{ 부서: "기획팀", 메모: "이번 주 완료 건" }}
+        expectedOutput="4개 항목 보고서"
+        tips="실명은 마스킹하세요"
+      />,
+    );
+
+    expect(screen.getAllByText("{{부서}}").length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText("{{메모}}").length).toBeGreaterThanOrEqual(1);
+    expect(screen.getByText("기획팀")).toBeInTheDocument();
+    expect(screen.getByText("4개 항목 보고서")).toBeInTheDocument();
+    expect(screen.getByText("실명은 마스킹하세요")).toBeInTheDocument();
+  });
 });

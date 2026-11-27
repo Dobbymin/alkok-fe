@@ -44,6 +44,7 @@ const getInternalHref = (item: VaultItem) => {
   if (!slug) return "/";
   const type = item.content?.type;
   if (type === "TOOL") return `/tools/${slug}`;
+  if (type === "SKILL") return `/skills/${slug}`;
   if (type === "NEWS") return `/news/${slug}`;
   return `/guides/${slug}`;
 };
