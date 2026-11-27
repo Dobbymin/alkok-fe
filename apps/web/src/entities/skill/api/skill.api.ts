@@ -33,7 +33,7 @@ export const skillApi = {
         validOnly: params.validOnly ? "true" : undefined,
         sort: params.sort ?? "recommended",
         page: params.page ?? 1,
-        limit: params.limit ?? 20,
+        limit: params.limit ?? 50,
       },
     });
   },
